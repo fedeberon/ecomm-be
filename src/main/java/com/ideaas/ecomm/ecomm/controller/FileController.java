@@ -43,8 +43,8 @@ public class FileController {
 
     @RequestMapping("{folder}")
     public ResponseEntity<List<Image>> readFiles(@PathVariable final String folder) {
-        final List<Image> imagesOfProduct = fileService.readFiles(folder);
-        imagesOfProduct.forEach(image -> {
+        final List<Image> images = fileService.readFiles(folder);
+        images.forEach(image -> {
             String path = ServletUriComponentsBuilder.fromCurrentContextPath()
                             .path("/file/download/")
                             .path(folder)
@@ -54,7 +54,7 @@ public class FileController {
             image.setLink(path);
         });
 
-        return ResponseEntity.ok(imagesOfProduct);
+        return ResponseEntity.ok(images);
     }
 
     @RequestMapping("download/{folder}/{fileName:.+}")

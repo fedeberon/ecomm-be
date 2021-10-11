@@ -9,4 +9,6 @@ public interface IProductService {
     List<Product> findAll();
 
     Product save(Product product);
+
+    Product get(Long id);
 }
