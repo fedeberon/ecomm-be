@@ -23,8 +23,11 @@ public class Product {
     @Column(name = "PRO_DESCRIPTION")
     private String description;
 
-    @Column(name = "PRO_PRICE")
+    @Column(name = "PRO_PRICE", precision=10, scale=2)
     private Long price;
+
+    @Column(name = "PRO_STOCK")
+    private Long stock;
 
     @Transient
     private List<Image> images;

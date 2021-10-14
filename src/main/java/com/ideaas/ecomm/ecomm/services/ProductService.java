@@ -41,15 +41,10 @@ public class ProductService implements IProductService {
 
     @Override
     public Product get(final Long id) {
-        final Optional<Product> optionalProduct =  dao.findById(id);
-        if(optionalProduct.isPresent()) {
-            final Product product = optionalProduct.get();
-            addImagesOnProduct(product);
-            return product;
-        } else {
-            final String messageException = String.format("Product with id %d was not found." , id);
-            throw new NotFoundException(messageException);
-        }
+        Optional<Product> optionalProduct = dao.findById(id);
+        addImagesOnProduct(optionalProduct.get());
+
+        return optionalProduct.get();
     }
 
     private void addImagesOnProduct(final Product product) {

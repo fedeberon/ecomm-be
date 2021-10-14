@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -30,28 +31,18 @@ public class CheckoutService implements ICheckoutService {
     @Override
     public Checkout save(final CheckoutResponse response) {
         Product product = productService.get(response.getProductId());
-        Optional<Checkout> optionalCheckout = dao.getCheckoutByState(CheckoutState.ACTIVE);
-        if (optionalCheckout.isPresent()) {
-            Checkout checkout = optionalCheckout.get();
-            List<ProductToCart> products = checkout.getProducts();
-            ProductToCart productToCart = prepareProductToCart(product, checkout, response.getQuantity());
-            products.add(productToCart);
-            checkout.setProducts(products);
-            checkout.setState(CheckoutState.ACTIVE);
-            dao.save(checkout);
-
-            return checkout;
-        } else {
-            List<ProductToCart> products = new ArrayList<>();
-            Checkout checkout = new Checkout();
-            ProductToCart productToCart = prepareProductToCart(product, checkout, response.getQuantity());
-            products.add(productToCart);
-            checkout.setProducts(products);
-            checkout.setState(CheckoutState.ACTIVE);
-            dao.save(checkout);
-
-            return checkout;
+        Checkout checkout = dao.getCheckoutByState(CheckoutState.ACTIVE);
+        if (Objects.isNull(checkout)) {
+            checkout = Checkout.builder().products(new ArrayList<>()).build();
         }
+        List<ProductToCart> products = checkout.getProducts();
+        ProductToCart productToCart = prepareProductToCart(product, checkout, response.getQuantity());
+        products.add(productToCart);
+        checkout.setProducts(products);
+        checkout.setState(CheckoutState.ACTIVE);
+        dao.save(checkout);
+
+        return checkout;
     }
 
 

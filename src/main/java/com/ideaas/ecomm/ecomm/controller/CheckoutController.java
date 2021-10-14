@@ -5,12 +5,14 @@ import com.ideaas.ecomm.ecomm.payload.CheckoutResponse;
 import com.ideaas.ecomm.ecomm.services.interfaces.ICheckoutService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@CrossOrigin
 @RequestMapping("checkout")
 public class CheckoutController {
 
@@ -22,10 +24,10 @@ public class CheckoutController {
     }
 
     @PostMapping
-    public ResponseEntity<Checkout> save(@RequestBody final CheckoutResponse response) {
+    public Checkout save(@RequestBody final CheckoutResponse response) {
         Checkout checkout = checkoutService.save(response);
 
-        return ResponseEntity.ok(checkout);
+        return checkout;
     }
 
 

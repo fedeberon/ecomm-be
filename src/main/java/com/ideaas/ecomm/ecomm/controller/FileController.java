@@ -16,6 +16,7 @@ import java.io.File;
 import java.util.List;
 
 @RestController
+@CrossOrigin
 @RequestMapping("file")
 public class FileController {
 
@@ -27,7 +28,7 @@ public class FileController {
     }
 
     @PostMapping("upload")
-    public UploadFileResponse uploadFile(@RequestParam("file") final MultipartFile file, final String folder) {
+    public UploadFileResponse uploadFile(@RequestParam("file") final MultipartFile file, @RequestParam final String folder) {
         final String fileName = fileService.storeFile(file, folder);
 
         final String fileDownloadUrl = ServletUriComponentsBuilder.fromCurrentContextPath()
