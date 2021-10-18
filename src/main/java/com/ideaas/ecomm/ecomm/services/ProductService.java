@@ -47,7 +47,9 @@ public class ProductService implements IProductService {
         return optionalProduct.get();
     }
 
-    private void addImagesOnProduct(final Product product) {
+
+    @Override
+    public void addImagesOnProduct(final Product product) {
         List<Image> images  = fileService.readFiles(product.getId().toString());
         images.forEach(image -> {
             String path = ServletUriComponentsBuilder.fromCurrentContextPath()

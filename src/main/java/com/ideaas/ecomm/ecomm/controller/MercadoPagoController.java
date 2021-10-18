@@ -40,6 +40,7 @@ public class MercadoPagoController {
 
     @GetMapping("checkout")
     public ResponseEntity<String> checkout(@RequestParam Long checkoutId) {
+
         final Checkout checkout = checkoutService.get(checkoutId);
         final Preference preference = mercadoPagoService.createPreference(checkout);
 
@@ -51,11 +52,12 @@ public class MercadoPagoController {
         final Checkout checkout = checkoutService.get(Long.parseLong(callback.getExternalReference()));
         final CheckoutState state = CheckoutState.findByStatus(callback.getStatus());
         checkout.setCheckoutState(state);
+        callback.setCheckout(checkout);
         callbackService.save(callback);
 
         final String redirectUrl = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path("/callback/")
-                .path(String.valueOf(checkout.getId()))
+                .path(String.valueOf(callback.getId()))
                 .toUriString();
 
         return ResponseEntity.

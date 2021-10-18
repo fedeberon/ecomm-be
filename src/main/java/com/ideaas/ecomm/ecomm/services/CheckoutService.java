@@ -30,7 +30,10 @@ public class CheckoutService implements ICheckoutService {
 
     @Override
     public Checkout get(final Long id) {
-        return dao.findById(id).get();
+        Checkout checkout = dao.findById(id).get();
+        checkout.getProducts().forEach(productToCart -> productService.addImagesOnProduct(productToCart.getProduct()));
+
+        return checkout;
     }
 
     @Override

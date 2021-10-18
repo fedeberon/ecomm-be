@@ -11,4 +11,6 @@ public interface IProductService {
     Product save(Product product);
 
     Product get(Long id);
+
+    void addImagesOnProduct(Product product);
 }
