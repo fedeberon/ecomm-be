@@ -10,6 +10,8 @@ import org.springframework.stereotype.Component;
 public class CheckoutResponse {
 
     private Long productId;
-    private Long quantity;
+    private Integer quantity;
+
+
 
 }

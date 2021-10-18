@@ -6,6 +6,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface CheckoutDao extends JpaRepository<Checkout, Long> {
 
-    Checkout getCheckoutByState(CheckoutState state);
+    Checkout getCheckoutByCheckoutState(CheckoutState checkoutState);
 
 }

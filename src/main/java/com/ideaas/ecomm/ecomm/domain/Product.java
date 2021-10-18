@@ -24,7 +24,7 @@ public class Product {
     private String description;
 
     @Column(name = "PRO_PRICE", precision=10, scale=2)
-    private Long price;
+    private Double price;
 
     @Column(name = "PRO_STOCK")
     private Long stock;

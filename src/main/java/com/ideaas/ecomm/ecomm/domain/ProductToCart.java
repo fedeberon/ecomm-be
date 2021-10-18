@@ -1,6 +1,7 @@
 package com.ideaas.ecomm.ecomm.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -40,6 +41,13 @@ public class ProductToCart {
     private Checkout checkout;
 
     @Column(name = "PTC_QUANTITY")
-    private Long quantity;
+    private Integer quantity;
 
+    @Getter(AccessLevel.NONE)
+    @Column(name = "PTC_PRICE", precision=10, scale=2)
+    private Double price;
+
+    public Double getPrice() {
+        return price * quantity;
+    }
 }

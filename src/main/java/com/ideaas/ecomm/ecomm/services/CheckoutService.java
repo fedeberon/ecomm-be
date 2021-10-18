@@ -29,29 +29,33 @@ public class CheckoutService implements ICheckoutService {
     }
 
     @Override
+    public Checkout get(final Long id) {
+        return dao.findById(id).get();
+    }
+
+    @Override
     public Checkout save(final CheckoutResponse response) {
-        Product product = productService.get(response.getProductId());
-        Checkout checkout = dao.getCheckoutByState(CheckoutState.ACTIVE);
+        final Product product = productService.get(response.getProductId());
+        Checkout checkout = dao.getCheckoutByCheckoutState(CheckoutState.IN_PROCESS);
         if (Objects.isNull(checkout)) {
             checkout = Checkout.builder().products(new ArrayList<>()).build();
         }
-        List<ProductToCart> products = checkout.getProducts();
-        ProductToCart productToCart = prepareProductToCart(product, checkout, response.getQuantity());
+        final List<ProductToCart> products = checkout.getProducts();
+        final ProductToCart productToCart = prepareProductToCart(product, checkout, response.getQuantity());
         products.add(productToCart);
         checkout.setProducts(products);
-        checkout.setState(CheckoutState.ACTIVE);
+        checkout.setCheckoutState(CheckoutState.IN_PROCESS);
         dao.save(checkout);
 
         return checkout;
     }
 
-
-
-    public ProductToCart prepareProductToCart(final Product product, final Checkout checkout, final Long quantity) {
+    public ProductToCart prepareProductToCart(final Product product, final Checkout checkout, final Integer quantity) {
         return  ProductToCart.builder()
                             .product(product)
                             .checkout(checkout)
                             .quantity(quantity)
+                            .price(product.getPrice())
                             .build();
     }
 }

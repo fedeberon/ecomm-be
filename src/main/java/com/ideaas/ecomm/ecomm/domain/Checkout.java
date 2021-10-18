@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -36,6 +37,8 @@ public class Checkout {
     private List<ProductToCart> products;
 
     @Enumerated(EnumType.STRING)
-    private CheckoutState state;
+    private CheckoutState checkoutState;
+
+
 
 }
