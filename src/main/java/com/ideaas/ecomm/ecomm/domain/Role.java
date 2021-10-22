@@ -1,21 +1,21 @@
 package com.ideaas.ecomm.ecomm.domain;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.Collection;
 
 @Entity
+@Table(name = "roles")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class User {
+public class Role {
     @Id
-    private String username;
+    @Column(name = "rol_id")
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
+    @Column(name = "rol_name")
     private String name;
-    private String password;
-    @ManyToOne(cascade = CascadeType.MERGE)
-    @JoinColumn(name = "users_rol_id")
-    private Role role;
 }
