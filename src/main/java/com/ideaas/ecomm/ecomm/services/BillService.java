@@ -1,5 +1,7 @@
 package com.ideaas.ecomm.ecomm.services;
 
+import com.ideaas.ecomm.ecomm.payload.AFIP.FECAE;
+import com.ideaas.ecomm.ecomm.payload.AFIP.LoginTicketResponse;
 import com.ideaas.ecomm.ecomm.payload.AFIP.Person;
 import com.ideaas.ecomm.ecomm.payload.AFIP.PersonPayload;
 import com.ideaas.ecomm.ecomm.services.interfaces.IBillService;
@@ -15,7 +17,6 @@ import javax.xml.soap.SOAPConnection;
 import javax.xml.soap.SOAPConnectionFactory;
 import javax.xml.soap.SOAPElement;
 import javax.xml.soap.SOAPEnvelope;
-import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPMessage;
 import javax.xml.soap.SOAPPart;
 import javax.xml.stream.XMLInputFactory;
@@ -25,13 +26,14 @@ import javax.xml.transform.TransformerFactory;
 import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
-import java.net.MalformedURLException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @Service
 public class BillService implements IBillService {
 
     public static String AFIP_A5_SERVICE = "https://aws.afip.gov.ar/sr-padron/webservices/personaServiceA5";
-    public static String AFIP_FACTURACION_SERVICE = "http://impl.service.wsmtxca.afip.gov.ar/service/";
+    public static String AFIP_FACTURACION_SERVICE = "https://wswhomo.afip.gov.ar/wsfev1/service.asmx?op=FECAESolicitar";
 
     @Override
     public Person createPersonRequest(final String token,
@@ -45,47 +47,38 @@ public class BillService implements IBillService {
             SOAPMessage soapResponse = soapConnection.call(createSOAPRequest(token, sign, cuitRepresentada, idPersona), endPoint);
             String result = printSOAPResponse(soapResponse);
             PersonPayload personPayload = convert(result);
-            System.out.print(personPayload);
             soapConnection.close();
 
             return personPayload.getPerson();
-        } catch (SAXException e) {
-            e.printStackTrace();
-            System.out.print("ERROR DE PARSEO ===========> " + e);
-            return null;
-        } catch (XMLStreamException e) {
-            e.printStackTrace();
-            System.out.print("ERROR DE PARSEO ===========> " + e);
-            return null;
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-            System.out.print("ERROR DE PARSEO ===========> " + e);
-            return null;
-        } catch (ParserConfigurationException e) {
-            System.out.print("ERROR DE PARSEO ===========> " + e);
-            e.printStackTrace();
-            System.out.print("ERROR DE PARSEO ===========> " + e);
-            return null;
-        } catch (JAXBException e) {
-            System.out.print("ERROR DE PARSEO ===========> " + e);
-            e.printStackTrace();
-            return null;
-        } catch (IOException e) {
-            System.out.print("ERROR DE PARSEO ===========> " + e);
-            e.printStackTrace();
-            return null;
-        } catch (SOAPException e) {
-            System.out.print("ERROR DE PARSEO ===========> " + e);
-            e.printStackTrace();
-            return null;
-        } catch (Exception e) {
+        }catch (Exception e) {
             System.out.print("ERROR DE PARSEO ===========> " + e);
             e.printStackTrace();
         }
         return null;
     }
 
-    private static SOAPMessage createSOAPRequest(final String token,
+
+    @Override
+    public FECAE createCAERequest(final LoginTicketResponse ticketResponse,
+                                  final String CUIT) {
+        try {
+            java.net.URL endPoint = new java.net.URL(AFIP_FACTURACION_SERVICE);
+            SOAPConnectionFactory soapConnectionFactory = SOAPConnectionFactory.newInstance();
+            SOAPConnection soapConnection = soapConnectionFactory.createConnection();
+            SOAPMessage soapResponse = soapConnection.call(prepareCAE(ticketResponse, CUIT), endPoint);
+            String result = printSOAPResponse(soapResponse);
+            FECAE cae = convertToCAE(result);
+            soapConnection.close();
+
+            return cae;
+
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public static SOAPMessage createSOAPRequest(final String token,
                                                  final String sign,
                                                  final String cuitRepresentada,
                                                  final String idPersona) throws Exception {
@@ -125,7 +118,7 @@ public class BillService implements IBillService {
         return finalstring;
     }
 
-    public PersonPayload convert(String xml) throws ParserConfigurationException, IOException, SAXException, JAXBException, XMLStreamException {
+    public PersonPayload convert(String xml) throws JAXBException, XMLStreamException {
         JAXBContext jc = JAXBContext.newInstance(new Class[] { PersonPayload.class });
         StringReader reader = new StringReader(xml);
         XMLInputFactory xif = XMLInputFactory.newFactory();
@@ -142,51 +135,21 @@ public class BillService implements IBillService {
         return personaReturn;
     }
 
-    @SuppressWarnings("all")
-    private static SOAPMessage getCAR() throws Exception {
-        MessageFactory messageFactory = MessageFactory.newInstance();
-        SOAPMessage soapMessage = messageFactory.createMessage();
-        SOAPPart soapPart = soapMessage.getSOAPPart();
-        String serverURI = "https://wswhomo.afip.gov.ar/wsfev1/service.asmx?op=FECAESolicitar";
-        SOAPEnvelope envelope = soapPart.getEnvelope();
-        envelope.addNamespaceDeclaration("ser", AFIP_FACTURACION_SERVICE);
-        javax.xml.soap.SOAPBody soapBody = envelope.getBody();
+    public FECAE convertToCAE(String xml) throws ParserConfigurationException, IOException, SAXException, JAXBException, XMLStreamException {
+        JAXBContext jc = JAXBContext.newInstance(new Class[] { FECAE.class });
+        StringReader reader = new StringReader(xml);
+        XMLInputFactory xif = XMLInputFactory.newFactory();
+        XMLStreamReader xmlReader = xif.createXMLStreamReader(reader);
+        xmlReader.nextTag();
+        while (!xmlReader.getLocalName().equals("FECAESolicitarResult")) {
+            xmlReader.nextTag();
+        }
+        javax.xml.bind.Unmarshaller jaxbUnmarshaller = jc.createUnmarshaller();
+        javax.xml.bind.JAXBElement<FECAE> jb = jaxbUnmarshaller.unmarshal(xmlReader, FECAE.class);
+        xmlReader.close();
+        FECAE fecae = jb.getValue();
 
-        SOAPElement FECAESolicitarElement = soapBody.addChildElement("FECAESolicitar", "ar");
-
-        SOAPElement authElement = FECAESolicitarElement.addChildElement("Auth", "ar");
-        SOAPElement tokenElement = authElement.addChildElement("Token", "ar");
-        SOAPElement signElement = authElement.addChildElement("Sign", "ar");
-        SOAPElement cuitElement = authElement.addChildElement("Cuit", "ar");
-
-        SOAPElement FeCAEReqElement = soapBody.addChildElement("FeCAEReq", "ar");
-        SOAPElement FeCabReqElement = FeCAEReqElement.addChildElement("FeCabReq", "ar");
-        SOAPElement CantRegElement = FeCabReqElement.addChildElement("CantReg", "ar");
-        SOAPElement PtoVtaElement = FeCabReqElement.addChildElement("PtoVta", "ar");
-        SOAPElement CbteTipoElement = FeCabReqElement.addChildElement("CbteTipo", "ar");
-
-
-        SOAPElement FeDetReqElement = FeCAEReqElement.addChildElement("FeCAEReq", "ar");
-        SOAPElement FECAEDetRequestElement = FeDetReqElement.addChildElement("FECAEDetRequest", "ar");
-        SOAPElement ConceptoElement = FECAEDetRequestElement.addChildElement("Concepto", "ar");
-        SOAPElement DocTipoElement = FECAEDetRequestElement.addChildElement("DocTipo", "ar");
-        SOAPElement DocNroElement = FECAEDetRequestElement.addChildElement("DocNro", "ar");
-        SOAPElement CbteDesdeElement = FECAEDetRequestElement.addChildElement("CbteDesde", "ar");
-        SOAPElement CbteHastaElement = FECAEDetRequestElement.addChildElement("CbteHasta", "ar");
-        SOAPElement CbteFchElement = FECAEDetRequestElement.addChildElement("CbteFch", "ar");
-        SOAPElement ImpTotalElement = FECAEDetRequestElement.addChildElement("ImpTotal", "ar");
-        SOAPElement ImpTotConcElement = FECAEDetRequestElement.addChildElement("ImpTotConc", "ar");
-        SOAPElement ImpNetoElement = FECAEDetRequestElement.addChildElement("ImpNeto", "ar");
-        SOAPElement ImpOpExElement = FECAEDetRequestElement.addChildElement("ImpOpEx", "ar");
-        SOAPElement ImpTribElement = FECAEDetRequestElement.addChildElement("ImpTrib", "ar");
-        SOAPElement ImpIVAElement = FECAEDetRequestElement.addChildElement("ImpIVA", "ar");
-        SOAPElement FchServDesdeElement = FECAEDetRequestElement.addChildElement("FchServDesde", "ar");
-        SOAPElement FchServHastaElement = FECAEDetRequestElement.addChildElement("FchServHasta", "ar");
-        SOAPElement FchVtoPagoElement = FECAEDetRequestElement.addChildElement("FchVtoPago", "ar");
-        SOAPElement MonIdElement = FECAEDetRequestElement.addChildElement("MonId", "ar");
-        SOAPElement MonCotizElement = FECAEDetRequestElement.addChildElement("MonCotiz", "ar");
-
-        return soapMessage;
+        return fecae;
     }
 
 
@@ -279,6 +242,81 @@ public class BillService implements IBillService {
         headers.addHeader("SOAPAction", serverURI + "getPersona");
         soapMessage.saveChanges();
 
+
+        return soapMessage;
+    }
+
+    @SuppressWarnings("all")
+    @Override
+    public SOAPMessage prepareCAE(LoginTicketResponse response,
+                                  String CUIT) throws Exception {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
+        MessageFactory messageFactory = MessageFactory.newInstance();
+        SOAPMessage soapMessage = messageFactory.createMessage();
+        SOAPPart soapPart = soapMessage.getSOAPPart();
+        String serverURI = "https://wswhomo.afip.gov.ar/wsfev1/service.asmx?op=FECAESolicitar";
+        SOAPEnvelope envelope = soapPart.getEnvelope();
+        envelope.addNamespaceDeclaration("ser", serverURI);
+        javax.xml.soap.SOAPBody soapBody = envelope.getBody();
+
+        SOAPElement FECAESolicitarElement = soapBody.addChildElement("FECAESolicitar");
+
+        SOAPElement authElement = FECAESolicitarElement.addChildElement("Auth");
+        SOAPElement tokenElement = authElement.addChildElement("Token");
+        tokenElement.setTextContent(response.getToken());
+        SOAPElement signElement = authElement.addChildElement("Sign");
+        signElement.setTextContent(response.getSign());
+        SOAPElement cuitElement = authElement.addChildElement("Cuit");
+        cuitElement.setTextContent(CUIT);
+
+        SOAPElement feCAEReqElement = soapBody.addChildElement("FeCAEReq");
+        SOAPElement feCabReqElement = feCAEReqElement.addChildElement("FeCabReq");
+        SOAPElement cantRegElement = feCabReqElement.addChildElement("CantReg");
+        cantRegElement.setTextContent("1");
+
+        SOAPElement ptoVtaElement = feCabReqElement.addChildElement("PtoVta");
+        ptoVtaElement.setTextContent("1");
+        SOAPElement cbteTipoElement = feCabReqElement.addChildElement("CbteTipo");
+        cbteTipoElement.setTextContent("6");
+
+        SOAPElement FeDetReqElement = feCAEReqElement.addChildElement("FeCAEReq");
+        SOAPElement FECAEDetRequestElement = FeDetReqElement.addChildElement("FECAEDetRequest");
+        SOAPElement ConceptoElement = FECAEDetRequestElement.addChildElement("Concepto");
+
+        SOAPElement docTipoElement = FECAEDetRequestElement.addChildElement("DocTipo");
+        docTipoElement.setTextContent("80");
+        SOAPElement docNroElement = FECAEDetRequestElement.addChildElement("DocNro");
+        docNroElement.setTextContent("");
+        SOAPElement cbteDesdeElement = FECAEDetRequestElement.addChildElement("CbteDesde");
+        cbteDesdeElement.setTextContent("1");
+        SOAPElement cbteHastaElement = FECAEDetRequestElement.addChildElement("CbteHasta");
+        cbteHastaElement.setTextContent("1");
+        SOAPElement cbteFchElement = FECAEDetRequestElement.addChildElement("CbteFch");
+        cbteFchElement.setTextContent(formatter.format(LocalDateTime.now()));
+
+        SOAPElement ImpTotalElement = FECAEDetRequestElement.addChildElement("ImpTotal");
+        ImpTotalElement.setTextContent("184.05");
+        SOAPElement impTotConcElement = FECAEDetRequestElement.addChildElement("ImpTotConc");
+        impTotConcElement.setTextContent("0");
+        SOAPElement impNetoElement = FECAEDetRequestElement.addChildElement("ImpNeto");
+        impNetoElement.setTextContent("150");
+        SOAPElement impOpExElement = FECAEDetRequestElement.addChildElement("ImpOpEx");
+        impOpExElement.setTextContent("0");
+        SOAPElement impIVAElement = FECAEDetRequestElement.addChildElement("ImpIVA");
+        impIVAElement.setTextContent("26.25");
+        SOAPElement impTribElement = FECAEDetRequestElement.addChildElement("ImpTrib");
+        impTribElement.setTextContent("7.8");
+
+        SOAPElement fchServDesdeElement = FECAEDetRequestElement.addChildElement("FchServDesde");
+        fchServDesdeElement.setTextContent(null);
+        SOAPElement fchServHastaElement = FECAEDetRequestElement.addChildElement("FchServHasta");
+        fchServHastaElement.setTextContent(null);
+        SOAPElement fchVtoPagoElement = FECAEDetRequestElement.addChildElement("FchVtoPago");
+        fchVtoPagoElement.setTextContent(null);
+        SOAPElement monIdElement = FECAEDetRequestElement.addChildElement("MonId");
+        monIdElement.setTextContent("PES");
+        SOAPElement monCotizElement = FECAEDetRequestElement.addChildElement("MonCotiz");
+        monCotizElement.setTextContent("1");
 
         return soapMessage;
     }

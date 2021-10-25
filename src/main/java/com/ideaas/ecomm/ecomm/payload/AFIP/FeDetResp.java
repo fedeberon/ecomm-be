@@ -8,16 +8,13 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
-@XmlRootElement( name = "FECAESolicitarResult" )
+@XmlRootElement( name = "FeDetResp" )
 @XmlAccessorType(XmlAccessType.FIELD)
 @Getter
 @Setter
-public class FECAE {
+public class FeDetResp {
 
-    @XmlElement(name = "FeCabResp")
-    private FeCabResp feCabResp;
-
-    @XmlElement(name = "FeDetResp")
-    private FeDetResp feDetResp;
+    @XmlElement(name = "FEDetResponse")
+    private FEDetResponse fEDetResponse;
 
 }
