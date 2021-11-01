@@ -2,14 +2,16 @@ package com.ideaas.ecomm.ecomm.domain;
 
 import com.ideaas.ecomm.ecomm.enums.BillType;
 import com.ideaas.ecomm.ecomm.enums.IVAConditionType;
-import com.ideaas.ecomm.ecomm.payload.AFIP.Person;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
 import java.time.LocalDate;
 import java.util.List;
 
 @SuppressWarnings("all")
+@XmlAccessorType(XmlAccessType.FIELD)
 @Getter
 @Setter
 public class BillRequest {
@@ -28,12 +30,17 @@ public class BillRequest {
 
     private String cuit;
 
-    private Double subtotal;
-
-    private Double total;
-
     private String comments;
 
     private List<Item> items;
+
+
+    public Double getTotalAmount() {
+        return items.stream().mapToDouble(i -> i.getPrice()).sum();
+    }
+
+    public Double getSubtotal() {
+        return  items.stream().mapToDouble(i -> i.getPrice()).sum();
+    }
 
 }

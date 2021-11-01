@@ -12,9 +12,11 @@
 	<artifactId>ecomm</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>ecomm</name>
-	<description>Demo project for Spring Boot</description>
+	<description>e Commerce - AFIP Implement</description>
 	<properties>
 		<java.version>11</java.version>
+		<junit-jupiter.version>5.3.2</junit-jupiter.version>
+		<mockito.version>2.24.0</mockito.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -83,6 +85,14 @@
 			<groupId>javax.xml.bind</groupId>
 			<artifactId>jaxb-api</artifactId>
 			<version>2.3.0</version>
+		</dependency>
+
+		<!-- junit 5 -->
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-engine</artifactId>
+			<version>${junit-jupiter.version}</version>
+			<scope>test</scope>
 		</dependency>
 
 		<!--wsaa afip-->

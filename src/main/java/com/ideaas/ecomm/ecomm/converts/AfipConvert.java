@@ -71,7 +71,7 @@ public class AfipConvert {
             XMLStreamReader xmlReader = xif.createXMLStreamReader(reader);
 
             xmlReader.nextTag();
-            while (!xmlReader.getLocalName().equals("ser:consultarUltimoComprobanteAutorizadoResponse")) {
+            while (!xmlReader.getLocalName().equals("consultarUltimoComprobanteAutorizadoResponse")) {
                 xmlReader.nextTag();
             }
             javax.xml.bind.Unmarshaller jaxbUnmarshaller = jc.createUnmarshaller();
@@ -96,7 +96,7 @@ public class AfipConvert {
             XMLStreamReader xmlReader = xif.createXMLStreamReader(reader);
 
             xmlReader.nextTag();
-            while (!xmlReader.getLocalName().equals("ser:autorizarComprobanteResponse")) {
+            while (!xmlReader.getLocalName().equals("autorizarComprobanteResponse")) {
                 xmlReader.nextTag();
             }
             javax.xml.bind.Unmarshaller jaxbUnmarshaller = jc.createUnmarshaller();

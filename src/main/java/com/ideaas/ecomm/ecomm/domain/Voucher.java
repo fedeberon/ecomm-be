@@ -7,6 +7,7 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 
+@SuppressWarnings("all")
 @Getter
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Voucher {
@@ -16,7 +17,7 @@ public class Voucher {
     private String cuit;
 
     @XmlElement(name = "codigoTipoComprobante")
-    private BillType billType;
+    private String billType;
 
     @XmlElement(name = "numeroPuntoVenta")
     private int pointNumber;
@@ -33,5 +34,9 @@ public class Voucher {
     @XmlElement(name = "fechaVencimientoCAE")
     private String dueDateCAE;
 
+
+    public BillType getBillTypeName() {
+        return BillType.find(this.billType);
+    }
 
 }

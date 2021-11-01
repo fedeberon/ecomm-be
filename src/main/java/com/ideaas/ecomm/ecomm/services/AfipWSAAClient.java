@@ -1,6 +1,7 @@
 package com.ideaas.ecomm.ecomm.services;
 
 import com.ideaas.ecomm.ecomm.domain.BillRequest;
+import com.ideaas.ecomm.ecomm.domain.LastBillIdResponse;
 import com.ideaas.ecomm.ecomm.payload.AFIP.LoginTicketResponse;
 import com.sun.org.apache.xerces.internal.jaxp.datatype.XMLGregorianCalendarImpl;
 import org.apache.axis.client.Call;
@@ -169,7 +170,7 @@ public class AfipWSAAClient {
 
 
     public static SOAPMessage createGetLastBillId(final LoginTicketResponse ticketResponse,
-                                                  final String CUIT) {
+                                                  final LastBillIdResponse lastBillIdResponse) {
         try {
             MessageFactory messageFactory  = MessageFactory.newInstance();
             SOAPMessage soapMessage = messageFactory.createMessage();
@@ -184,11 +185,11 @@ public class AfipWSAAClient {
             SOAPElement signElement = authElem.addChildElement("sign");
             signElement.addTextNode(ticketResponse.getSign());
             SOAPElement cuitElement = authElem.addChildElement("cuitRepresentada");
-            cuitElement.addTextNode(CUIT);
+            cuitElement.addTextNode(lastBillIdResponse.getCuit());
 
             SOAPElement consultaUltimoComprobanteAutorizadoRequest = consultarUltimoComprobanteAutorizadoElem.addChildElement("consultaUltimoComprobanteAutorizadoRequest");
             SOAPElement codigoTipoComprobanteElement = consultaUltimoComprobanteAutorizadoRequest.addChildElement("codigoTipoComprobante");
-            codigoTipoComprobanteElement.setTextContent("1");
+            codigoTipoComprobanteElement.setTextContent(lastBillIdResponse.getBillType().getCode());
             SOAPElement numeroPuntoVentaElement = consultaUltimoComprobanteAutorizadoRequest.addChildElement("numeroPuntoVenta");
             numeroPuntoVentaElement.setTextContent("1");
 
@@ -243,7 +244,8 @@ public class AfipWSAAClient {
 
 
     public static SOAPMessage createBill(final LoginTicketResponse ticketResponse,
-                                         final BillRequest billRequest) {
+                                         final BillRequest billRequest,
+                                         final LastBillIdResponse lastBillIdResponse) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
         try {
@@ -264,11 +266,11 @@ public class AfipWSAAClient {
 
             SOAPElement comprobanteCAERequestElement = autorizarComprobanteRequestElement.addChildElement("comprobanteCAERequest");
             SOAPElement codigoTipoComprobanteElement = comprobanteCAERequestElement.addChildElement("codigoTipoComprobante");
-            codigoTipoComprobanteElement.addTextNode(billRequest.getBillType().getDescription());
+            codigoTipoComprobanteElement.addTextNode(billRequest.getBillType().getCode());
             SOAPElement numeroPuntoVentaElement = comprobanteCAERequestElement.addChildElement("numeroPuntoVenta");
             numeroPuntoVentaElement.addTextNode(String.valueOf(billRequest.getPuntoDeVenta()));
             SOAPElement numeroComprobanteElement = comprobanteCAERequestElement.addChildElement("numeroComprobante");
-            numeroComprobanteElement.addTextNode(String.valueOf(billRequest.getId()));
+            numeroComprobanteElement.addTextNode(String.valueOf(lastBillIdResponse.nextBillId()));
             SOAPElement fechaEmisionElement = comprobanteCAERequestElement.addChildElement("fechaEmision");
             fechaEmisionElement.addTextNode(formatter.format(billRequest.getDate()));
 
@@ -278,7 +280,7 @@ public class AfipWSAAClient {
             numeroDocumentoElement.addTextNode(billRequest.getCardId());
 
             SOAPElement importeGravadoElement = comprobanteCAERequestElement.addChildElement("importeGravado");
-            importeGravadoElement.addTextNode("0.00");
+            importeGravadoElement.addTextNode(String.valueOf(billRequest.getTotalAmount()));
             SOAPElement importeNoGravadoElement = comprobanteCAERequestElement.addChildElement("importeNoGravado");
             importeNoGravadoElement.addTextNode("0.00");
             SOAPElement importeExentoElement = comprobanteCAERequestElement.addChildElement("importeExento");
@@ -286,7 +288,7 @@ public class AfipWSAAClient {
             SOAPElement importeSubtotalElement = comprobanteCAERequestElement.addChildElement("importeSubtotal");
             importeSubtotalElement.addTextNode(String.valueOf(billRequest.getSubtotal()));
             SOAPElement importeTotalElement = comprobanteCAERequestElement.addChildElement("importeTotal");
-            importeTotalElement.addTextNode(String.valueOf(billRequest.getTotal()));
+            importeTotalElement.addTextNode(String.valueOf(billRequest.getTotalAmount()));
             SOAPElement codigoMonedaElement = comprobanteCAERequestElement.addChildElement("codigoMoneda");
             codigoMonedaElement.addTextNode("PES");
             SOAPElement cotizacionMonedaElement = comprobanteCAERequestElement.addChildElement("cotizacionMoneda");
@@ -363,5 +365,8 @@ public class AfipWSAAClient {
 
         return soapMessage;
     }
+
+
+
 
 }

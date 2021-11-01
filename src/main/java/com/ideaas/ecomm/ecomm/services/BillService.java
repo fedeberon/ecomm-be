@@ -58,8 +58,8 @@ public class BillService implements IBillService {
 
     @Override
     public LastBillIdResponse getLastBillId(final LoginTicketResponse ticketResponse,
-                                            final String CUIT) {
-        SOAPMessage request = createGetLastBillId(ticketResponse, CUIT);
+                                            final LastBillIdResponse lastBillIdResponse) {
+        SOAPMessage request = createGetLastBillId(ticketResponse, lastBillIdResponse);
         String requestAsAString = printSOAPResponse(request);
         SOAPMessage response = callService(AFIP_LAST_BILL_ID, request);
         String asAString = printSOAPResponse(response);
@@ -84,7 +84,11 @@ public class BillService implements IBillService {
     @Override
     public BillResponse createBilling(final LoginTicketResponse ticketResponse,
                                       final BillRequest billRequest) {
-        SOAPMessage request = createBill(ticketResponse, billRequest);
+
+        LastBillIdResponse lastBillIdRequest = new LastBillIdResponse(billRequest.getCuit(), billRequest.getBillType());
+        LastBillIdResponse lastBillId = this.getLastBillId(ticketResponse, lastBillIdRequest);
+
+        SOAPMessage request = createBill(ticketResponse, billRequest, lastBillId);
         String requestAsAString = printSOAPResponse(request);
         SOAPMessage response = callService(AFIP_BILLIMG, request);
         String asAString = printSOAPResponse(response);

@@ -15,7 +15,7 @@ public interface IBillService {
                                String idPersona);
 
     LastBillIdResponse getLastBillId(LoginTicketResponse ticketResponse,
-                                     String CUIT);
+                                     LastBillIdResponse lastBillIdResponse);
 
     CAEAResponse createCAERequest(LoginTicketResponse ticketResponse,
                                   String CUIT);

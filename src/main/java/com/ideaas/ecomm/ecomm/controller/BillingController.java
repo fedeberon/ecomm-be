@@ -66,7 +66,9 @@ public class BillingController {
         LoginTicketResponse ticketResponse = new LoginTicketResponse();
         ticketResponse.setToken(token);
         ticketResponse.setSign(sign);
-        LastBillIdResponse lastBillId = billService.getLastBillId(ticketResponse, lastBillIdRequest.getCuit());
+        LastBillIdResponse lastBillId = billService.getLastBillId(ticketResponse, lastBillIdRequest);
+        lastBillId.setBillType(lastBillIdRequest.getBillType());
+        lastBillId.setCuit(lastBillIdRequest.getCuit());
 
         return ResponseEntity.ok(lastBillId);
     }
