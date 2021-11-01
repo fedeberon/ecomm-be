@@ -1,4 +1,4 @@
-package com.ideaas.ecomm.ecomm.domain;
+package com.ideaas.ecomm.ecomm.payload;
 
 import lombok.Getter;
 import lombok.Setter;

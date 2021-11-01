@@ -1,4 +1,5 @@
-package com.ideaas.ecomm.ecomm.payload.AFIP;
+package com.ideaas.ecomm.ecomm.payload;
+
 
 import lombok.Getter;
 import lombok.Setter;
@@ -8,13 +9,16 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
-@XmlRootElement( name = "FeDetResp" )
-@XmlAccessorType(XmlAccessType.FIELD)
 @Getter
 @Setter
-public class FeDetResp {
+@XmlAccessorType(XmlAccessType.FIELD)
+@XmlRootElement(name = "credentials")
+public class Credential {
 
-    @XmlElement(name = "FEDetResponse")
-    private FEDetResponse fEDetResponse;
+    @XmlElement(name="token")
+    private String token;
+
+    @XmlElement(name="sign")
+    private String sign;
 
 }

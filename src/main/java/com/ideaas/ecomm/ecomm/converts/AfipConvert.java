@@ -1,9 +1,10 @@
 package com.ideaas.ecomm.ecomm.converts;
 
-import com.ideaas.ecomm.ecomm.domain.BillResponse;
-import com.ideaas.ecomm.ecomm.domain.CAEAResponse;
-import com.ideaas.ecomm.ecomm.domain.LastBillIdResponse;
-import com.ideaas.ecomm.ecomm.payload.AFIP.PersonPayload;
+import com.ideaas.ecomm.ecomm.payload.BillResponse;
+import com.ideaas.ecomm.ecomm.payload.CAEAResponse;
+import com.ideaas.ecomm.ecomm.payload.LastBillIdResponse;
+import com.ideaas.ecomm.ecomm.payload.LoginTicket;
+import com.ideaas.ecomm.ecomm.payload.PersonPayload;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -135,6 +136,31 @@ public class AfipConvert {
             e.printStackTrace();
         }
 
+        return null;
+    }
+
+    public static LoginTicket convertToLoginTicketResponse(final String xml) {
+        try {
+            JAXBContext jc = JAXBContext.newInstance(new Class[] { LoginTicket.class });
+            StringReader reader = new StringReader(xml);
+            XMLInputFactory xif = XMLInputFactory.newFactory();
+            XMLStreamReader xmlReader = xif.createXMLStreamReader(reader);
+
+            xmlReader.nextTag();
+            while (!xmlReader.getLocalName().equals("loginTicketResponse")) {
+                xmlReader.nextTag();
+            }
+            javax.xml.bind.Unmarshaller jaxbUnmarshaller = jc.createUnmarshaller();
+            javax.xml.bind.JAXBElement<LoginTicket> jb = jaxbUnmarshaller.unmarshal(xmlReader, LoginTicket.class);
+            xmlReader.close();
+            LoginTicket loginTicketResponse = jb.getValue();
+
+            return loginTicketResponse;
+        } catch (XMLStreamException e) {
+            e.printStackTrace();
+        } catch (JAXBException e) {
+            e.printStackTrace();
+        }
         return null;
     }
 }

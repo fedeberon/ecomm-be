@@ -1,5 +1,6 @@
-package com.ideaas.ecomm.ecomm.domain;
+package com.ideaas.ecomm.ecomm.payload;
 
+import com.ideaas.ecomm.ecomm.domain.Item;
 import com.ideaas.ecomm.ecomm.enums.BillType;
 import com.ideaas.ecomm.ecomm.enums.IVAConditionType;
 import lombok.Getter;

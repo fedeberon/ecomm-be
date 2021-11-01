@@ -1,5 +1,6 @@
-package com.ideaas.ecomm.ecomm.domain;
+package com.ideaas.ecomm.ecomm.payload;
 
+import com.ideaas.ecomm.ecomm.domain.AFIP.Voucher;
 import lombok.Getter;
 
 import javax.xml.bind.annotation.XmlAccessType;

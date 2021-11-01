@@ -1,4 +1,4 @@
-package com.ideaas.ecomm.ecomm.domain;
+package com.ideaas.ecomm.ecomm.domain.AFIP;
 
 import com.ideaas.ecomm.ecomm.enums.BillType;
 import lombok.Getter;

@@ -1,11 +1,11 @@
 package com.ideaas.ecomm.ecomm.services.interfaces;
 
-import com.ideaas.ecomm.ecomm.domain.BillRequest;
-import com.ideaas.ecomm.ecomm.domain.BillResponse;
-import com.ideaas.ecomm.ecomm.domain.CAEAResponse;
-import com.ideaas.ecomm.ecomm.domain.LastBillIdResponse;
-import com.ideaas.ecomm.ecomm.payload.AFIP.LoginTicketResponse;
-import com.ideaas.ecomm.ecomm.payload.AFIP.Person;
+import com.ideaas.ecomm.ecomm.payload.BillRequest;
+import com.ideaas.ecomm.ecomm.payload.BillResponse;
+import com.ideaas.ecomm.ecomm.payload.CAEAResponse;
+import com.ideaas.ecomm.ecomm.payload.LastBillIdResponse;
+import com.ideaas.ecomm.ecomm.domain.AFIP.LoginTicketResponse;
+import com.ideaas.ecomm.ecomm.domain.AFIP.Person;
 
 public interface IBillService {
 

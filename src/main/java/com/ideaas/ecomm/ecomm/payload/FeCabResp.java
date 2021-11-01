@@ -1,4 +1,4 @@
-package com.ideaas.ecomm.ecomm.payload.AFIP;
+package com.ideaas.ecomm.ecomm.payload;
 
 import lombok.Getter;
 import lombok.Setter;

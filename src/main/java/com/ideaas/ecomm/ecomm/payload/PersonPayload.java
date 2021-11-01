@@ -1,5 +1,7 @@
-package com.ideaas.ecomm.ecomm.payload.AFIP;
+package com.ideaas.ecomm.ecomm.payload;
 
+import com.ideaas.ecomm.ecomm.domain.AFIP.Metadata;
+import com.ideaas.ecomm.ecomm.domain.AFIP.Person;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

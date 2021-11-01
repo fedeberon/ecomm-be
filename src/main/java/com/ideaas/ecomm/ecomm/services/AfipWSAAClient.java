@@ -1,8 +1,8 @@
 package com.ideaas.ecomm.ecomm.services;
 
-import com.ideaas.ecomm.ecomm.domain.BillRequest;
-import com.ideaas.ecomm.ecomm.domain.LastBillIdResponse;
-import com.ideaas.ecomm.ecomm.payload.AFIP.LoginTicketResponse;
+import com.ideaas.ecomm.ecomm.domain.AFIP.LoginTicketResponse;
+import com.ideaas.ecomm.ecomm.payload.BillRequest;
+import com.ideaas.ecomm.ecomm.payload.LastBillIdResponse;
 import com.sun.org.apache.xerces.internal.jaxp.datatype.XMLGregorianCalendarImpl;
 import org.apache.axis.client.Call;
 import org.apache.axis.client.Service;
@@ -30,6 +30,8 @@ import java.security.Security;
 import java.security.cert.CertStore;
 import java.security.cert.CollectionCertStoreParameters;
 import java.security.cert.X509Certificate;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
@@ -146,10 +148,9 @@ public class AfipWSAAClient {
         GregorianCalendar gentime = new GregorianCalendar();
         GregorianCalendar exptime = new GregorianCalendar();
         String UniqueId = new Long(GenTime.getTime() / 1000).toString();
-        exptime.setTime(new Date(GenTime.getTime() +  10000));
-
+        exptime.setTime(new Date(GenTime.getTime() +  1000));
         XMLGregorianCalendarImpl XMLGenTime = new XMLGregorianCalendarImpl(gentime);
-        XMLGregorianCalendarImpl XMLExpTime = new XMLGregorianCalendarImpl(exptime);
+        LocalDateTime start = XMLGenTime.toGregorianCalendar().toZonedDateTime().toLocalDateTime();
 
         LoginTicketRequest_xml = "<?xml version=\"1.0\" encoding=\"UTF\u00AD8\"?>"
                                 +"<loginTicketRequest version=\"1.0\">"
@@ -157,8 +158,8 @@ public class AfipWSAAClient {
                                 +"<source>" + SignerDN + "</source>"
                                 +"<destination>" + dstDN + "</destination>"
                                 +"<uniqueId>" + UniqueId + "</uniqueId>"
-                                +"<generationTime>" + XMLGenTime + "</generationTime>"
-                                +"<expirationTime>" + XMLExpTime + "</expirationTime>"
+                                +"<generationTime>" + start + "</generationTime>"
+                                +"<expirationTime>" + start.plusMinutes(1) + "</expirationTime>"
                                 +"</header>"
                                 +"<service>" + service + "</service>"
                                 +"</loginTicketRequest>";
