@@ -34,7 +34,6 @@ public class Voucher {
     @XmlElement(name = "fechaVencimientoCAE")
     private String dueDateCAE;
 
-
     public BillType getBillTypeName() {
         return BillType.find(this.billType);
     }

@@ -35,13 +35,14 @@ public class BillRequest {
 
     private List<Item> items;
 
+    private Long checkoutId;
 
     public Double getTotalAmount() {
-        return items.stream().mapToDouble(i -> i.getPrice()).sum();
+        return items.stream().mapToDouble(i -> i.getPrice() * i.getQuantity()).sum();
     }
 
     public Double getSubtotal() {
-        return  items.stream().mapToDouble(i -> i.getPrice()).sum();
+        return  items.stream().mapToDouble(i -> i.getPrice() * i.getQuantity()).sum();
     }
 
 }

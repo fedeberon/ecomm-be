@@ -12,6 +12,4 @@ public class CheckoutResponse {
     private Long productId;
     private Integer quantity;
 
-
-
 }

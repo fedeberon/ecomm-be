@@ -1,5 +1,7 @@
 package com.ideaas.ecomm.ecomm.controller;
 
+import com.ideaas.ecomm.ecomm.domain.Checkout;
+import com.ideaas.ecomm.ecomm.enums.CheckoutState;
 import com.ideaas.ecomm.ecomm.payload.BillRequest;
 import com.ideaas.ecomm.ecomm.payload.BillResponse;
 import com.ideaas.ecomm.ecomm.payload.CAEAResponse;
@@ -8,6 +10,7 @@ import com.ideaas.ecomm.ecomm.domain.AFIP.LoginTicketResponse;
 import com.ideaas.ecomm.ecomm.domain.AFIP.Person;
 import com.ideaas.ecomm.ecomm.services.interfaces.IAfipService;
 import com.ideaas.ecomm.ecomm.services.interfaces.IBillService;
+import com.ideaas.ecomm.ecomm.services.interfaces.ICheckoutService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
@@ -17,7 +20,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@SuppressWarnings("all")
 @RestController
 @RequestMapping("billing")
 public class BillingController {
@@ -31,11 +33,15 @@ public class BillingController {
 
     private IAfipService afipService;
     private IBillService billService;
+    private ICheckoutService checkoutService;
 
     @Autowired
-    public BillingController(IAfipService afipService, IBillService billService) {
+    public BillingController(final IAfipService afipService,
+                             final IBillService billService,
+                             final ICheckoutService checkoutService) {
         this.afipService = afipService;
         this.billService = billService;
+        this.checkoutService = checkoutService;
     }
 
     @RequestMapping("{CUIT}")
@@ -62,10 +68,10 @@ public class BillingController {
 
     @PostMapping("/lastBill")
     public ResponseEntity<LastBillIdResponse> getLastBillId(final @RequestBody LastBillIdResponse lastBillIdRequest) {
-        //final LoginTicketResponse ticketResponse = afipService.getAuthentication("wsmtxca");
-        LoginTicketResponse ticketResponse = new LoginTicketResponse();
+        final LoginTicketResponse ticketResponse = afipService.getAuthentication("wsmtxca");
+        /*LoginTicketResponse ticketResponse = new LoginTicketResponse();
         ticketResponse.setToken(token);
-        ticketResponse.setSign(sign);
+        ticketResponse.setSign(sign);*/
         LastBillIdResponse lastBillId = billService.getLastBillId(ticketResponse, lastBillIdRequest);
         lastBillId.setBillType(lastBillIdRequest.getBillType());
         lastBillId.setCuit(lastBillIdRequest.getCuit());
@@ -75,14 +81,15 @@ public class BillingController {
 
     @PostMapping
     public ResponseEntity<BillResponse> create(final @RequestBody BillRequest billRequest) {
-       //LoginTicketResponse ticketResponse = afipService.getAuthentication("wsmtxca");
+        //LoginTicketResponse ticketResponse = afipService.getAuthentication("wsmtxca");
         LoginTicketResponse ticketResponse = new LoginTicketResponse();
         ticketResponse.setToken(token);
         ticketResponse.setSign(sign);
         BillResponse billResponse = billService.createBilling(ticketResponse, billRequest);
+        Checkout checkout = checkoutService.changeStateTo(CheckoutState.PAID_OUT, billRequest.getCheckoutId());
+        billResponse.setCheckout(checkout);
 
         return ResponseEntity.ok(billResponse);
-
     }
 
 }

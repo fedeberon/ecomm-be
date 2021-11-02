@@ -3,7 +3,6 @@ package com.ideaas.ecomm.ecomm.services;
 import com.ideaas.ecomm.ecomm.domain.AFIP.LoginTicketResponse;
 import com.ideaas.ecomm.ecomm.payload.BillRequest;
 import com.ideaas.ecomm.ecomm.payload.LastBillIdResponse;
-import com.sun.org.apache.xerces.internal.jaxp.datatype.XMLGregorianCalendarImpl;
 import org.apache.axis.client.Call;
 import org.apache.axis.client.Service;
 import org.apache.axis.encoding.Base64;
@@ -30,7 +29,6 @@ import java.security.Security;
 import java.security.cert.CertStore;
 import java.security.cert.CollectionCertStoreParameters;
 import java.security.cert.X509Certificate;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -41,6 +39,8 @@ import java.util.GregorianCalendar;
 @SuppressWarnings("all")
 @Component
 public class AfipWSAAClient {
+
+    //https://www.afip.gob.ar/fe/ayuda/documentos/Manual-desarrollador-V.0.16.pdf
 
     static String invokeWSAA (byte [] LoginTicketRequest_xml_cms, String endpoint){
         String LoginTicketResponse = null;
@@ -149,8 +149,7 @@ public class AfipWSAAClient {
         GregorianCalendar exptime = new GregorianCalendar();
         String UniqueId = new Long(GenTime.getTime() / 1000).toString();
         exptime.setTime(new Date(GenTime.getTime() +  1000));
-        XMLGregorianCalendarImpl XMLGenTime = new XMLGregorianCalendarImpl(gentime);
-        LocalDateTime start = XMLGenTime.toGregorianCalendar().toZonedDateTime().toLocalDateTime();
+        LocalDateTime start = LocalDateTime.now();
 
         LoginTicketRequest_xml = "<?xml version=\"1.0\" encoding=\"UTF\u00AD8\"?>"
                                 +"<loginTicketRequest version=\"1.0\">"
@@ -299,10 +298,10 @@ public class AfipWSAAClient {
             SOAPElement codigoConceptoElement = comprobanteCAERequestElement.addChildElement("codigoConcepto");
             codigoConceptoElement.addTextNode("1");
             SOAPElement arrayItemsElement = comprobanteCAERequestElement.addChildElement("arrayItems");
-            SOAPElement itemElement = arrayItemsElement.addChildElement("item");
 
             billRequest.getItems().forEach(item -> {
                 try {
+                    SOAPElement itemElement = arrayItemsElement.addChildElement("item");
                     SOAPElement unidadesMtxElement = itemElement.addChildElement("unidadesMtx");
                     unidadesMtxElement.addTextNode(String.valueOf(item.getQuantity()));
                     SOAPElement codigoMtxElement = itemElement.addChildElement("codigoMtx");
@@ -320,8 +319,8 @@ public class AfipWSAAClient {
                     SOAPElement codigoCondicionIVAElement = itemElement.addChildElement("codigoCondicionIVA");
                     codigoCondicionIVAElement.addTextNode(billRequest.getIvaConditionType().getCode());
                     SOAPElement importeItemElement = itemElement.addChildElement("importeItem");
-                    importeItemElement.addTextNode(String.valueOf(item.getPrice()));
-
+                    importeItemElement.addTextNode(String.valueOf(item.getPrice() * item.getQuantity()));
+                    arrayItemsElement.addChildElement(itemElement);
                 } catch (SOAPException e) {
                     e.printStackTrace();
                 }

@@ -1,5 +1,7 @@
 package com.ideaas.ecomm.ecomm.services;
 
+import com.ideaas.ecomm.ecomm.domain.Checkout;
+import com.ideaas.ecomm.ecomm.domain.Item;
 import com.ideaas.ecomm.ecomm.payload.BillRequest;
 import com.ideaas.ecomm.ecomm.payload.BillResponse;
 import com.ideaas.ecomm.ecomm.payload.CAEAResponse;
@@ -8,11 +10,16 @@ import com.ideaas.ecomm.ecomm.domain.AFIP.LoginTicketResponse;
 import com.ideaas.ecomm.ecomm.domain.AFIP.Person;
 import com.ideaas.ecomm.ecomm.payload.PersonPayload;
 import com.ideaas.ecomm.ecomm.services.interfaces.IBillService;
+import com.ideaas.ecomm.ecomm.services.interfaces.ICheckoutService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.xml.soap.SOAPConnection;
 import javax.xml.soap.SOAPConnectionFactory;
 import javax.xml.soap.SOAPMessage;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static com.ideaas.ecomm.ecomm.converts.AfipConvert.convertToCAE;
 import static com.ideaas.ecomm.ecomm.converts.AfipConvert.convertToPersonPayload;
@@ -24,7 +31,6 @@ import static com.ideaas.ecomm.ecomm.services.AfipWSAAClient.createGetCAE;
 import static com.ideaas.ecomm.ecomm.services.AfipWSAAClient.createGetLastBillId;
 import static com.ideaas.ecomm.ecomm.services.AfipWSAAClient.createSOAPRequest;
 
-@SuppressWarnings("all")
 @Service
 public class BillService implements IBillService {
 
@@ -32,6 +38,13 @@ public class BillService implements IBillService {
     public static String AFIP_CAE          = "https://fwshomo.afip.gov.ar/wsmtxca/services/MTXCAService";
     public static String AFIP_LAST_BILL_ID = "https://fwshomo.afip.gov.ar/wsmtxca/services/MTXCAService";
     public static String AFIP_BILLIMG      = "https://fwshomo.afip.gov.ar/wsmtxca/services/MTXCAService";
+
+    private ICheckoutService checkoutService;
+
+    @Autowired
+    public BillService(final ICheckoutService checkoutService) {
+        this.checkoutService = checkoutService;
+    }
 
 
     @Override
@@ -84,7 +97,8 @@ public class BillService implements IBillService {
     @Override
     public BillResponse createBilling(final LoginTicketResponse ticketResponse,
                                       final BillRequest billRequest) {
-
+        Checkout checkout = checkoutService.get(billRequest.getCheckoutId());
+        prepareBillingItems(billRequest, checkout);
         LastBillIdResponse lastBillIdRequest = new LastBillIdResponse(billRequest.getCuit(), billRequest.getBillType());
         LastBillIdResponse lastBillId = this.getLastBillId(ticketResponse, lastBillIdRequest);
 
@@ -112,6 +126,23 @@ public class BillService implements IBillService {
             e.printStackTrace();
             return null;
         }
+    }
+
+    private static BillRequest prepareBillingItems(final BillRequest billRequest, final Checkout checkout) {
+        List<Item> items = new ArrayList<>(checkout.getProducts().size());
+        checkout.getProducts().forEach(productToCart -> {
+            Item item = Item.builder()
+                    .id(productToCart.getProduct().getId())
+                    .code(productToCart.getProduct().getId().toString())
+                    .description(productToCart.getProduct().getName())
+                    .quantity(productToCart.getQuantity())
+                    .price(productToCart.getProduct().getPrice())
+                    .build();
+            items.add(item);
+        });
+        billRequest.setItems(items);
+
+        return billRequest;
     }
 
 }

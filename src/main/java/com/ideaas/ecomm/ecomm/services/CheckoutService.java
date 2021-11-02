@@ -53,6 +53,16 @@ public class CheckoutService implements ICheckoutService {
         return checkout;
     }
 
+
+    @Override
+    public Checkout changeStateTo(final CheckoutState state, final Long checkoutId) {
+        Checkout checkout = get(checkoutId);
+        checkout.setCheckoutState(state);
+        dao.save(checkout);
+
+        return checkout;
+    }
+
     public ProductToCart prepareProductToCart(final Product product, final Checkout checkout, final Integer quantity) {
         return  ProductToCart.builder()
                             .product(product)

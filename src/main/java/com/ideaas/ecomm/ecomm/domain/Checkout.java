@@ -33,7 +33,7 @@ public class Checkout {
     @Column(name = "CHE_ID")
     private Long id;
 
-    @OneToMany(mappedBy = "checkout", cascade = CascadeType.PERSIST, orphanRemoval = true)
+    @OneToMany(mappedBy = "checkout", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ProductToCart> products;
 
     @Enumerated(EnumType.STRING)

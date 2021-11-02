@@ -23,8 +23,8 @@ public class AfipService  implements IAfipService {
     public LoginTicketResponse getAuthentication(final String service) {
         System.setProperty("http.proxyHost", "");
         System.setProperty("http.proxyPort", "80");
-        final String endpoint = "https://wsaa.afip.gov.ar/ws/services/LoginCms";
-        final String dstDN = "CN=wsaa, O=AFIP, C=AR, SERIALNUMBER=CUIT 33693450239";
+        final String endpoint = "https://wsaahomo.afip.gov.ar/ws/services/LoginCms";
+        final String dstDN = "CN=wsaahomo, O=AFIP, C=AR, SERIALNUMBER=CUIT 33693450239";
         final String p12file = certificatedPath;
         final String signer = "fedeberon";
         final String p12pass = "1234";

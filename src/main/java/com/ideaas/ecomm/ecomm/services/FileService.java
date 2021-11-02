@@ -67,7 +67,7 @@ public class FileService {
     public List<Image> readFiles(String url) {
         final List<Image> images = new ArrayList<>();
         try {
-            Files.walkFileTree(Paths.get(fileStorageLocation.toString() + File.separator + url), new SimpleFileVisitor<>() {
+            Files.walkFileTree(Paths.get(fileStorageLocation.toString() + File.separator + url), new SimpleFileVisitor<Path>() {
                 @Override
                 public FileVisitResult visitFile(Path file, BasicFileAttributes attrs){
                     try {
