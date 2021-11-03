@@ -1,13 +1,14 @@
 package com.ideaas.ecomm.ecomm.services;
 
+import com.ideaas.ecomm.ecomm.domain.AFIP.LoginTicketResponse;
+import com.ideaas.ecomm.ecomm.domain.AFIP.Person;
 import com.ideaas.ecomm.ecomm.domain.Checkout;
 import com.ideaas.ecomm.ecomm.domain.Item;
+import com.ideaas.ecomm.ecomm.exception.LoginTicketException;
 import com.ideaas.ecomm.ecomm.payload.BillRequest;
 import com.ideaas.ecomm.ecomm.payload.BillResponse;
 import com.ideaas.ecomm.ecomm.payload.CAEAResponse;
 import com.ideaas.ecomm.ecomm.payload.LastBillIdResponse;
-import com.ideaas.ecomm.ecomm.domain.AFIP.LoginTicketResponse;
-import com.ideaas.ecomm.ecomm.domain.AFIP.Person;
 import com.ideaas.ecomm.ecomm.payload.PersonPayload;
 import com.ideaas.ecomm.ecomm.services.interfaces.IBillService;
 import com.ideaas.ecomm.ecomm.services.interfaces.ICheckoutService;
@@ -17,7 +18,6 @@ import org.springframework.stereotype.Service;
 import javax.xml.soap.SOAPConnection;
 import javax.xml.soap.SOAPConnectionFactory;
 import javax.xml.soap.SOAPMessage;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,7 +29,7 @@ import static com.ideaas.ecomm.ecomm.converts.AfipConvert.printSOAPResponse;
 import static com.ideaas.ecomm.ecomm.services.AfipWSAAClient.createBill;
 import static com.ideaas.ecomm.ecomm.services.AfipWSAAClient.createGetCAE;
 import static com.ideaas.ecomm.ecomm.services.AfipWSAAClient.createGetLastBillId;
-import static com.ideaas.ecomm.ecomm.services.AfipWSAAClient.createSOAPRequest;
+import static com.ideaas.ecomm.ecomm.services.AfipWSAAClient.createGetPersona;
 
 @Service
 public class BillService implements IBillService {
@@ -56,7 +56,9 @@ public class BillService implements IBillService {
             java.net.URL endPoint = new java.net.URL(AFIP_A5_SERVICE);
             SOAPConnectionFactory soapConnectionFactory = SOAPConnectionFactory.newInstance();
             SOAPConnection soapConnection = soapConnectionFactory.createConnection();
-            SOAPMessage soapResponse = soapConnection.call(createSOAPRequest(token, sign, cuitRepresentada, idPersona), endPoint);
+            SOAPMessage request = createGetPersona(token, sign, cuitRepresentada, idPersona);
+            String asAString = printSOAPResponse(request);
+            SOAPMessage soapResponse = soapConnection.call(request, endPoint);
             String result = printSOAPResponse(soapResponse);
             PersonPayload personPayload = convertToPersonPayload(result);
             soapConnection.close();
@@ -106,9 +108,14 @@ public class BillService implements IBillService {
         String requestAsAString = printSOAPResponse(request);
         SOAPMessage response = callService(AFIP_BILLIMG, request);
         String asAString = printSOAPResponse(response);
-        BillResponse billResponse = convertoToBillResponse(asAString);
+        try {
+            BillResponse billResponse = convertoToBillResponse(asAString);
 
-        return billResponse;
+            return billResponse;
+        } catch (LoginTicketException ex) {
+          throw ex;
+        }
+
     }
 
     private SOAPMessage callService(final String webService,

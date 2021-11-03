@@ -19,7 +19,6 @@ public class LoginTicket {
     @XmlElement(name = "header")
     private Header header;
 
-
     public LoginTicketResponse build() {
         return new LoginTicketResponse(this);
     }

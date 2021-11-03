@@ -4,8 +4,12 @@ import com.ideaas.ecomm.ecomm.converts.AfipConvert;
 import com.ideaas.ecomm.ecomm.domain.AFIP.LoginTicketResponse;
 import com.ideaas.ecomm.ecomm.payload.LoginTicket;
 import com.ideaas.ecomm.ecomm.services.interfaces.IAfipService;
+import com.ideaas.ecomm.ecomm.services.interfaces.ILoginTicketService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @Service
 public class AfipService  implements IAfipService {
@@ -15,8 +19,26 @@ public class AfipService  implements IAfipService {
 
     private AfipWSAAClient client;
 
-    public AfipService() {
+    private ILoginTicketService loginTicketService;
+
+    @Autowired
+    public AfipService(final ILoginTicketService loginTicketService) {
+        this.loginTicketService = loginTicketService;
         this.client = new AfipWSAAClient();
+    }
+
+    @Override
+    public LoginTicketResponse get(final String service){
+        Optional<LoginTicketResponse> loginTicket = loginTicketService.getActive(service);
+        if(loginTicket.isPresent()){
+            return loginTicket.get();
+
+        } else {
+            LoginTicketResponse loginTicketResponse = getAuthentication(service);
+            loginTicketService.save(loginTicketResponse);
+
+            return loginTicketResponse;
+        }
     }
 
     @Override

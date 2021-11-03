@@ -8,6 +8,8 @@ import lombok.Setter;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import java.time.LocalDateTime;
@@ -25,10 +27,10 @@ public class LoginTicketResponse {
     @Column(name="uniqueId")
     private String uniqueId;
 
-    @Column(name="token")
+    @Column(name="token", length = 999)
     private String token;
 
-    @Column(name = "sign")
+    @Column(name = "sign", length = 999)
     private String sign;
 
     @Column(name = "fechaDePedido")
@@ -37,7 +39,11 @@ public class LoginTicketResponse {
     @Column(name = "fechaDeCaducacion")
     private LocalDateTime expirationTime;
 
+    @Column(name = "service")
+    private String service;
+
     public LoginTicketResponse(LoginTicket builder) {
+        this.uniqueId = builder.getHeader().getUniqueId();
         this.token = builder.getCredential().getToken();
         this.sign = builder.getCredential().getSign();
         this.generationTime = builder.getHeader().getGenerationTime();

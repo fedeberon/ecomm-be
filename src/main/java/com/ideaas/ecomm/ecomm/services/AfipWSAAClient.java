@@ -339,10 +339,10 @@ public class AfipWSAAClient {
     }
 
 
-    public static SOAPMessage createSOAPRequest(final String token,
-                                                final String sign,
-                                                final String cuitRepresentada,
-                                                final String idPersona) throws Exception {
+    public static SOAPMessage createGetPersona(final String token,
+                                               final String sign,
+                                               final String cuitRepresentada,
+                                               final String idPersona) throws Exception {
         MessageFactory messageFactory = MessageFactory.newInstance();
         SOAPMessage soapMessage = messageFactory.createMessage();
         SOAPPart soapPart = soapMessage.getSOAPPart();

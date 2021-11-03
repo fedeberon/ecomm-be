@@ -116,25 +116,25 @@ public class AfipConvert {
 
     public static String printSOAPResponse(SOAPMessage soapResponse) {
         try {
-        TransformerFactory transformerFactory = TransformerFactory.newInstance();
-        javax.xml.transform.Transformer transformer = transformerFactory.newTransformer();
+            TransformerFactory transformerFactory = TransformerFactory.newInstance();
+            javax.xml.transform.Transformer transformer = transformerFactory.newTransformer();
 
-        javax.xml.transform.Source sourceContent = soapResponse.getSOAPPart().getContent();
-        StringWriter outWriter = new StringWriter();
-        javax.xml.transform.stream.StreamResult result = new javax.xml.transform.stream.StreamResult(outWriter);
-        transformer.transform(sourceContent, result);
-        StringBuffer sb = outWriter.getBuffer();
-        String finalstring = sb.toString();
+            javax.xml.transform.Source sourceContent = soapResponse.getSOAPPart().getContent();
+            StringWriter outWriter = new StringWriter();
+            javax.xml.transform.stream.StreamResult result = new javax.xml.transform.stream.StreamResult(outWriter);
+            transformer.transform(sourceContent, result);
+            StringBuffer sb = outWriter.getBuffer();
+            String finalstring = sb.toString();
 
-        return finalstring;
+            return finalstring;
 
-        } catch (TransformerConfigurationException e) {
-            e.printStackTrace();
-        } catch (SOAPException e) {
-            e.printStackTrace();
-        } catch (TransformerException e) {
-            e.printStackTrace();
-        }
+            } catch (TransformerConfigurationException e) {
+                e.printStackTrace();
+            } catch (SOAPException e) {
+                e.printStackTrace();
+            } catch (TransformerException e) {
+                e.printStackTrace();
+            }
 
         return null;
     }

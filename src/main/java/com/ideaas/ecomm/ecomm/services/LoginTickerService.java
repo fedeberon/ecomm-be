@@ -6,6 +6,9 @@ import com.ideaas.ecomm.ecomm.services.interfaces.ILoginTicketService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.util.Optional;
+
 @Service
 public class LoginTickerService implements ILoginTicketService {
 
@@ -22,6 +25,11 @@ public class LoginTickerService implements ILoginTicketService {
         LoginTicketResponse loginTicketResponse = dao.save(loginTicket);
 
         return loginTicketResponse;
+    }
+
+    @Override
+    public Optional<LoginTicketResponse> getActive(final String service){
+        return dao.findAllByExpirationTimeBeforeAndServiceEquals(LocalDateTime.now(), service);
     }
 
 }
