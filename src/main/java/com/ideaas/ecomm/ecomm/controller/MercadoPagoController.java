@@ -1,8 +1,10 @@
 package com.ideaas.ecomm.ecomm.controller;
 
-import com.ideaas.ecomm.ecomm.domain.Checkout;
-import com.ideaas.ecomm.ecomm.enums.CheckoutState;
 import com.ideaas.ecomm.ecomm.domain.Callback;
+import com.ideaas.ecomm.ecomm.domain.Cart;
+import com.ideaas.ecomm.ecomm.domain.Checkout;
+import com.ideaas.ecomm.ecomm.domain.Detail;
+import com.ideaas.ecomm.ecomm.enums.CheckoutState;
 import com.ideaas.ecomm.ecomm.services.interfaces.ICallbackService;
 import com.ideaas.ecomm.ecomm.services.interfaces.ICheckoutService;
 import com.ideaas.ecomm.ecomm.services.interfaces.IMercadoPagoService;
@@ -12,13 +14,15 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
+import java.util.Arrays;
+import java.util.List;
+
 
 @RestController
 @CrossOrigin
@@ -38,10 +42,10 @@ public class MercadoPagoController {
         this.callbackService = callbackService;
     }
 
-    @GetMapping("checkout")
-    public ResponseEntity<String> checkout(@RequestParam Long checkoutId) {
-
-        final Checkout checkout = checkoutService.get(checkoutId);
+    @PostMapping("checkout")
+    public ResponseEntity<String> mercadoPagoCheckout(@RequestBody List<Detail> details) {
+        final Cart cart = new Cart.CartBuilder().withDetails(details).build();
+        final Checkout checkout = checkoutService.save(cart);
         final Preference preference = mercadoPagoService.createPreference(checkout);
 
         return ResponseEntity.ok(preference.getInitPoint());

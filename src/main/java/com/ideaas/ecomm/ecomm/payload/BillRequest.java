@@ -1,5 +1,6 @@
 package com.ideaas.ecomm.ecomm.payload;
 
+import com.ideaas.ecomm.ecomm.domain.Cart;
 import com.ideaas.ecomm.ecomm.domain.Item;
 import com.ideaas.ecomm.ecomm.enums.BillType;
 import com.ideaas.ecomm.ecomm.enums.IVAConditionType;
@@ -36,6 +37,8 @@ public class BillRequest {
     private List<Item> items;
 
     private Long checkoutId;
+
+    private Cart cart;
 
     public Double getTotalAmount() {
         return items.stream().mapToDouble(i -> i.getPrice() * i.getQuantity()).sum();

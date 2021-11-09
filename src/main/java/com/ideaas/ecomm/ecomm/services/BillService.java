@@ -2,6 +2,7 @@ package com.ideaas.ecomm.ecomm.services;
 
 import com.ideaas.ecomm.ecomm.domain.AFIP.LoginTicketResponse;
 import com.ideaas.ecomm.ecomm.domain.AFIP.Person;
+import com.ideaas.ecomm.ecomm.domain.Bill;
 import com.ideaas.ecomm.ecomm.domain.Checkout;
 import com.ideaas.ecomm.ecomm.domain.Item;
 import com.ideaas.ecomm.ecomm.exception.LoginTicketException;
@@ -10,6 +11,7 @@ import com.ideaas.ecomm.ecomm.payload.BillResponse;
 import com.ideaas.ecomm.ecomm.payload.CAEAResponse;
 import com.ideaas.ecomm.ecomm.payload.LastBillIdResponse;
 import com.ideaas.ecomm.ecomm.payload.PersonPayload;
+import com.ideaas.ecomm.ecomm.repository.BillDao;
 import com.ideaas.ecomm.ecomm.services.interfaces.IBillService;
 import com.ideaas.ecomm.ecomm.services.interfaces.ICheckoutService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,9 +43,13 @@ public class BillService implements IBillService {
 
     private ICheckoutService checkoutService;
 
+    private BillDao dao;
+
     @Autowired
-    public BillService(final ICheckoutService checkoutService) {
+    public BillService(final ICheckoutService checkoutService,
+                       final BillDao dao) {
         this.checkoutService = checkoutService;
+        this.dao = dao;
     }
 
 
@@ -150,6 +156,28 @@ public class BillService implements IBillService {
         billRequest.setItems(items);
 
         return billRequest;
+    }
+
+    @Override
+    public Bill save(BillResponse response) {
+        Bill bill = new Bill.BillBuilder()
+                .withBillType(response.getVoucher().getBillType())
+                .withCAE(response.getVoucher().getCAE())
+                .withCuit(response.getVoucher().getCuit())
+                .withDate(response.getVoucher().getDate())
+                .withDueDateCAE(response.getVoucher().getDueDateCAE())
+                .withNumber(response.getVoucher().getNumber())
+                .withPointNumber(response.getVoucher().getPointNumber())
+                .withCheckout(response.getCheckout())
+                .build();
+
+        return dao.save(bill);
+    }
+
+
+    @Override
+    public List<Bill> findAll(){
+        return dao.findAll();
     }
 
 }

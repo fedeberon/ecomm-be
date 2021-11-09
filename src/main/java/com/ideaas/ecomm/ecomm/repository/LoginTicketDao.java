@@ -8,7 +8,10 @@ import java.util.Optional;
 
 public interface LoginTicketDao extends JpaRepository<LoginTicketResponse, Long> {
 
-    Optional<LoginTicketResponse> findAllByExpirationTimeBeforeAndServiceEquals(final LocalDateTime now,
-                                                                                final String service);
+    Optional<LoginTicketResponse> findByExpirationTimeAfter(LocalDateTime now);
+
+    default Optional<LoginTicketResponse> getActive(LocalDateTime localDate) {
+        return findByExpirationTimeAfter(localDate);
+    }
 
 }

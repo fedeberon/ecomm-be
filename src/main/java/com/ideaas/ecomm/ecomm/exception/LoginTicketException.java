@@ -1,11 +1,9 @@
 package com.ideaas.ecomm.ecomm.exception;
 
 public class LoginTicketException extends RuntimeException {
-    public LoginTicketException(String message) {
+
+    public LoginTicketException(final String message) {
         super(message);
     }
 
-    public LoginTicketException(String message, Throwable cause) {
-        super(message, cause);
-    }
 }

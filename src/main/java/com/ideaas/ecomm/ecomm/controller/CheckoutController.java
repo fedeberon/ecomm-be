@@ -1,6 +1,8 @@
 package com.ideaas.ecomm.ecomm.controller;
 
+import com.ideaas.ecomm.ecomm.domain.Cart;
 import com.ideaas.ecomm.ecomm.domain.Checkout;
+import com.ideaas.ecomm.ecomm.domain.Detail;
 import com.ideaas.ecomm.ecomm.payload.CheckoutResponse;
 import com.ideaas.ecomm.ecomm.services.interfaces.ICheckoutService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +15,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 @RestController
 @CrossOrigin
@@ -27,10 +31,11 @@ public class CheckoutController {
     }
 
     @PostMapping
-    public Checkout save(@RequestBody final CheckoutResponse response) {
-        final Checkout checkout = checkoutService.save(response);
+    public ResponseEntity<Checkout> checkout(@RequestBody List<Detail> details) {
+        final Cart cart = new Cart.CartBuilder().withDetails(details).build();
+        final Checkout checkout = checkoutService.save(cart);
 
-        return checkout;
+        return ResponseEntity.ok(checkout);
     }
 
 

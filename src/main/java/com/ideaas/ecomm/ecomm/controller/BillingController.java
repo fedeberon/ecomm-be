@@ -1,5 +1,6 @@
 package com.ideaas.ecomm.ecomm.controller;
 
+import com.ideaas.ecomm.ecomm.domain.Bill;
 import com.ideaas.ecomm.ecomm.domain.Checkout;
 import com.ideaas.ecomm.ecomm.enums.CheckoutState;
 import com.ideaas.ecomm.ecomm.payload.BillRequest;
@@ -89,13 +90,14 @@ public class BillingController {
     }
 
     @PostMapping
-    public ResponseEntity<BillResponse> create(final @RequestBody BillRequest billRequest) {
+    public ResponseEntity<Bill> create(final @RequestBody BillRequest billRequest) {
         LoginTicketResponse ticketResponse = afipService.get("wsmtxca");
         BillResponse billResponse = billService.createBilling(ticketResponse, billRequest);
         Checkout checkout = checkoutService.changeStateTo(CheckoutState.PAID_OUT, billRequest.getCheckoutId());
         billResponse.setCheckout(checkout);
+        Bill bill = billService.save(billResponse);
 
-        return ResponseEntity.ok(billResponse);
+        return ResponseEntity.ok(bill);
     }
 
 }

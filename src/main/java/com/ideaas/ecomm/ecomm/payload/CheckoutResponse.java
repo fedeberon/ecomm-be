@@ -2,14 +2,13 @@ package com.ideaas.ecomm.ecomm.payload;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.stereotype.Component;
 
-@Component
+import java.util.List;
+
 @Getter
 @Setter
 public class CheckoutResponse {
 
-    private Long productId;
-    private Integer quantity;
+    private List<CheckoutResponseDetail> detailList;
 
 }
