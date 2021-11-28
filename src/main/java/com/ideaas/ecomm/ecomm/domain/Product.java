@@ -23,6 +23,9 @@ public class Product {
     @Column(name = "PRO_DESCRIPTION")
     private String description;
 
+    @Column(name = "PRO_CODE")
+    private String code;
+
     @Column(name = "PRO_PRICE", precision=10, scale=2)
     private Double price;
 
@@ -31,5 +34,9 @@ public class Product {
 
     @Transient
     private List<Image> images;
+
+    @OneToOne
+    @JoinColumn(name = "PROD_CAT_ID")
+    private Category category;
 
 }

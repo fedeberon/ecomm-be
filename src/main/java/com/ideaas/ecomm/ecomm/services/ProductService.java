@@ -1,8 +1,8 @@
 package com.ideaas.ecomm.ecomm.services;
 
+import com.ideaas.ecomm.ecomm.domain.Category;
 import com.ideaas.ecomm.ecomm.domain.Image;
 import com.ideaas.ecomm.ecomm.domain.Product;
-import com.ideaas.ecomm.ecomm.exception.NotFoundException;
 import com.ideaas.ecomm.ecomm.repository.ProductDao;
 import com.ideaas.ecomm.ecomm.services.interfaces.IProductService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.io.File;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,13 +18,16 @@ import java.util.Optional;
 public class ProductService implements IProductService {
 
     private ProductDao dao;
-
     private FileService fileService;
+    private CategoryService categoryService;
 
     @Autowired
-    public ProductService(final ProductDao dao, final FileService fileService) {
+    public ProductService(final ProductDao dao,
+                          final FileService fileService,
+                          final CategoryService categoryService) {
         this.dao = dao;
         this.fileService = fileService;
+        this.categoryService = categoryService;
     }
 
     @Override
@@ -62,4 +66,21 @@ public class ProductService implements IProductService {
         });
         product.setImages(images);
     }
+
+    @Override
+    public List<Product> byCategory(final String nameOfCategory) {
+        Category category = categoryService.findAllByNameEquals(nameOfCategory);
+        List<Product> optionalProducts = dao.findAllByCategory(category);
+
+        return optionalProducts;
+    }
+
+
+    @Override
+    public List<Product> search(final String value) {
+        List<Product> optionalProducts = dao.findAllByNameIgnoreCase(value);
+
+        return optionalProducts;
+    }
+
 }

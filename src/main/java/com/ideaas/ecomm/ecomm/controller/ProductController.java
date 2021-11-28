@@ -5,7 +5,14 @@ import com.ideaas.ecomm.ecomm.exception.NotFoundException;
 import com.ideaas.ecomm.ecomm.services.interfaces.IProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
@@ -17,7 +24,7 @@ public class ProductController {
     private IProductService productService;
 
     @Autowired
-    public ProductController(IProductService productService) {
+    public ProductController(final IProductService productService) {
         this.productService = productService;
     }
 
@@ -30,8 +37,8 @@ public class ProductController {
     @GetMapping("{id}")
     public ResponseEntity<Product> get(@PathVariable final Long id) {
         try {
-            Product products = productService.get(id);
-            return ResponseEntity.ok().body(products);
+            Product product = productService.get(id);
+            return ResponseEntity.ok().body(product);
         } catch (NotFoundException ex) {
             return ResponseEntity.notFound().build();
         }
@@ -50,5 +57,22 @@ public class ProductController {
 
         return ResponseEntity.accepted().body(productSaved);
     }
+
+    @GetMapping("/byType/{category}")
+    public ResponseEntity<List<Product>> byType(final @PathVariable String category) {
+        List<Product> products = productService.byCategory(category);
+
+        return ResponseEntity.ok(products);
+    }
+
+    @GetMapping("/search/{value}")
+    public ResponseEntity<List<Product>> search(final @PathVariable String value) {
+        List<Product> products = productService.search(value);
+
+        return ResponseEntity.ok(products);
+    }
+
+
+
 
 }

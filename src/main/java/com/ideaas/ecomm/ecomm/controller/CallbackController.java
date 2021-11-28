@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("callback")
 public class CallbackController {
 
-
     private ICallbackService callbackService;
 
     @Autowired
@@ -22,8 +21,8 @@ public class CallbackController {
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<Callback> get(@PathVariable Long id) {
-        Callback callback = callbackService.get(id);
+    public ResponseEntity<Callback> get(@PathVariable final Long id) {
+        final Callback callback = callbackService.get(id);
 
         return ResponseEntity.ok(callback);
     }

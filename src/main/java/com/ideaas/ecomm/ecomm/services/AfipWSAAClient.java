@@ -1,6 +1,9 @@
 package com.ideaas.ecomm.ecomm.services;
 
 import com.ideaas.ecomm.ecomm.domain.AFIP.LoginTicketResponse;
+import com.ideaas.ecomm.ecomm.domain.Item;
+import com.ideaas.ecomm.ecomm.enums.IVAConditionType;
+import com.ideaas.ecomm.ecomm.enums.IdCartType;
 import com.ideaas.ecomm.ecomm.payload.BillRequest;
 import com.ideaas.ecomm.ecomm.payload.LastBillIdResponse;
 import org.apache.axis.client.Call;
@@ -29,6 +32,7 @@ import java.security.Security;
 import java.security.cert.CertStore;
 import java.security.cert.CollectionCertStoreParameters;
 import java.security.cert.X509Certificate;
+import java.text.DecimalFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -39,6 +43,9 @@ import java.util.GregorianCalendar;
 @SuppressWarnings("all")
 @Component
 public class AfipWSAAClient {
+
+    static DecimalFormat df = new DecimalFormat("###.##");
+
 
     //https://www.afip.gob.ar/fe/ayuda/documentos/Manual-desarrollador-V.0.16.pdf
 
@@ -275,7 +282,7 @@ public class AfipWSAAClient {
             fechaEmisionElement.addTextNode(formatter.format(billRequest.getDate()));
 
             SOAPElement codigoTipoDocumentoElement = comprobanteCAERequestElement.addChildElement("codigoTipoDocumento");
-            codigoTipoDocumentoElement.addTextNode("96");
+            codigoTipoDocumentoElement.addTextNode(getIdCardType(billRequest));
             SOAPElement numeroDocumentoElement = comprobanteCAERequestElement.addChildElement("numeroDocumento");
             numeroDocumentoElement.addTextNode(billRequest.getCardId());
 
@@ -287,8 +294,10 @@ public class AfipWSAAClient {
             importeExentoElement.addTextNode("0.00");
             SOAPElement importeSubtotalElement = comprobanteCAERequestElement.addChildElement("importeSubtotal");
             importeSubtotalElement.addTextNode(String.valueOf(billRequest.getSubtotal()));
+
             SOAPElement importeTotalElement = comprobanteCAERequestElement.addChildElement("importeTotal");
-            importeTotalElement.addTextNode(String.valueOf(billRequest.getTotalAmount()));
+            importeTotalElement.addTextNode(df.format(calculateTotal(billRequest)));
+
             SOAPElement codigoMonedaElement = comprobanteCAERequestElement.addChildElement("codigoMoneda");
             codigoMonedaElement.addTextNode("PES");
             SOAPElement cotizacionMonedaElement = comprobanteCAERequestElement.addChildElement("cotizacionMoneda");
@@ -317,14 +326,29 @@ public class AfipWSAAClient {
                     SOAPElement precioUnitarioElement = itemElement.addChildElement("precioUnitario");
                     precioUnitarioElement.addTextNode(String.valueOf(item.getPrice()));
                     SOAPElement codigoCondicionIVAElement = itemElement.addChildElement("codigoCondicionIVA");
-                    codigoCondicionIVAElement.addTextNode(billRequest.getIvaConditionType().getCode());
+                    SOAPElement importeIVAAElement = itemElement.addChildElement("importeIVA");
+                    importeIVAAElement.addTextNode(String.valueOf(getIva(billRequest, item)));
+                    codigoCondicionIVAElement.addTextNode(getContitionType(billRequest));
                     SOAPElement importeItemElement = itemElement.addChildElement("importeItem");
-                    importeItemElement.addTextNode(String.valueOf(item.getPrice() * item.getQuantity()));
+                    importeItemElement.addTextNode(df.format(getPriceItem(billRequest, item)));
                     arrayItemsElement.addChildElement(itemElement);
                 } catch (SOAPException e) {
                     e.printStackTrace();
                 }
             });
+
+            SOAPElement arraySubtotalesIVAElement = comprobanteCAERequestElement.addChildElement("arraySubtotalesIVA");
+            SOAPElement subtotalIVAElement = arraySubtotalesIVAElement.addChildElement("subtotalIVA");
+
+            SOAPElement codigoSubtotalIVAElement = subtotalIVAElement.addChildElement("codigo");
+            codigoSubtotalIVAElement.addTextNode(getContitionType(billRequest));
+            subtotalIVAElement.addChildElement(codigoSubtotalIVAElement);
+
+            SOAPElement importeSubtotalIVAElement = subtotalIVAElement.addChildElement("importe");
+            importeSubtotalIVAElement.addTextNode(df.format(getCalculateAllIvaValues(billRequest)));
+            subtotalIVAElement.addChildElement(importeSubtotalIVAElement);
+
+            arraySubtotalesIVAElement.addChildElement(subtotalIVAElement);
 
             MimeHeaders headers = soapMessage.getMimeHeaders();
             headers.addHeader("SOAPAction", "http://impl.service.wsmtxca.afip.gov.ar/service/autorizarComprobante");
@@ -338,6 +362,57 @@ public class AfipWSAAClient {
         }
     }
 
+    private static Double getCalculateAllIvaValues(final BillRequest billRequest) {
+        return billRequest.getItems().stream().mapToDouble(i -> getIva(billRequest, i)).sum();
+    }
+
+    private static Double calculateTotal(final BillRequest billRequest) {
+        Double result = getCalculateAllIvaValues(billRequest);
+
+        return billRequest.getTotalAmount() + result;
+    }
+
+    private static Double getIva(final BillRequest billRequest,
+                                 final Item item){
+        switch (billRequest.getBillType()) {
+            case A:
+                return item.getPrice() * item.getQuantity()  * 21 / 100;
+            case B:
+                return 0.00;
+        }
+        throw new IllegalStateException("There was not posible find a 'IVA' condition type to return a value.");
+    }
+
+    private static Double getPriceItem(final BillRequest billRequest,
+                                       final Item item) {
+        switch (billRequest.getBillType()) {
+            case A:
+                return item.getPrice() * item.getQuantity() + getIva(billRequest, item);
+            case B:
+                return item.getPrice() * item.getQuantity();
+        }
+        throw new IllegalStateException("There was not posible calculate price item.");
+    }
+
+    private static String getContitionType(final BillRequest billRequest) {
+        switch (billRequest.getBillType()) {
+            case A:
+                return IVAConditionType.VEINTIUNO_PORCIENTO.getCode();
+            case B:
+                return IVAConditionType.O_POCIENTO.getCode();
+        }
+        throw new IllegalStateException("There was not posible find a 'IVA' condition type");
+    }
+
+    private static String getIdCardType(BillRequest billRequest) {
+        switch (billRequest.getBillType()) {
+            case A:
+                return IdCartType.CUIT.getCode();
+            case B:
+                return IdCartType.DNI.getCode();
+        }
+        throw new IllegalStateException("There was not posible find a 'TIPO DE DNI' type");
+    }
 
     public static SOAPMessage createGetPersona(final String token,
                                                final String sign,

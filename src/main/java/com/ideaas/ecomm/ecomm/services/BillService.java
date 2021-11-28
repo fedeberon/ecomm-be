@@ -1,10 +1,13 @@
 package com.ideaas.ecomm.ecomm.services;
 
+import com.ideaas.ecomm.ecomm.converts.exceptions.Errors;
 import com.ideaas.ecomm.ecomm.domain.AFIP.LoginTicketResponse;
 import com.ideaas.ecomm.ecomm.domain.AFIP.Person;
 import com.ideaas.ecomm.ecomm.domain.Bill;
 import com.ideaas.ecomm.ecomm.domain.Checkout;
 import com.ideaas.ecomm.ecomm.domain.Item;
+import com.ideaas.ecomm.ecomm.domain.User;
+import com.ideaas.ecomm.ecomm.exception.AfipException;
 import com.ideaas.ecomm.ecomm.exception.LoginTicketException;
 import com.ideaas.ecomm.ecomm.payload.BillRequest;
 import com.ideaas.ecomm.ecomm.payload.BillResponse;
@@ -15,6 +18,7 @@ import com.ideaas.ecomm.ecomm.repository.BillDao;
 import com.ideaas.ecomm.ecomm.services.interfaces.IBillService;
 import com.ideaas.ecomm.ecomm.services.interfaces.ICheckoutService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import javax.xml.soap.SOAPConnection;
@@ -28,6 +32,7 @@ import static com.ideaas.ecomm.ecomm.converts.AfipConvert.convertToPersonPayload
 import static com.ideaas.ecomm.ecomm.converts.AfipConvert.convertoToBillResponse;
 import static com.ideaas.ecomm.ecomm.converts.AfipConvert.convertoToLastBillId;
 import static com.ideaas.ecomm.ecomm.converts.AfipConvert.printSOAPResponse;
+import static com.ideaas.ecomm.ecomm.converts.exceptions.AfipExceptionConvert.convertToErrorAfip;
 import static com.ideaas.ecomm.ecomm.services.AfipWSAAClient.createBill;
 import static com.ideaas.ecomm.ecomm.services.AfipWSAAClient.createGetCAE;
 import static com.ideaas.ecomm.ecomm.services.AfipWSAAClient.createGetLastBillId;
@@ -80,14 +85,20 @@ public class BillService implements IBillService {
     @Override
     public LastBillIdResponse getLastBillId(final LoginTicketResponse ticketResponse,
                                             final LastBillIdResponse lastBillIdResponse) {
-        SOAPMessage request = createGetLastBillId(ticketResponse, lastBillIdResponse);
-        String requestAsAString = printSOAPResponse(request);
-        SOAPMessage response = callService(AFIP_LAST_BILL_ID, request);
-        String asAString = printSOAPResponse(response);
-        LastBillIdResponse lastBillId = convertoToLastBillId(asAString);
+        String asAString = null;
+        try {
+            SOAPMessage request = createGetLastBillId(ticketResponse, lastBillIdResponse);
+            String requestAsAString = printSOAPResponse(request);
+            SOAPMessage response = callService(AFIP_LAST_BILL_ID, request);
+            asAString = printSOAPResponse(response);
+            LastBillIdResponse lastBillId = convertoToLastBillId(asAString);
 
-        return lastBillId;
+            return lastBillId;
+        } catch (Exception e) {
+            Errors errors = convertToErrorAfip(asAString);
 
+            throw new AfipException("There was a problem with AFIP services. Exception: " + errors);
+        }
     }
 
     @Override
@@ -105,22 +116,30 @@ public class BillService implements IBillService {
     @Override
     public BillResponse createBilling(final LoginTicketResponse ticketResponse,
                                       final BillRequest billRequest) {
-        Checkout checkout = checkoutService.get(billRequest.getCheckoutId());
-        prepareBillingItems(billRequest, checkout);
-        LastBillIdResponse lastBillIdRequest = new LastBillIdResponse(billRequest.getCuit(), billRequest.getBillType());
-        LastBillIdResponse lastBillId = this.getLastBillId(ticketResponse, lastBillIdRequest);
-
-        SOAPMessage request = createBill(ticketResponse, billRequest, lastBillId);
-        String requestAsAString = printSOAPResponse(request);
-        SOAPMessage response = callService(AFIP_BILLIMG, request);
-        String asAString = printSOAPResponse(response);
+        String asAString = null;
         try {
+            Checkout checkout = checkoutService.get(billRequest.getCheckoutId());
+            prepareBillingItems(billRequest, checkout);
+            LastBillIdResponse lastBillIdRequest = new LastBillIdResponse(billRequest.getCuit(), billRequest.getBillType());
+            LastBillIdResponse lastBillId = this.getLastBillId(ticketResponse, lastBillIdRequest);
+
+            SOAPMessage request = createBill(ticketResponse, billRequest, lastBillId);
+            String requestAsAString = printSOAPResponse(request);
+            SOAPMessage response = callService(AFIP_BILLIMG, request);
+
+            asAString = printSOAPResponse(response);
             BillResponse billResponse = convertoToBillResponse(asAString);
 
             return billResponse;
+
         } catch (LoginTicketException ex) {
-          throw ex;
+            throw ex;
+        } catch (Exception e) {
+            Errors errors = convertToErrorAfip(asAString);
+
+            throw new AfipException("There was a problem with AFIP services. Exception: " + errors);
         }
+
 
     }
 
@@ -177,7 +196,17 @@ public class BillService implements IBillService {
 
     @Override
     public List<Bill> findAll(){
-        return dao.findAll();
+        return dao.findAll(Sort.by(Sort.Direction.DESC, "id"));
+    }
+
+    @Override
+    public Bill get(Long id) {
+        return dao.findById(id).get();
+    }
+
+    @Override
+    public List<Bill> findAllByUser(User user){
+        return dao.findAllByUser(user);
     }
 
 }

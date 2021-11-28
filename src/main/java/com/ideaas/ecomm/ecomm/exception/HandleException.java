@@ -13,4 +13,9 @@ public class HandleException {
         return ResponseEntity.internalServerError().body(ex.getMessage());
     }
 
+    @ExceptionHandler(value = AfipException.class )
+    protected ResponseEntity handleAfipException(RuntimeException ex, WebRequest request) {
+        return ResponseEntity.internalServerError().body(ex.getMessage());
+    }
+
 }

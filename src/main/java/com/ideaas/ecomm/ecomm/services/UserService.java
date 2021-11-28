@@ -9,6 +9,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class UserService implements IUserService {
@@ -29,4 +30,22 @@ public class UserService implements IUserService {
         return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), new ArrayList<>());
 
     }
+
+    @Override
+    public User save(final User user) {
+        user.setUsername(user.getCardId());
+
+        return dao.save(user);
+    }
+
+    @Override
+    public User get(String username) {
+        return dao.getById(username);
+    }
+
+    @Override
+    public List<User> findAll() {
+        return dao.findAll();
+    }
+
 }

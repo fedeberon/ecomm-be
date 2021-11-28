@@ -17,11 +17,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("billing")
@@ -100,4 +103,17 @@ public class BillingController {
         return ResponseEntity.ok(bill);
     }
 
+    @GetMapping
+    public ResponseEntity<List<Bill>> findAll() {
+        List<Bill> bills = billService.findAll();
+
+        return ResponseEntity.ok(bills);
+    }
+
+    @GetMapping("{id}")
+    public ResponseEntity<Bill> get(final @PathVariable Long id) {
+        Bill bill = billService.get(id);
+
+        return ResponseEntity.ok(bill);
+    }
 }

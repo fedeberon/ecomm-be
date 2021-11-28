@@ -1,5 +1,7 @@
 package com.ideaas.ecomm.ecomm.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.ideaas.ecomm.ecomm.domain.AFIP.Person;
 import com.ideaas.ecomm.ecomm.enums.BillType;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -51,12 +53,20 @@ public class Bill {
     @JoinColumn(name = "checkout_id")
     private Checkout checkout;
 
+    @OneToOne
+    @JoinColumn(name = "person_id")
+    private Person person;
+
+    @OneToOne
+    @JoinColumn(name = "user_id")
+    @JsonIgnore
+    private User user;
+
     public Double getTotalAmount() {
         return checkout.getProducts().stream().mapToDouble(i -> i.getPrice() * i.getQuantity()).sum();
     }
 
-
-    public Bill(BillBuilder builder) {
+    public Bill(final BillBuilder builder) {
         this.cuit = builder.cuit;
         this.billType = builder.billType;
         this.pointNumber = builder.pointNumber;

@@ -13,4 +13,8 @@ public interface IProductService {
     Product get(Long id);
 
     void addImagesOnProduct(Product product);
+
+    List<Product> byCategory(String category);
+
+    List<Product> search(String value);
 }

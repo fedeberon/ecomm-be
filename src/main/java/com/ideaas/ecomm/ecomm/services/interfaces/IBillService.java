@@ -1,6 +1,7 @@
 package com.ideaas.ecomm.ecomm.services.interfaces;
 
 import com.ideaas.ecomm.ecomm.domain.Bill;
+import com.ideaas.ecomm.ecomm.domain.User;
 import com.ideaas.ecomm.ecomm.payload.BillRequest;
 import com.ideaas.ecomm.ecomm.payload.BillResponse;
 import com.ideaas.ecomm.ecomm.payload.CAEAResponse;
@@ -29,4 +30,9 @@ public interface IBillService {
     Bill save(BillResponse response);
 
     List<Bill> findAll();
+
+    Bill get(Long id);
+
+    List<Bill>  findAllByUser(User user);
+
 }
