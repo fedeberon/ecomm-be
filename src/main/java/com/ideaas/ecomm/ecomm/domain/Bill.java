@@ -75,6 +75,7 @@ public class Bill {
         this.CAE = builder.CAE;
         this.dueDateCAE = builder.dueDateCAE;
         this.checkout = builder.checkout;
+        this.user = builder.user;
     }
 
     public BillType getBillTypeName() {
@@ -99,6 +100,8 @@ public class Bill {
         private String dueDateCAE;
 
         private Checkout checkout;
+
+        private User user;
 
 
         public BillBuilder withCuit(final String cuit) {
@@ -150,10 +153,15 @@ public class Bill {
             return this;
         }
 
+        public BillBuilder withUser(final User user) {
+            this.user = user;
+
+            return this;
+        }
+
         public Bill build(){
             return new Bill(this);
         }
 
     }
-
 }

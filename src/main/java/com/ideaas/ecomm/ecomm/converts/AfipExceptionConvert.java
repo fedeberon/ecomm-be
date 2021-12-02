@@ -1,4 +1,6 @@
-package com.ideaas.ecomm.ecomm.converts.exceptions;
+package com.ideaas.ecomm.ecomm.converts;
+
+import com.ideaas.ecomm.ecomm.converts.exceptions.Errors;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;

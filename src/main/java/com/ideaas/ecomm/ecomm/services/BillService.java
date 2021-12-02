@@ -1,6 +1,7 @@
 package com.ideaas.ecomm.ecomm.services;
 
 import com.ideaas.ecomm.ecomm.converts.exceptions.Errors;
+import com.ideaas.ecomm.ecomm.converts.exceptions.Fault;
 import com.ideaas.ecomm.ecomm.domain.AFIP.LoginTicketResponse;
 import com.ideaas.ecomm.ecomm.domain.AFIP.Person;
 import com.ideaas.ecomm.ecomm.domain.Bill;
@@ -17,6 +18,7 @@ import com.ideaas.ecomm.ecomm.payload.PersonPayload;
 import com.ideaas.ecomm.ecomm.repository.BillDao;
 import com.ideaas.ecomm.ecomm.services.interfaces.IBillService;
 import com.ideaas.ecomm.ecomm.services.interfaces.ICheckoutService;
+import com.ideaas.ecomm.ecomm.services.interfaces.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -32,7 +34,8 @@ import static com.ideaas.ecomm.ecomm.converts.AfipConvert.convertToPersonPayload
 import static com.ideaas.ecomm.ecomm.converts.AfipConvert.convertoToBillResponse;
 import static com.ideaas.ecomm.ecomm.converts.AfipConvert.convertoToLastBillId;
 import static com.ideaas.ecomm.ecomm.converts.AfipConvert.printSOAPResponse;
-import static com.ideaas.ecomm.ecomm.converts.exceptions.AfipExceptionConvert.convertToErrorAfip;
+import static com.ideaas.ecomm.ecomm.converts.AfipExceptionConvert.convertToErrorAfip;
+import static com.ideaas.ecomm.ecomm.converts.AfipValidationConverter.convertToValidationAfip;
 import static com.ideaas.ecomm.ecomm.services.AfipWSAAClient.createBill;
 import static com.ideaas.ecomm.ecomm.services.AfipWSAAClient.createGetCAE;
 import static com.ideaas.ecomm.ecomm.services.AfipWSAAClient.createGetLastBillId;
@@ -47,14 +50,18 @@ public class BillService implements IBillService {
     public static String AFIP_BILLIMG      = "https://fwshomo.afip.gov.ar/wsmtxca/services/MTXCAService";
 
     private ICheckoutService checkoutService;
-
     private BillDao dao;
+    private IUserService userService;
+
+
 
     @Autowired
     public BillService(final ICheckoutService checkoutService,
-                       final BillDao dao) {
+                       final BillDao dao,
+                       final IUserService userService) {
         this.checkoutService = checkoutService;
         this.dao = dao;
+        this.userService = userService;
     }
 
 
@@ -116,31 +123,35 @@ public class BillService implements IBillService {
     @Override
     public BillResponse createBilling(final LoginTicketResponse ticketResponse,
                                       final BillRequest billRequest) {
-        String asAString = null;
         try {
-            Checkout checkout = checkoutService.get(billRequest.getCheckoutId());
+            final Checkout checkout = checkoutService.get(billRequest.getCheckoutId());
             prepareBillingItems(billRequest, checkout);
-            LastBillIdResponse lastBillIdRequest = new LastBillIdResponse(billRequest.getCuit(), billRequest.getBillType());
-            LastBillIdResponse lastBillId = this.getLastBillId(ticketResponse, lastBillIdRequest);
+            final LastBillIdResponse lastBillIdRequest = new LastBillIdResponse("20285640661", billRequest.getBillType());
+            final LastBillIdResponse lastBillId = this.getLastBillId(ticketResponse, lastBillIdRequest);
 
-            SOAPMessage request = createBill(ticketResponse, billRequest, lastBillId);
-            String requestAsAString = printSOAPResponse(request);
-            SOAPMessage response = callService(AFIP_BILLIMG, request);
+            final SOAPMessage request = createBill(ticketResponse, billRequest, lastBillId);
+            final String requestAsAString = printSOAPResponse(request);
+            final SOAPMessage response = callService(AFIP_BILLIMG, request);
+            final String asAString = printSOAPResponse(response);
 
-            asAString = printSOAPResponse(response);
-            BillResponse billResponse = convertoToBillResponse(asAString);
+            if(response.getSOAPBody().hasFault()) {
+                final Fault fault = convertToValidationAfip(asAString);
+
+                throw new AfipException("[AFIP ERROR]: Description: " + fault.getDetail());
+            }
+
+            final BillResponse billResponse = convertoToBillResponse(asAString);
 
             return billResponse;
 
         } catch (LoginTicketException ex) {
             throw ex;
-        } catch (Exception e) {
-            Errors errors = convertToErrorAfip(asAString);
-
-            throw new AfipException("There was a problem with AFIP services. Exception: " + errors);
+        } catch (AfipException ex) {
+            throw ex;
+        } catch (Exception ex) {
+            //Errors errors = convertToErrorAfip(asAString);
+            throw new AfipException("There was a problem with AFIP services. Exception: " + ex);
         }
-
-
     }
 
     private SOAPMessage callService(final String webService,
@@ -179,6 +190,7 @@ public class BillService implements IBillService {
 
     @Override
     public Bill save(BillResponse response) {
+        final User user = userService.getCurrent();
         Bill bill = new Bill.BillBuilder()
                 .withBillType(response.getVoucher().getBillType())
                 .withCAE(response.getVoucher().getCAE())
@@ -188,6 +200,7 @@ public class BillService implements IBillService {
                 .withNumber(response.getVoucher().getNumber())
                 .withPointNumber(response.getVoucher().getPointNumber())
                 .withCheckout(response.getCheckout())
+                .withUser(user)
                 .build();
 
         return dao.save(bill);

@@ -28,8 +28,7 @@ import java.util.stream.Collectors;
 @Service
 public class JwtServiceImpl implements JwtService {
     public static final String HEADER = "Authorization";
-    public static final String PREFIX
-            = "Bearer ";
+    public static final String PREFIX = "Bearer ";
     public static final String AUTHORITIES = "authorities";
     public static final int EXPIRATION_TIME = Integer.MAX_VALUE;
     @Value("${ecomm.api.secret.key}")
@@ -53,7 +52,7 @@ public class JwtServiceImpl implements JwtService {
                 .signWith(SignatureAlgorithm.HS512,
                         SECRET_KEY.getBytes()).compact();
 
-        return token;
+        return PREFIX + token;
     }
 
     @SuppressWarnings("unchecked")

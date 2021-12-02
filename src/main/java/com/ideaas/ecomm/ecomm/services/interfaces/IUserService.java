@@ -11,4 +11,6 @@ public interface IUserService extends UserDetailsService {
     User get(String username);
 
     List<User> findAll();
+
+    User getCurrent();
 }

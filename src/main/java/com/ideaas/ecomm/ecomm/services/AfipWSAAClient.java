@@ -2,6 +2,7 @@ package com.ideaas.ecomm.ecomm.services;
 
 import com.ideaas.ecomm.ecomm.domain.AFIP.LoginTicketResponse;
 import com.ideaas.ecomm.ecomm.domain.Item;
+import com.ideaas.ecomm.ecomm.enums.BillType;
 import com.ideaas.ecomm.ecomm.enums.IVAConditionType;
 import com.ideaas.ecomm.ecomm.enums.IdCartType;
 import com.ideaas.ecomm.ecomm.payload.BillRequest;
@@ -326,8 +327,10 @@ public class AfipWSAAClient {
                     SOAPElement precioUnitarioElement = itemElement.addChildElement("precioUnitario");
                     precioUnitarioElement.addTextNode(String.valueOf(item.getPrice()));
                     SOAPElement codigoCondicionIVAElement = itemElement.addChildElement("codigoCondicionIVA");
-                    SOAPElement importeIVAAElement = itemElement.addChildElement("importeIVA");
-                    importeIVAAElement.addTextNode(String.valueOf(getIva(billRequest, item)));
+                    if(billRequest.getBillType().equals(BillType.A)) {
+                        SOAPElement importeIVAAElement = itemElement.addChildElement("importeIVA");
+                        importeIVAAElement.addTextNode(String.valueOf(getIva(billRequest, item)));
+                    }
                     codigoCondicionIVAElement.addTextNode(getContitionType(billRequest));
                     SOAPElement importeItemElement = itemElement.addChildElement("importeItem");
                     importeItemElement.addTextNode(df.format(getPriceItem(billRequest, item)));
@@ -337,18 +340,20 @@ public class AfipWSAAClient {
                 }
             });
 
-            SOAPElement arraySubtotalesIVAElement = comprobanteCAERequestElement.addChildElement("arraySubtotalesIVA");
-            SOAPElement subtotalIVAElement = arraySubtotalesIVAElement.addChildElement("subtotalIVA");
+            if(billRequest.getBillType().equals(BillType.A)) {
 
-            SOAPElement codigoSubtotalIVAElement = subtotalIVAElement.addChildElement("codigo");
-            codigoSubtotalIVAElement.addTextNode(getContitionType(billRequest));
-            subtotalIVAElement.addChildElement(codigoSubtotalIVAElement);
+                SOAPElement arraySubtotalesIVAElement = comprobanteCAERequestElement.addChildElement("arraySubtotalesIVA");
+                SOAPElement subtotalIVAElement = arraySubtotalesIVAElement.addChildElement("subtotalIVA");
 
-            SOAPElement importeSubtotalIVAElement = subtotalIVAElement.addChildElement("importe");
-            importeSubtotalIVAElement.addTextNode(df.format(getCalculateAllIvaValues(billRequest)));
-            subtotalIVAElement.addChildElement(importeSubtotalIVAElement);
+                SOAPElement codigoSubtotalIVAElement = subtotalIVAElement.addChildElement("codigo");
+                codigoSubtotalIVAElement.addTextNode(getContitionType(billRequest));
+                subtotalIVAElement.addChildElement(codigoSubtotalIVAElement);
 
-            arraySubtotalesIVAElement.addChildElement(subtotalIVAElement);
+                SOAPElement importeSubtotalIVAElement = subtotalIVAElement.addChildElement("importe");
+                importeSubtotalIVAElement.addTextNode(df.format(getCalculateAllIvaValues(billRequest)));
+                subtotalIVAElement.addChildElement(importeSubtotalIVAElement);
+                arraySubtotalesIVAElement.addChildElement(subtotalIVAElement);
+            }
 
             MimeHeaders headers = soapMessage.getMimeHeaders();
             headers.addHeader("SOAPAction", "http://impl.service.wsmtxca.afip.gov.ar/service/autorizarComprobante");
