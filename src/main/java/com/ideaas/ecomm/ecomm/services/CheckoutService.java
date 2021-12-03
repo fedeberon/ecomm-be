@@ -9,6 +9,7 @@ import com.ideaas.ecomm.ecomm.repository.CheckoutDao;
 import com.ideaas.ecomm.ecomm.services.interfaces.ICheckoutService;
 import com.ideaas.ecomm.ecomm.services.interfaces.IProductService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -52,6 +53,10 @@ public class CheckoutService implements ICheckoutService {
         return checkout;
     }
 
+    @Override
+    public List<Checkout> findAll() {
+        return dao.findAll(Sort.by(Sort.Direction.DESC, "id"));
+    }
 
     @Override
     public Checkout changeStateTo(final CheckoutState state, final Long checkoutId) {

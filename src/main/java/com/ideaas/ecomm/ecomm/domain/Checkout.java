@@ -40,5 +40,8 @@ public class Checkout {
     private CheckoutState checkoutState;
 
 
+    public Double getTotalAmount() {
+        return products.stream().mapToDouble(i -> i.getPrice() * i.getQuantity()).sum();
+    }
 
 }

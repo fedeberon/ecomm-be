@@ -46,4 +46,11 @@ public class CheckoutController {
         return ResponseEntity.ok(checkout);
     }
 
+    @GetMapping
+    public ResponseEntity<List<Checkout>> findAll() {
+        List<Checkout> checkouts = checkoutService.findAll();
+
+        return ResponseEntity.ok().body(checkouts);
+    }
+
 }

@@ -46,6 +46,10 @@ public class ProductToCart {
     private Double price;
 
     public Double getPrice() {
-        return price * quantity;
+        try {
+            return price * quantity;
+        } catch (Exception ex) {
+            return 0.0;
+        }
     }
 }
