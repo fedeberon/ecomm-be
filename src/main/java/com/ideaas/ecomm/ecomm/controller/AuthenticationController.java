@@ -7,6 +7,7 @@ import com.ideaas.ecomm.ecomm.payload.AuthenticationResponse;
 import com.ideaas.ecomm.ecomm.services.interfaces.IUserService;
 import com.ideaas.ecomm.ecomm.services.interfaces.JwtService;
 import org.apache.catalina.connector.Response;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -35,7 +36,10 @@ public class AuthenticationController {
             UserDetails userDetails = userService.loadUserByUsername(authenticationRequest.getUsername());
             String token = jwtService.createToken(userDetails);
             User user = userService.get(userDetails.getUsername());
-            AuthenticationResponse tokenResponse = new AuthenticationResponse(token, user.getUsername(), user.getName());
+            AuthenticationResponse tokenResponse = new AuthenticationResponse(token,
+                                                                              user.getUsername(),
+                                                                              user.getName(),
+                                                                              StringUtils.join(user.getAuthorities(), ","));
 
             return ResponseEntity.ok().body(tokenResponse);
         } catch (InvalidPasswordOrUsernameException e) {

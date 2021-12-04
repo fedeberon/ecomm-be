@@ -50,7 +50,6 @@ public class User implements Serializable {
     @JsonIgnore
     private List<Role> roles;
 
-    @JsonIgnore
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<GrantedAuthority> authorities = new ArrayList<>();
         for (Role role: this.roles) {
