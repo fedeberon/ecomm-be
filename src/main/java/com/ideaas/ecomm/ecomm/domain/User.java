@@ -21,7 +21,7 @@ import java.util.List;
 @Table(name = "USERS")
 @Getter
 @Setter
-public class User implements Serializable {
+public class User  {
 
     @Id
     @Column(name = "USU_USERNAME")
@@ -50,6 +50,7 @@ public class User implements Serializable {
     @JsonIgnore
     private List<Role> roles;
 
+    @JsonIgnore
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<GrantedAuthority> authorities = new ArrayList<>();
         for (Role role: this.roles) {

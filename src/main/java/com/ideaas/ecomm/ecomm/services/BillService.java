@@ -218,8 +218,8 @@ public class BillService implements IBillService {
     }
 
     @Override
-    public List<Bill> findAllByUser(User user){
-        return dao.findAllByUser(user);
+    public List<Bill> findAllByUser(final User user){
+        return dao.findAllByUser(user, Sort.by(Sort.Direction.DESC, "id"));
     }
 
 }

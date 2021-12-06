@@ -1,18 +1,20 @@
 package com.ideaas.ecomm.ecomm.controller;
 
+import com.ideaas.ecomm.ecomm.domain.AFIP.LoginTicketResponse;
+import com.ideaas.ecomm.ecomm.domain.AFIP.Person;
 import com.ideaas.ecomm.ecomm.domain.Bill;
 import com.ideaas.ecomm.ecomm.domain.Checkout;
+import com.ideaas.ecomm.ecomm.domain.User;
 import com.ideaas.ecomm.ecomm.enums.CheckoutState;
 import com.ideaas.ecomm.ecomm.payload.BillRequest;
 import com.ideaas.ecomm.ecomm.payload.BillResponse;
 import com.ideaas.ecomm.ecomm.payload.CAEAResponse;
 import com.ideaas.ecomm.ecomm.payload.LastBillIdResponse;
-import com.ideaas.ecomm.ecomm.domain.AFIP.LoginTicketResponse;
-import com.ideaas.ecomm.ecomm.domain.AFIP.Person;
 import com.ideaas.ecomm.ecomm.services.interfaces.IAfipService;
 import com.ideaas.ecomm.ecomm.services.interfaces.IBillService;
 import com.ideaas.ecomm.ecomm.services.interfaces.ICheckoutService;
 import com.ideaas.ecomm.ecomm.services.interfaces.ILoginTicketService;
+import com.ideaas.ecomm.ecomm.services.interfaces.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
@@ -43,15 +45,18 @@ public class BillingController {
     private IAfipService afipService;
     private IBillService billService;
     private ICheckoutService checkoutService;
+    private IUserService userService;
 
     @Autowired
     public BillingController(final ILoginTicketService loginTicketService, final IAfipService afipService,
                              final IBillService billService,
-                             final ICheckoutService checkoutService) {
+                             final ICheckoutService checkoutService,
+                             final IUserService userService) {
         this.loginTicketService = loginTicketService;
         this.afipService = afipService;
         this.billService = billService;
         this.checkoutService = checkoutService;
+        this.userService = userService;
     }
 
     @RequestMapping("{CUIT}")
@@ -115,5 +120,13 @@ public class BillingController {
         Bill bill = billService.get(id);
 
         return ResponseEntity.ok(bill);
+    }
+
+    @GetMapping("/user/{username}")
+    public ResponseEntity<List<Bill>> getByCheckoutId(final @PathVariable String username) {
+        final User user = userService.get(username);
+        List<Bill> bills = billService.findAllByUser(user);
+
+        return ResponseEntity.ok(bills);
     }
 }

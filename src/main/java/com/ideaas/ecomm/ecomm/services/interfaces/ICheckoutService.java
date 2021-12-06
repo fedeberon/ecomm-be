@@ -14,4 +14,5 @@ public interface ICheckoutService {
     Checkout changeStateTo(CheckoutState state, Long checkoutId);
 
     List<Checkout> findAll();
+
 }

@@ -44,7 +44,7 @@ public class UserService implements IUserService {
 
     @Override
     public User get(String username) {
-        return dao.getById(username);
+        return dao.findById(username).get();
     }
 
     @Override
