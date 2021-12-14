@@ -1,6 +1,7 @@
 package com.ideaas.ecomm.ecomm.services.interfaces;
 
 import com.ideaas.ecomm.ecomm.domain.Product;
+import com.ideaas.ecomm.ecomm.payload.SearchBrandRequest;
 
 import java.util.List;
 
@@ -17,4 +18,6 @@ public interface IProductService {
     List<Product> byCategory(String category);
 
     List<Product> search(String value);
+
+    List<Product> searchByBrand(List<SearchBrandRequest.BrandRequest> brands);
 }

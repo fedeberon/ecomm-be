@@ -2,6 +2,7 @@ package com.ideaas.ecomm.ecomm.controller;
 
 import com.ideaas.ecomm.ecomm.domain.Product;
 import com.ideaas.ecomm.ecomm.exception.NotFoundException;
+import com.ideaas.ecomm.ecomm.payload.SearchBrandRequest;
 import com.ideaas.ecomm.ecomm.services.interfaces.IProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -68,6 +69,13 @@ public class ProductController {
     @GetMapping("/search/{value}")
     public ResponseEntity<List<Product>> search(final @PathVariable String value) {
         List<Product> products = productService.search(value);
+
+        return ResponseEntity.ok(products);
+    }
+
+    @PostMapping("/search/brands")
+    public ResponseEntity<List<Product>> searchByBrand(final @RequestBody List<SearchBrandRequest.BrandRequest> brandRequests) {
+        List<Product> products = productService.searchByBrand(brandRequests);
 
         return ResponseEntity.ok(products);
     }

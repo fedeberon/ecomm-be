@@ -3,6 +3,7 @@ package com.ideaas.ecomm.ecomm.services;
 import com.ideaas.ecomm.ecomm.domain.Category;
 import com.ideaas.ecomm.ecomm.domain.Image;
 import com.ideaas.ecomm.ecomm.domain.Product;
+import com.ideaas.ecomm.ecomm.payload.SearchBrandRequest;
 import com.ideaas.ecomm.ecomm.repository.ProductDao;
 import com.ideaas.ecomm.ecomm.services.interfaces.IProductService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.io.File;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -81,6 +83,23 @@ public class ProductService implements IProductService {
         List<Product> optionalProducts = dao.findAllByNameIgnoreCase(value);
 
         return optionalProducts;
+    }
+
+    @Override
+    public List<Product> searchByBrand(List<SearchBrandRequest.BrandRequest> brands) {
+        Collection brandsList = convertToCollection(brands);
+        return dao.searchAllByBrandIn(brandsList);
+    }
+
+    private Collection<Long> convertToCollection(final List<SearchBrandRequest.BrandRequest> brandRequests) {
+        if (brandRequests == null || brandRequests.isEmpty()) {
+            return Collections.emptyList();
+        }
+        Collection<Long> collection = Collections.emptyList();
+        for (SearchBrandRequest.BrandRequest v : brandRequests) {
+            collection.add(v.getId());
+        }
+        return collection;
     }
 
 }

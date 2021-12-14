@@ -39,4 +39,8 @@ public class Product {
     @JoinColumn(name = "PROD_CAT_ID")
     private Category category;
 
+    @OneToOne
+    @JoinColumn(name = "PROD_BRAND_ID")
+    private Brand brand;
+
 }
