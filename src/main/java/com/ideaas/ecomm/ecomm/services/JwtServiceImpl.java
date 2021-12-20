@@ -3,8 +3,7 @@ package com.ideaas.ecomm.ecomm.services;
 import com.ideaas.ecomm.ecomm.domain.User;
 import com.ideaas.ecomm.ecomm.exception.NotFoundException;
 import com.ideaas.ecomm.ecomm.services.interfaces.JwtService;
-import com.sun.org.slf4j.internal.Logger;
-import com.sun.org.slf4j.internal.LoggerFactory;
+ 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -34,7 +33,7 @@ public class JwtServiceImpl implements JwtService {
     @Value("${ecomm.api.secret.key}")
     private String SECRET_KEY;
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(JwtServiceImpl.class);
+ 
 
     @Override
     public String createToken(UserDetails userDetails) {
@@ -97,8 +96,7 @@ public class JwtServiceImpl implements JwtService {
         try {
             return (Long) SecurityContextHolder.getContext().getAuthentication().getDetails();
         } catch (Exception e) {
-            LOGGER.error("There was a problem in the incoming request. Exception = [{}].");
-            throw new NotFoundException("User is not logged in");
+              throw new NotFoundException("User is not logged in");
         }
     }
 
