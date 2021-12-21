@@ -43,4 +43,7 @@ public class Product {
     @JoinColumn(name = "PROD_BRAND_ID")
     private Brand brand;
 
+    @Column(name = "PRO_POINT")    
+    private Long point = 0l;
+
 }

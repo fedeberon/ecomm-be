@@ -31,7 +31,8 @@ public class WalletService implements IWalletService {
 		return dao.save(wallet);
 	}
 	
-	
-	
-	
+	public void saveAll(List<Wallet> wallets) {
+		dao.saveAll(wallets);
+	}
+
 }

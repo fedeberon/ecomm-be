@@ -7,7 +7,10 @@ import com.ideaas.ecomm.ecomm.domain.AFIP.Person;
 import com.ideaas.ecomm.ecomm.domain.Bill;
 import com.ideaas.ecomm.ecomm.domain.Checkout;
 import com.ideaas.ecomm.ecomm.domain.Item;
+import com.ideaas.ecomm.ecomm.domain.Product;
+import com.ideaas.ecomm.ecomm.domain.ProductToCart;
 import com.ideaas.ecomm.ecomm.domain.User;
+import com.ideaas.ecomm.ecomm.domain.Wallet;
 import com.ideaas.ecomm.ecomm.exception.AfipException;
 import com.ideaas.ecomm.ecomm.exception.LoginTicketException;
 import com.ideaas.ecomm.ecomm.payload.BillRequest;
@@ -19,6 +22,8 @@ import com.ideaas.ecomm.ecomm.repository.BillDao;
 import com.ideaas.ecomm.ecomm.services.interfaces.IBillService;
 import com.ideaas.ecomm.ecomm.services.interfaces.ICheckoutService;
 import com.ideaas.ecomm.ecomm.services.interfaces.IUserService;
+import com.ideaas.ecomm.ecomm.services.interfaces.IWalletService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -52,16 +57,19 @@ public class BillService implements IBillService {
     private ICheckoutService checkoutService;
     private BillDao dao;
     private IUserService userService;
+    private IWalletService walletService;
 
 
 
     @Autowired
     public BillService(final ICheckoutService checkoutService,
                        final BillDao dao,
-                       final IUserService userService) {
+                       final IUserService userService,
+                       final IWalletService walletService) {
         this.checkoutService = checkoutService;
         this.dao = dao;
         this.userService = userService;
+        this.walletService = walletService;
     }
 
 
@@ -202,8 +210,34 @@ public class BillService implements IBillService {
                 .withCheckout(response.getCheckout())
                 .withUser(user)
                 .build();
+        
+                productToCartInWallet(user, bill.getCheckout().getProducts());        
+
 
         return dao.save(bill);
+    }
+
+
+    private void productToCartInWallet(final User user, final List<ProductToCart> productToCarts){
+        List<Wallet> wallets = new ArrayList<>();
+        productToCarts.forEach(productToCart -> {
+            Product product = productToCart.getProduct();
+            Wallet oneWallet = new Wallet(product, user, product.getPoint());
+            wallets.add(oneWallet);
+        }); 
+
+        walletService.saveAll(wallets);
+
+    }
+
+    private void savePointsOnWallet(final User user, final List<Product> products) {
+        List<Wallet> wallets = new ArrayList<>();       
+        products.forEach(product -> {
+            Wallet wallet = new Wallet(product, user, product.getPoint());   
+            wallets.add(wallet); 
+        });
+        
+        walletService.saveAll(wallets);
     }
 
 
