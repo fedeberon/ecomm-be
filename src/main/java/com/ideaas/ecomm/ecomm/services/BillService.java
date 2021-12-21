@@ -229,17 +229,7 @@ public class BillService implements IBillService {
         walletService.saveAll(wallets);
 
     }
-
-    private void savePointsOnWallet(final User user, final List<Product> products) {
-        List<Wallet> wallets = new ArrayList<>();       
-        products.forEach(product -> {
-            Wallet wallet = new Wallet(product, user, product.getPoint());   
-            wallets.add(wallet); 
-        });
-        
-        walletService.saveAll(wallets);
-    }
-
+ 
 
     @Override
     public List<Bill> findAll(){
