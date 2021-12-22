@@ -854,3 +854,6 @@ Caused by: java.lang.IllegalStateException: The file is locked: nio:/Users/fedeb
 	at org.h2.mvstore.FileStore.open(FileStore.java:172)
 	at org.h2.mvstore.MVStore.<init>(MVStore.java:381)
 	... 60 more
+2021-12-21 11:54:30 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "SELECT * FROM WALLETS USERS USU_USERNAME[*]"; SQL statement:
+SELECT * FROM WALLETS USERS USU_USERNAME [42000-200]
