@@ -1,5 +1,6 @@
 package com.ideaas.ecomm.ecomm.services;
 
+import com.ideaas.ecomm.ecomm.domain.Brand;
 import com.ideaas.ecomm.ecomm.domain.Category;
 import com.ideaas.ecomm.ecomm.domain.Image;
 import com.ideaas.ecomm.ecomm.domain.Product;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -91,13 +93,13 @@ public class ProductService implements IProductService {
         return dao.searchAllByBrandIn(brandsList);
     }
 
-    private Collection<Long> convertToCollection(final List<SearchBrandRequest.BrandRequest> brandRequests) {
+    private Collection<Brand> convertToCollection(final List<SearchBrandRequest.BrandRequest> brandRequests) {
         if (brandRequests == null || brandRequests.isEmpty()) {
             return Collections.emptyList();
         }
-        Collection<Long> collection = Collections.emptyList();
+        Collection<Brand> collection = new ArrayList<>();
         for (SearchBrandRequest.BrandRequest v : brandRequests) {
-            collection.add(v.getId());
+            collection.add(new Brand(v.getId()));
         }
         return collection;
     }
