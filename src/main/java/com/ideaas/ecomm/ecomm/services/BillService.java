@@ -21,6 +21,7 @@ import com.ideaas.ecomm.ecomm.payload.PersonPayload;
 import com.ideaas.ecomm.ecomm.repository.BillDao;
 import com.ideaas.ecomm.ecomm.services.interfaces.IBillService;
 import com.ideaas.ecomm.ecomm.services.interfaces.ICheckoutService;
+import com.ideaas.ecomm.ecomm.services.interfaces.IProductService;
 import com.ideaas.ecomm.ecomm.services.interfaces.IUserService;
 import com.ideaas.ecomm.ecomm.services.interfaces.IWalletService;
 
@@ -58,6 +59,7 @@ public class BillService implements IBillService {
     private BillDao dao;
     private IUserService userService;
     private IWalletService walletService;
+    private IProductService productService;
 
 
 
@@ -65,11 +67,13 @@ public class BillService implements IBillService {
     public BillService(final ICheckoutService checkoutService,
                        final BillDao dao,
                        final IUserService userService,
-                       final IWalletService walletService) {
+                       final IWalletService walletService,
+                       final IProductService productService ){
         this.checkoutService = checkoutService;
         this.dao = dao;
         this.userService = userService;
         this.walletService = walletService;
+        this.productService = productService;
     }
 
 
@@ -211,7 +215,8 @@ public class BillService implements IBillService {
                 .withUser(user)
                 .build();
         
-                productToCartInWallet(user, bill.getCheckout().getProducts());        
+                productToCartInWallet(user, bill.getCheckout().getProducts());  
+                discountAmmountStock(bill.getCheckout().getProducts());      
 
 
         return dao.save(bill);
@@ -222,15 +227,25 @@ public class BillService implements IBillService {
         List<Wallet> wallets = new ArrayList<>();
         productToCarts.forEach(productToCart -> {
             Product product = productToCart.getProduct();
-            Wallet oneWallet = new Wallet(product, user, product.getPoint());
+            Wallet oneWallet = new Wallet(product, user, product.getPoints());
             wallets.add(oneWallet);
         }); 
 
         walletService.saveAll(wallets);
 
     }
- 
 
+
+    private void discountAmmountStock(final List<ProductToCart> productToCarts) {
+        productToCarts.forEach(productToCart -> {
+            Product product = productToCart.getProduct();
+            Long stock =  product.getStock() - productToCart.getQuantity();
+            product.setStock(stock);
+            productService.save(product);
+        });
+    }
+
+ 
     @Override
     public List<Bill> findAll(){
         return dao.findAll(Sort.by(Sort.Direction.DESC, "id"));
