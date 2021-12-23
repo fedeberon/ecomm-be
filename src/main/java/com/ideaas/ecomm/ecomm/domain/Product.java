@@ -44,6 +44,6 @@ public class Product {
     private Brand brand;
 
     @Column(name = "PRO_POINT")    
-    private Long point = 0l;
+    private Long points = 0l;
 
 }
