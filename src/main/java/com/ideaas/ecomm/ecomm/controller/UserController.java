@@ -1,7 +1,10 @@
 package com.ideaas.ecomm.ecomm.controller;
 
 import com.ideaas.ecomm.ecomm.domain.User;
+import com.ideaas.ecomm.ecomm.domain.Wallet;
 import com.ideaas.ecomm.ecomm.services.UserService;
+import com.ideaas.ecomm.ecomm.services.interfaces.IWalletService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -20,10 +23,14 @@ import java.util.List;
 public class UserController {
 
     private UserService userService;
+    private IWalletService walletService;
+
 
     @Autowired
-    public UserController(final UserService userService) {
+    public UserController(final UserService userService,
+                            final IWalletService walletService) {
         this.userService = userService;
+        this.walletService = walletService;
     }
 
     @PostMapping
@@ -46,5 +53,15 @@ public class UserController {
 
         return ResponseEntity.ok(user);
     }
+
+
+    @GetMapping("/wallet/{username}")
+    public ResponseEntity<List<Wallet>> getWalletByUser(@PathVariable final String username) {
+        final User user = userService.get(username);
+        final List<Wallet> walletOfUser = walletService.findAllByUser(user);     
+
+        return ResponseEntity.ok(walletOfUser);
+    }
+
 
 }

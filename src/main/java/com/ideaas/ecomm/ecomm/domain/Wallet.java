@@ -37,7 +37,13 @@ public class Wallet {
 	private Long points;
 	
 	@Column(name = "date")
-	private LocalDateTime date;
+	private LocalDateTime date = LocalDateTime.now();
+
+    public Wallet(final Product product, final User user, final Long points){
+        this.product = product;
+        this.user = user;
+        this.points = points;
+    }
 	
 
 }

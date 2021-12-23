@@ -7,7 +7,10 @@ import com.ideaas.ecomm.ecomm.domain.AFIP.Person;
 import com.ideaas.ecomm.ecomm.domain.Bill;
 import com.ideaas.ecomm.ecomm.domain.Checkout;
 import com.ideaas.ecomm.ecomm.domain.Item;
+import com.ideaas.ecomm.ecomm.domain.Product;
+import com.ideaas.ecomm.ecomm.domain.ProductToCart;
 import com.ideaas.ecomm.ecomm.domain.User;
+import com.ideaas.ecomm.ecomm.domain.Wallet;
 import com.ideaas.ecomm.ecomm.exception.AfipException;
 import com.ideaas.ecomm.ecomm.exception.LoginTicketException;
 import com.ideaas.ecomm.ecomm.payload.BillRequest;
@@ -18,7 +21,10 @@ import com.ideaas.ecomm.ecomm.payload.PersonPayload;
 import com.ideaas.ecomm.ecomm.repository.BillDao;
 import com.ideaas.ecomm.ecomm.services.interfaces.IBillService;
 import com.ideaas.ecomm.ecomm.services.interfaces.ICheckoutService;
+import com.ideaas.ecomm.ecomm.services.interfaces.IProductService;
 import com.ideaas.ecomm.ecomm.services.interfaces.IUserService;
+import com.ideaas.ecomm.ecomm.services.interfaces.IWalletService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -52,16 +58,22 @@ public class BillService implements IBillService {
     private ICheckoutService checkoutService;
     private BillDao dao;
     private IUserService userService;
+    private IWalletService walletService;
+    private IProductService productService;
 
 
 
     @Autowired
     public BillService(final ICheckoutService checkoutService,
                        final BillDao dao,
-                       final IUserService userService) {
+                       final IUserService userService,
+                       final IWalletService walletService,
+                       final IProductService productService ){
         this.checkoutService = checkoutService;
         this.dao = dao;
         this.userService = userService;
+        this.walletService = walletService;
+        this.productService = productService;
     }
 
 
@@ -202,11 +214,38 @@ public class BillService implements IBillService {
                 .withCheckout(response.getCheckout())
                 .withUser(user)
                 .build();
+        
+                productToCartInWallet(user, bill.getCheckout().getProducts());  
+                discountAmmountStock(bill.getCheckout().getProducts());      
+
 
         return dao.save(bill);
     }
 
 
+    private void productToCartInWallet(final User user, final List<ProductToCart> productToCarts){
+        List<Wallet> wallets = new ArrayList<>();
+        productToCarts.forEach(productToCart -> {
+            Product product = productToCart.getProduct();
+            Wallet oneWallet = new Wallet(product, user, product.getPoints());
+            wallets.add(oneWallet);
+        }); 
+
+        walletService.saveAll(wallets);
+
+    }
+
+
+    private void discountAmmountStock(final List<ProductToCart> productToCarts) {
+        productToCarts.forEach(productToCart -> {
+            Product product = productToCart.getProduct();
+            Long stock =  product.getStock() - productToCart.getQuantity();
+            product.setStock(stock);
+            productService.save(product);
+        });
+    }
+
+ 
     @Override
     public List<Bill> findAll(){
         return dao.findAll(Sort.by(Sort.Direction.DESC, "id"));

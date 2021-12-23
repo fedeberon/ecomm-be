@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.ideaas.ecomm.ecomm.domain.Product;
 import com.ideaas.ecomm.ecomm.domain.ProductToCart;
+import com.ideaas.ecomm.ecomm.domain.User;
 import com.ideaas.ecomm.ecomm.domain.Wallet;
 import com.ideaas.ecomm.ecomm.repository.WalletDao;
 import com.ideaas.ecomm.ecomm.services.interfaces.IWalletService;
@@ -31,7 +32,12 @@ public class WalletService implements IWalletService {
 		return dao.save(wallet);
 	}
 	
-	
-	
-	
+	public void saveAll(List<Wallet> wallets) {
+		dao.saveAll(wallets);
+	}
+
+	public List<Wallet> findAllByUser(final User user) {
+		return dao.findByUser(user);
+	}
+
 }
