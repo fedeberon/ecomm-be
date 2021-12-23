@@ -29,21 +29,25 @@ public class Wallet {
     @JoinColumn(name = "WALL_PRO_ID")
 	private Product product;
 
-    @OneToOne
-    @JoinColumn(name = "WALL_USU_USERNAME")
-	private User user;
+    
+    @Column(name = "WALL_PRO_QUANTITY")
+	private Integer quantity;
 
 	@Column(name = "points")
 	private Long points;
+
+    @OneToOne
+    @JoinColumn(name = "WALL_USU_USERNAME")
+	private User user;
 	
 	@Column(name = "date")
 	private LocalDateTime date = LocalDateTime.now();
 
-    public Wallet(final Product product, final User user, final Long points){
+    public Wallet(final Product product, final User user, final Long points, final Integer quantity){
         this.product = product;
         this.user = user;
         this.points = points;
+        this.quantity = quantity;
     }
-	
 
 }
