@@ -33,5 +33,5 @@ build/
 .vscode/
 
 ### H2 Database ###
-/data/*
+/data/*.mv.db
 .DS_Store
