@@ -227,7 +227,7 @@ public class BillService implements IBillService {
         List<Wallet> wallets = new ArrayList<>();
         productToCarts.forEach(productToCart -> {
             Product product = productToCart.getProduct();
-            Wallet oneWallet = new Wallet(product, user, product.getPoints());
+            Wallet oneWallet = new Wallet(product, user, product.getPoints(), productToCart.getQuantity());
             wallets.add(oneWallet);
         }); 
 
