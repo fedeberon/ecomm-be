@@ -26,4 +26,7 @@ public class Brand {
     @Column(name = "BRAND_NAME")
     private String name;
 
+    public Brand(Long id) {
+        this.id = id;
+    }
 }
