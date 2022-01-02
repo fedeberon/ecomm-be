@@ -34,6 +34,7 @@ import javax.xml.soap.SOAPConnectionFactory;
 import javax.xml.soap.SOAPMessage;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import static com.ideaas.ecomm.ecomm.converts.AfipConvert.convertToCAE;
 import static com.ideaas.ecomm.ecomm.converts.AfipConvert.convertToPersonPayload;
@@ -216,7 +217,7 @@ public class BillService implements IBillService {
                 .build();
         
                 productToCartInWallet(user, bill.getCheckout().getProducts());  
-                discountAmmountStock(bill.getCheckout().getProducts());      
+                discountAmountStock(bill.getCheckout().getProducts());
 
 
         return dao.save(bill);
@@ -227,16 +228,22 @@ public class BillService implements IBillService {
         List<Wallet> wallets = new ArrayList<>();
         productToCarts.forEach(productToCart -> {
             Product product = productToCart.getProduct();
-            Wallet oneWallet = new Wallet(product, user, product.getPoints(), productToCart.getQuantity());
+            Long points = Objects.isNull(product.getPoints()) || product.getPoints() == 0
+                            ? Math.round(product.getPrice() * 5 / 100)
+                            : product.getPoints();
+            Wallet oneWallet = new Wallet(product,
+                                          user,
+                                          productToCart.getQuantity(),
+                                          points * productToCart.getQuantity());
             wallets.add(oneWallet);
-        }); 
+        });
 
         walletService.saveAll(wallets);
-
     }
 
 
-    private void discountAmmountStock(final List<ProductToCart> productToCarts) {
+
+    private void discountAmountStock(final List<ProductToCart> productToCarts) {
         productToCarts.forEach(productToCart -> {
             Product product = productToCart.getProduct();
             Long stock =  product.getStock() - productToCart.getQuantity();

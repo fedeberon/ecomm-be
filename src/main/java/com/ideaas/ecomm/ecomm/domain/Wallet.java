@@ -1,6 +1,8 @@
 package com.ideaas.ecomm.ecomm.domain;
 
-import java.time.LocalDateTime;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -10,13 +12,12 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
-
-import lombok.Getter;
-import lombok.Setter;
+import java.time.LocalDateTime;
 
 @Setter
 @Getter
 @Entity
+@NoArgsConstructor
 @Table(name = "WALLETS")
 public class Wallet {
 	
@@ -39,11 +40,11 @@ public class Wallet {
     @OneToOne
     @JoinColumn(name = "WALL_USU_USERNAME")
 	private User user;
-	
+
 	@Column(name = "date")
 	private LocalDateTime date = LocalDateTime.now();
 
-    public Wallet(final Product product, final User user, final Long points, final Integer quantity){
+    public Wallet(final Product product, final User user, final Integer quantity, final Long points) {
         this.product = product;
         this.user = user;
         this.points = points;
