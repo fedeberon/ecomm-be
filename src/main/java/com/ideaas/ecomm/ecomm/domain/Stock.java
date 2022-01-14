@@ -1,6 +1,5 @@
 package com.ideaas.ecomm.ecomm.domain;
 
-import com.ideaas.ecomm.ecomm.enums.StockType;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -27,12 +26,8 @@ public class Stock {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @Column(name = "ST_TYPE")
-    @Enumerated(EnumType.STRING)
-    private StockType stockType;
-
-    @Column(name = "ST_REF")
-    private String referenceId;
+    @Column(name = "ST_ORDER")
+    private String order;
 
     @Column(name = "ST_QUANTITY")
     private Long quantity;

@@ -3,13 +3,14 @@ package com.ideaas.ecomm.ecomm.domain;
 import lombok.Getter;
 import lombok.Setter;
 
+import com.ideaas.ecomm.ecomm.domain.Category;
 import javax.persistence.*;
 import java.util.List;
 
-@Entity
-@Table(name = "PRODUCTS")
 @Getter
 @Setter
+@Entity
+@Table(name = "PRODUCTS")
 public class Product {
 
     @Id
