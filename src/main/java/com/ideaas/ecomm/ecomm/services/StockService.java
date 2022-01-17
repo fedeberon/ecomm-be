@@ -13,10 +13,12 @@ import java.util.List;
 public class StockService implements IStockService {
 
     private StockDao dao;
+    private ProductService productService;
 
     @Autowired
-    public StockService(final StockDao dao) {
+    public StockService(final StockDao dao, final ProductService productService) {
         this.dao = dao;
+        this.productService = productService;
     }
 
     @Override
@@ -30,8 +32,16 @@ public class StockService implements IStockService {
     }
 
     @Override
-    public void saveAll(final List<Stock> stock){
-        dao.saveAll(stock);
+    public List<Stock> saveAll(final List<Stock> stocks){
+        stocks.forEach(stock ->{
+            Stock newStock = dao.save(stock);
+            Long quantityToAdd = newStock.getQuantity();
+            Product product = newStock.getProduct();
+            Long newQuantity = quantityToAdd + product.getStock();
+            product.setStock(newQuantity);
+            productService.save(product);
+        });
+        return dao.saveAll(stocks);
     }
 
 
