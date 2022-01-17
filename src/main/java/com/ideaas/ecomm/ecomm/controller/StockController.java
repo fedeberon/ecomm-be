@@ -48,10 +48,10 @@ public class StockController {
     }
 
     @PostMapping("list")
-    private ResponseEntity findAllByProduct(final @RequestBody List<Stock> stocks) {
-         stockService.saveAll(stocks);
+    private ResponseEntity<List<Stock>> saveAll(final @RequestBody List<Stock> stocks) {
+        final List<Stock> stocksRe = stockService.saveAll(stocks);
 
-        return ResponseEntity.status(HttpStatus.OK).build();
+        return ResponseEntity.ok(stocksRe);
     }
 
 }

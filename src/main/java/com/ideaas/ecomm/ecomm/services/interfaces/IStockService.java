@@ -6,11 +6,12 @@ import com.ideaas.ecomm.ecomm.domain.Stock;
 import java.util.List;
 
 public interface IStockService {
+    
     List<Stock> findAll();
 
     Stock save(Stock stock);
 
-    void saveAll(List<Stock> stock);
+    List<Stock> saveAll(List<Stock> stock);
 
     List<Stock> getBy(Product product);
 }
