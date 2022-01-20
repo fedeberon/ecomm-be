@@ -38,6 +38,7 @@ public class UserService implements IUserService {
     @Override
     public User save(final User user) {
         user.setUsername(user.getCardId());
+        user.setPassword("123");
 
         return dao.save(user);
     }
