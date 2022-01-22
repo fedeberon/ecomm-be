@@ -148,7 +148,7 @@ public class AfipConvert {
 
     public static LoginTicket convertToLoginTicketResponse(final String xml) {
         try {
-
+            logger.info("XML recieved: {}", xml);
             JAXBContext jc = JAXBContext.newInstance(new Class[] { LoginTicket.class });
             StringReader reader = new StringReader(xml);
             XMLInputFactory xif = XMLInputFactory.newFactory();
@@ -165,8 +165,10 @@ public class AfipConvert {
 
             return loginTicketResponse;
         } catch (XMLStreamException e) {
+            logger.error("XMLStreamException: {}", e);
             e.printStackTrace();
         } catch (JAXBException e) {
+            logger.error("JAXBException: {}", e);
             e.printStackTrace();
         }
         return null;
