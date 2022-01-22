@@ -16,6 +16,8 @@ import org.bouncycastle.cms.CMSProcessableByteArray;
 import org.bouncycastle.cms.CMSSignedData;
 import org.bouncycastle.cms.CMSSignedDataGenerator;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import javax.xml.rpc.ParameterMode;
@@ -45,12 +47,14 @@ import java.util.GregorianCalendar;
 @Component
 public class AfipWSAAClient {
 
+    private static final Logger logger = LoggerFactory.getLogger(AfipWSAAClient.class);
+
     static DecimalFormat df = new DecimalFormat("###.##");
 
 
     //https://www.afip.gob.ar/fe/ayuda/documentos/Manual-desarrollador-V.0.16.pdf
 
-    static String invokeWSAA (byte [] LoginTicketRequest_xml_cms, String endpoint){
+    static String invokeWSAA(byte [] LoginTicketRequest_xml_cms, String endpoint){
         String LoginTicketResponse = null;
         try {
 
@@ -70,10 +74,10 @@ public class AfipWSAAClient {
             //
             LoginTicketResponse = (String) call.invoke(new Object[] { Base64.encode (LoginTicketRequest_xml_cms) } );
 
-            System.out.print("Retorno " + LoginTicketResponse);
+            logger.info("LoginTicketResponse {}" , LoginTicketResponse);
 
         } catch (Exception e) {
-            System.out.print("Excepcion " + LoginTicketResponse);
+            logger.info("Excepcion {}" , LoginTicketResponse);
             e.printStackTrace();
         }
         return (LoginTicketResponse);
