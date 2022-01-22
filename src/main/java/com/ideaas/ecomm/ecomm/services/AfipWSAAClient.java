@@ -100,6 +100,7 @@ public class AfipWSAAClient {
             FileInputStream p12stream = new FileInputStream( p12file ) ;
             logger.info("p12stream {}" , p12stream);
             ks.load(p12stream, p12pass.toCharArray());
+            logger.info("ks {}" , ks.toString());
             p12stream.close();
 
             // Get Certificate & Private key from KeyStore
