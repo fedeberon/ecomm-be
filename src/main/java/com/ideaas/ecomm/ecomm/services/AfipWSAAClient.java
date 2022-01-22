@@ -104,8 +104,12 @@ public class AfipWSAAClient {
 
             // Get Certificate & Private key from KeyStore
             pKey = (PrivateKey) ks.getKey(signer, p12pass.toCharArray());
+            logger.info("pKey {}" , pKey);
             pCertificate = (X509Certificate)ks.getCertificate(signer);
+            logger.info("pCertificate {}" , pCertificate);
+
             SignerDN = pCertificate.getSubjectDN().toString();
+            logger.info("SignerDN {}" , SignerDN);
 
             // Create a list of Certificates to include in the final CMS
             ArrayList<X509Certificate> certList = new ArrayList<X509Certificate>();
