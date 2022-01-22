@@ -5,6 +5,8 @@ import com.ideaas.ecomm.ecomm.payload.CAEAResponse;
 import com.ideaas.ecomm.ecomm.payload.LastBillIdResponse;
 import com.ideaas.ecomm.ecomm.payload.LoginTicket;
 import com.ideaas.ecomm.ecomm.payload.PersonPayload;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -22,9 +24,11 @@ import java.io.StringWriter;
 @SuppressWarnings("all")
 public class AfipConvert {
 
+    private static final Logger logger = LoggerFactory.getLogger(AfipConvert.class);
     @SuppressWarnings("all")
     public static CAEAResponse convertToCAE(final String xml) {
         try {
+            logger.info("XML recieved: {}", xml);
             JAXBContext jc = JAXBContext.newInstance(new Class[] { CAEAResponse.class });
             StringReader reader = new StringReader(xml);
             XMLInputFactory xif = XMLInputFactory.newFactory();
@@ -37,11 +41,14 @@ public class AfipConvert {
             javax.xml.bind.JAXBElement<CAEAResponse> jb = jaxbUnmarshaller.unmarshal(xmlReader, CAEAResponse.class);
             xmlReader.close();
             CAEAResponse fecae = jb.getValue();
+            logger.info("CAEAResponse: {}", fecae);
 
             return fecae;
             } catch (JAXBException e) {
+                logger.error("JAXBException: {}", e);
                 e.printStackTrace();
             } catch (XMLStreamException e) {
+                logger.error("XMLStreamException: {}", e);
                 e.printStackTrace();
             }
         return null;
@@ -141,6 +148,7 @@ public class AfipConvert {
 
     public static LoginTicket convertToLoginTicketResponse(final String xml) {
         try {
+
             JAXBContext jc = JAXBContext.newInstance(new Class[] { LoginTicket.class });
             StringReader reader = new StringReader(xml);
             XMLInputFactory xif = XMLInputFactory.newFactory();
