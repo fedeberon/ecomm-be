@@ -98,6 +98,7 @@ public class AfipWSAAClient {
             // Create a keystore using keys from the pkcs#12 p12file
             KeyStore ks = KeyStore.getInstance("pkcs12");
             FileInputStream p12stream = new FileInputStream( p12file ) ;
+            logger.info("p12stream {}" , p12stream);
             ks.load(p12stream, p12pass.toCharArray());
             p12stream.close();
 
@@ -117,6 +118,7 @@ public class AfipWSAAClient {
             cstore = CertStore.getInstance("Collection", new CollectionCertStoreParameters(certList), "BC");
         }
         catch (Exception e) {
+            logger.info("Exception {}" , e);
             e.printStackTrace();
         }
 
