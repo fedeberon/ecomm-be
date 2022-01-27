@@ -102,7 +102,14 @@ public class AfipWSAAClient {
             KeyStore ks = KeyStore.getInstance("pkcs12");
             FileInputStream p12stream = new FileInputStream( p12file ) ;
             logger.info("p12pass {}" , p12pass);
-            ks.load(p12stream, p12pass.toCharArray());
+
+            try {
+                ks.load(p12stream, p12pass.toCharArray());
+            }
+            catch (IOException | NoSuchAlgorithmException | CertificateException ex) {
+                logger.info("IOException {}" , ex);
+            }
+
             logger.info("ks size {}" , ks.size());
             p12stream.close();
 
@@ -125,9 +132,7 @@ public class AfipWSAAClient {
 
             cstore = CertStore.getInstance("Collection", new CollectionCertStoreParameters(certList), "BC");
         }
-        catch (IOException | NoSuchAlgorithmException | CertificateException ex) {
-            logger.info("Excepcion {}" , ex);
-        }
+
         catch (Exception e) {
             logger.info("Exception {}" , e);
             e.printStackTrace();
