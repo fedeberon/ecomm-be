@@ -29,11 +29,16 @@ import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPMessage;
 import javax.xml.soap.SOAPPart;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.security.InvalidAlgorithmParameterException;
 import java.security.KeyStore;
+import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
 import java.security.PrivateKey;
 import java.security.Security;
+import java.security.UnrecoverableKeyException;
 import java.security.cert.CertStore;
 import java.security.cert.CertificateException;
 import java.security.cert.CollectionCertStoreParameters;
@@ -97,27 +102,54 @@ public class AfipWSAAClient {
         //
         // Manage Keys & Certificates
         //
-        try {
+
             // Create a keystore using keys from the pkcs#12 p12file
-            KeyStore ks = KeyStore.getInstance("pkcs12");
-            FileInputStream p12stream = new FileInputStream( p12file ) ;
-            logger.info("p12pass {}" , p12pass);
+        KeyStore ks = null;
+        try {
+            ks = KeyStore.getInstance("pkcs12");
+        } catch (KeyStoreException ex) {
+            ex.printStackTrace();
+            logger.info("KeyStoreException {}" , p12pass);
+
+        }
+        FileInputStream p12stream = null;
+        try {
+            p12stream = new FileInputStream( p12file );
+        } catch (FileNotFoundException ex) {
+            ex.printStackTrace();
+            logger.info("FileNotFoundException {}" , ex);
+        }
 
             try {
                 ks.load(p12stream, p12pass.toCharArray());
             }
             catch (IOException | NoSuchAlgorithmException | CertificateException ex) {
-                logger.info("IOException {}" , ex);
+                logger.info("IOException 1 {}" , ex);
+            }
+            try {
+                p12stream.close();
+            } catch (IOException ex) {
+                ex.printStackTrace();
+                logger.info("IOException 2 {}" , ex);
             }
 
-            logger.info("ks size {}" , ks.size());
-            p12stream.close();
-
-            // Get Certificate & Private key from KeyStore
+        // Get Certificate & Private key from KeyStore
+        try {
             pKey = (PrivateKey) ks.getKey(signer, p12pass.toCharArray());
-            logger.info("pKey {}" , pKey);
+        } catch (KeyStoreException ex) {
+            ex.printStackTrace();
+        } catch (NoSuchAlgorithmException ex) {
+            ex.printStackTrace();
+        } catch (UnrecoverableKeyException ex) {
+            ex.printStackTrace();
+        }
+        logger.info("pKey {}" , pKey);
+        try {
             pCertificate = (X509Certificate)ks.getCertificate(signer);
-            logger.info("pCertificate {}" , pCertificate);
+        } catch (KeyStoreException ex) {
+            ex.printStackTrace();
+        }
+        logger.info("pCertificate {}" , pCertificate);
 
             SignerDN = pCertificate.getSubjectDN().toString();
             logger.info("SignerDN {}" , SignerDN);
@@ -130,12 +162,17 @@ public class AfipWSAAClient {
                 Security.addProvider(new BouncyCastleProvider());
             }
 
+        try {
             cstore = CertStore.getInstance("Collection", new CollectionCertStoreParameters(certList), "BC");
-        }
-
-        catch (Exception e) {
-            logger.info("Exception {}" , e);
-            e.printStackTrace();
+        } catch (InvalidAlgorithmParameterException ex) {
+            ex.printStackTrace();
+            logger.info("InvalidAlgorithmParameterException {}" , ex);
+        } catch (NoSuchAlgorithmException ex) {
+            ex.printStackTrace();
+            logger.info("NoSuchAlgorithmException {}" , ex);
+        } catch (NoSuchProviderException ex) {
+            ex.printStackTrace();
+            logger.info("NoSuchProviderException {}" , ex);
         }
 
         //
