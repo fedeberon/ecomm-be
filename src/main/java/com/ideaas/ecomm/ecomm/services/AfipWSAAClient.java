@@ -29,10 +29,13 @@ import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPMessage;
 import javax.xml.soap.SOAPPart;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.security.KeyStore;
+import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
 import java.security.Security;
 import java.security.cert.CertStore;
+import java.security.cert.CertificateException;
 import java.security.cert.CollectionCertStoreParameters;
 import java.security.cert.X509Certificate;
 import java.text.DecimalFormat;
@@ -98,7 +101,7 @@ public class AfipWSAAClient {
             // Create a keystore using keys from the pkcs#12 p12file
             KeyStore ks = KeyStore.getInstance("pkcs12");
             FileInputStream p12stream = new FileInputStream( p12file ) ;
-            logger.info("p12stream {}" , p12stream);
+            logger.info("p12pass {}" , p12pass);
             ks.load(p12stream, p12pass.toCharArray());
             logger.info("ks size {}" , ks.size());
             p12stream.close();
@@ -121,6 +124,9 @@ public class AfipWSAAClient {
             }
 
             cstore = CertStore.getInstance("Collection", new CollectionCertStoreParameters(certList), "BC");
+        }
+        catch (IOException | NoSuchAlgorithmException | CertificateException ex) {
+            logger.info("Excepcion {}" , ex);
         }
         catch (Exception e) {
             logger.info("Exception {}" , e);
