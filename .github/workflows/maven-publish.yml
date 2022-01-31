@@ -5,7 +5,7 @@ name: Maven Package
 
 on:
   release:
-    types: [push]
+    types: [released]
 
 jobs:
   build:
@@ -34,8 +34,8 @@ jobs:
         GITHUB_TOKEN: ${{ github.token }}
 
     - name: Stop ecoom service
-        run: stop_ecomm
-        id: stop-ecomm-service
+      run: stop_ecomm
+      id: stop-ecomm-service
 
     - uses: actions/checkout@v1
     - name: Push to server
@@ -47,6 +47,6 @@ jobs:
         script: cd ${{ secrets.PROJECT_PATH }} && git pull
 
     - name: Start ecoom service
-        run: start_ecomm
-        id: start-ecomm-service
+      run: start_ecomm
+      id: start-ecomm-service
 
