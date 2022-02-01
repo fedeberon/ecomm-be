@@ -25,6 +25,7 @@ import java.io.StringWriter;
 public class AfipConvert {
 
     private static final Logger logger = LoggerFactory.getLogger(AfipConvert.class);
+
     @SuppressWarnings("all")
     public static CAEAResponse convertToCAE(final String xml) {
         try {

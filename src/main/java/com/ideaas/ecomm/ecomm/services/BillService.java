@@ -1,5 +1,6 @@
 package com.ideaas.ecomm.ecomm.services;
 
+import com.ideaas.ecomm.ecomm.converts.AfipConvert;
 import com.ideaas.ecomm.ecomm.converts.exceptions.Errors;
 import com.ideaas.ecomm.ecomm.converts.exceptions.Fault;
 import com.ideaas.ecomm.ecomm.domain.AFIP.LoginTicketResponse;
@@ -25,6 +26,8 @@ import com.ideaas.ecomm.ecomm.services.interfaces.IProductService;
 import com.ideaas.ecomm.ecomm.services.interfaces.IUserService;
 import com.ideaas.ecomm.ecomm.services.interfaces.IWalletService;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -62,6 +65,7 @@ public class BillService implements IBillService {
     private IWalletService walletService;
     private IProductService productService;
 
+    private static final Logger logger = LoggerFactory.getLogger(BillService.class);
 
 
     @Autowired
@@ -163,6 +167,7 @@ public class BillService implements IBillService {
             throw ex;
         } catch (Exception ex) {
             //Errors errors = convertToErrorAfip(asAString);
+            logger.error("[AFIP ERROR]: " + ex.getMessage());
             throw new AfipException("There was a problem with AFIP services. Exception: " + ex);
         }
     }
