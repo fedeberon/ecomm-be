@@ -28,6 +28,20 @@ public class Errors {
         @XmlElement(name = "descripcion")
         private String description;
 
+
+        @Override
+        public String toString() {
+            return "DescriptionCode{" +
+                    "code='" + code + '\'' +
+                    ", description='" + description + '\'' +
+                    '}';
+        }
     }
 
+    @Override
+    public String toString() {
+        return "Errors{" +
+                "descriptions=" + descriptions +
+                '}';
+    }
 }
