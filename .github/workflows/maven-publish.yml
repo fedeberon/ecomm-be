@@ -14,10 +14,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
 
-    - name: Stop ecoom service
-      run: stop_ecomm
-      id: stop-ecomm-service
-
     - uses: actions/checkout@v1
     - name: Push to server
       uses: appleboy/ssh-action@master
@@ -25,13 +21,8 @@ jobs:
         host: ${{ secrets.SERVER_IP }}
         username: ${{ secrets.SERVER_USERNAME }}
         password: ${{ secrets.SERVER_PASSWORD }}
-        script: cd ${{ secrets.PROJECT_PATH }} && git pull
-
-    - name: Build proyect
-      run: mvn clean install
-      id: build-project
-
-    - name: Start ecoom service
-      run: start_ecomm
-      id: start-ecomm-service
-
+        script: |
+          cd ${{ secrets.PROJECT_PATH }} && git pull
+          stop_ecomm
+          mvn clean package -DskipTests
+          start_ecomm
