@@ -148,8 +148,11 @@ public class BillService implements IBillService {
 
             final SOAPMessage request = createBill(ticketResponse, billRequest, lastBillId);
             final String requestAsAString = printSOAPResponse(request);
+            logger.info("Request: " + requestAsAString);
+
             final SOAPMessage response = callService(AFIP_BILLIMG, request);
             final String asAString = printSOAPResponse(response);
+            logger.info("AFIP response: " + asAString);
 
             if(response.getSOAPBody().hasFault()) {
                 final Fault fault = convertToValidationAfip(asAString);
@@ -162,8 +165,10 @@ public class BillService implements IBillService {
             return billResponse;
 
         } catch (LoginTicketException ex) {
+            logger.error("[LoginTicketException]: " + ex.getMessage());
             throw ex;
         } catch (AfipException ex) {
+            logger.error("[LoginTicketException]: " + ex.getMessage());
             throw ex;
         } catch (Exception ex) {
             //Errors errors = convertToErrorAfip(asAString);
