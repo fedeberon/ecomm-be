@@ -8,7 +8,7 @@ public class HomeController {
 
     @RequestMapping({"/", "/home"})
     public String home() {
-        return "Sistema de Gesti&oacoute;n de eComm. IDEAAS 2022";
+        return "Sistema de Gestion de eCommerce. IDEAAS - 2022";
     }
 
 }
