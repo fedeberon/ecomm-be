@@ -33,4 +33,13 @@ public class LastBillIdResponse {
 
         return id + 1;
     }
+
+    @Override
+    public String toString() {
+        return "LastBillIdResponse{" +
+                "lastId='" + lastId + '\'' +
+                ", cuit='" + cuit + '\'' +
+                ", billType=" + billType +
+                '}';
+    }
 }

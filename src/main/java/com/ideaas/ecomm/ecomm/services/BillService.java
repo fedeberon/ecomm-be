@@ -112,14 +112,16 @@ public class BillService implements IBillService {
         try {
             SOAPMessage request = createGetLastBillId(ticketResponse, lastBillIdResponse);
             String requestAsAString = printSOAPResponse(request);
+            logger.info("Request: " + requestAsAString);
             SOAPMessage response = callService(AFIP_LAST_BILL_ID, request);
             asAString = printSOAPResponse(response);
+            logger.info("Response: " + asAString);
             LastBillIdResponse lastBillId = convertoToLastBillId(asAString);
 
             return lastBillId;
         } catch (Exception e) {
             Errors errors = convertToErrorAfip(asAString);
-
+            logger.error("Error: " + errors.toString());
             throw new AfipException("There was a problem with AFIP services. Exception: " + errors);
         }
     }
