@@ -24,6 +24,6 @@ jobs:
         port: ${{ secrets.SERVER_PORT }}
         script: |
           cd ${{ secrets.PROJECT_PATH }} && git pull
-          stop_ecomm
+          systemctl stop ecomm-be.service
           mvn clean package -DskipTests
-          start_ecomm
+          systemctl start ecomm-be.service
