@@ -422,6 +422,7 @@ public class AfipWSAAClient {
 
         } catch (SOAPException e) {
             e.printStackTrace();
+            logger.error("Error al crear el mensaje SOAP para el CAE", e);
             return null;
         }
     }

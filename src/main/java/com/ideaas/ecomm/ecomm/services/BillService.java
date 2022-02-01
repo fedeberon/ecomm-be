@@ -54,6 +54,8 @@ import static com.ideaas.ecomm.ecomm.services.AfipWSAAClient.createGetPersona;
 @Service
 public class BillService implements IBillService {
 
+    private static final Logger logger = LoggerFactory.getLogger(BillService.class);
+
     public static String AFIP_A5_SERVICE   = "https://aws.afip.gov.ar/sr-padron/webservices/personaServiceA5";
     public static String AFIP_CAE          = "https://fwshomo.afip.gov.ar/wsmtxca/services/MTXCAService";
     public static String AFIP_LAST_BILL_ID = "https://fwshomo.afip.gov.ar/wsmtxca/services/MTXCAService";
@@ -64,9 +66,6 @@ public class BillService implements IBillService {
     private IUserService userService;
     private IWalletService walletService;
     private IProductService productService;
-
-    private static final Logger logger = LoggerFactory.getLogger(BillService.class);
-
 
     @Autowired
     public BillService(final ICheckoutService checkoutService,
@@ -144,7 +143,9 @@ public class BillService implements IBillService {
             final Checkout checkout = checkoutService.get(billRequest.getCheckoutId());
             prepareBillingItems(billRequest, checkout);
             final LastBillIdResponse lastBillIdRequest = new LastBillIdResponse("20285640661", billRequest.getBillType());
+            logger.info("lastBillIdRequest: " + lastBillIdRequest);
             final LastBillIdResponse lastBillId = this.getLastBillId(ticketResponse, lastBillIdRequest);
+            logger.info("lastBillId: " + lastBillId);
 
             final SOAPMessage request = createBill(ticketResponse, billRequest, lastBillId);
             final String requestAsAString = printSOAPResponse(request);
