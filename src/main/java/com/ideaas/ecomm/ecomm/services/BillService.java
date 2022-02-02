@@ -1,5 +1,6 @@
 package com.ideaas.ecomm.ecomm.services;
 
+import com.ideaas.ecomm.ecomm.converts.AfipConvert;
 import com.ideaas.ecomm.ecomm.converts.exceptions.Errors;
 import com.ideaas.ecomm.ecomm.converts.exceptions.Fault;
 import com.ideaas.ecomm.ecomm.domain.AFIP.LoginTicketResponse;
@@ -25,6 +26,8 @@ import com.ideaas.ecomm.ecomm.services.interfaces.IProductService;
 import com.ideaas.ecomm.ecomm.services.interfaces.IUserService;
 import com.ideaas.ecomm.ecomm.services.interfaces.IWalletService;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -51,6 +54,8 @@ import static com.ideaas.ecomm.ecomm.services.AfipWSAAClient.createGetPersona;
 @Service
 public class BillService implements IBillService {
 
+    private static final Logger logger = LoggerFactory.getLogger(BillService.class);
+
     public static String AFIP_A5_SERVICE   = "https://aws.afip.gov.ar/sr-padron/webservices/personaServiceA5";
     public static String AFIP_CAE          = "https://fwshomo.afip.gov.ar/wsmtxca/services/MTXCAService";
     public static String AFIP_LAST_BILL_ID = "https://fwshomo.afip.gov.ar/wsmtxca/services/MTXCAService";
@@ -61,8 +66,6 @@ public class BillService implements IBillService {
     private IUserService userService;
     private IWalletService walletService;
     private IProductService productService;
-
-
 
     @Autowired
     public BillService(final ICheckoutService checkoutService,
@@ -109,14 +112,16 @@ public class BillService implements IBillService {
         try {
             SOAPMessage request = createGetLastBillId(ticketResponse, lastBillIdResponse);
             String requestAsAString = printSOAPResponse(request);
+            logger.info("Request: " + requestAsAString);
             SOAPMessage response = callService(AFIP_LAST_BILL_ID, request);
             asAString = printSOAPResponse(response);
+            logger.info("Response: " + asAString);
             LastBillIdResponse lastBillId = convertoToLastBillId(asAString);
 
             return lastBillId;
         } catch (Exception e) {
             Errors errors = convertToErrorAfip(asAString);
-
+            logger.error("Error: " + errors.toString());
             throw new AfipException("There was a problem with AFIP services. Exception: " + errors);
         }
     }
@@ -140,12 +145,17 @@ public class BillService implements IBillService {
             final Checkout checkout = checkoutService.get(billRequest.getCheckoutId());
             prepareBillingItems(billRequest, checkout);
             final LastBillIdResponse lastBillIdRequest = new LastBillIdResponse("20285640661", billRequest.getBillType());
+            logger.info("lastBillIdRequest: " + lastBillIdRequest);
             final LastBillIdResponse lastBillId = this.getLastBillId(ticketResponse, lastBillIdRequest);
+            logger.info("lastBillId: " + lastBillId);
 
             final SOAPMessage request = createBill(ticketResponse, billRequest, lastBillId);
             final String requestAsAString = printSOAPResponse(request);
+            logger.info("Request: " + requestAsAString);
+
             final SOAPMessage response = callService(AFIP_BILLIMG, request);
             final String asAString = printSOAPResponse(response);
+            logger.info("AFIP response: " + asAString);
 
             if(response.getSOAPBody().hasFault()) {
                 final Fault fault = convertToValidationAfip(asAString);
@@ -158,11 +168,14 @@ public class BillService implements IBillService {
             return billResponse;
 
         } catch (LoginTicketException ex) {
+            logger.error("[LoginTicketException]: " + ex.getMessage());
             throw ex;
         } catch (AfipException ex) {
+            logger.error("[LoginTicketException]: " + ex.getMessage());
             throw ex;
         } catch (Exception ex) {
             //Errors errors = convertToErrorAfip(asAString);
+            logger.error("[AFIP ERROR]: " + ex.getMessage());
             throw new AfipException("There was a problem with AFIP services. Exception: " + ex);
         }
     }

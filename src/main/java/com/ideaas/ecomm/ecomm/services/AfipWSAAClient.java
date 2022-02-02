@@ -16,6 +16,8 @@ import org.bouncycastle.cms.CMSProcessableByteArray;
 import org.bouncycastle.cms.CMSSignedData;
 import org.bouncycastle.cms.CMSSignedDataGenerator;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import javax.xml.rpc.ParameterMode;
@@ -27,10 +29,18 @@ import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPMessage;
 import javax.xml.soap.SOAPPart;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.security.InvalidAlgorithmParameterException;
 import java.security.KeyStore;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
 import java.security.PrivateKey;
 import java.security.Security;
+import java.security.UnrecoverableKeyException;
 import java.security.cert.CertStore;
+import java.security.cert.CertificateException;
 import java.security.cert.CollectionCertStoreParameters;
 import java.security.cert.X509Certificate;
 import java.text.DecimalFormat;
@@ -45,12 +55,14 @@ import java.util.GregorianCalendar;
 @Component
 public class AfipWSAAClient {
 
+    private static final Logger logger = LoggerFactory.getLogger(AfipWSAAClient.class);
+
     static DecimalFormat df = new DecimalFormat("###.##");
 
 
     //https://www.afip.gob.ar/fe/ayuda/documentos/Manual-desarrollador-V.0.16.pdf
 
-    static String invokeWSAA (byte [] LoginTicketRequest_xml_cms, String endpoint){
+    static String invokeWSAA(byte [] LoginTicketRequest_xml_cms, String endpoint){
         String LoginTicketResponse = null;
         try {
 
@@ -70,10 +82,10 @@ public class AfipWSAAClient {
             //
             LoginTicketResponse = (String) call.invoke(new Object[] { Base64.encode (LoginTicketRequest_xml_cms) } );
 
-            System.out.print("Retorno " + LoginTicketResponse);
+            logger.info("LoginTicketResponse {}" , LoginTicketResponse);
 
         } catch (Exception e) {
-            System.out.print("Excepcion " + LoginTicketResponse);
+            logger.info("Excepcion {}" , LoginTicketResponse);
             e.printStackTrace();
         }
         return (LoginTicketResponse);
@@ -90,17 +102,57 @@ public class AfipWSAAClient {
         //
         // Manage Keys & Certificates
         //
-        try {
-            // Create a keystore using keys from the pkcs#12 p12file
-            KeyStore ks = KeyStore.getInstance("pkcs12");
-            FileInputStream p12stream = new FileInputStream( p12file ) ;
-            ks.load(p12stream, p12pass.toCharArray());
-            p12stream.close();
 
-            // Get Certificate & Private key from KeyStore
+            // Create a keystore using keys from the pkcs#12 p12file
+        KeyStore ks = null;
+        try {
+            ks = KeyStore.getInstance("pkcs12");
+        } catch (KeyStoreException ex) {
+            ex.printStackTrace();
+            logger.info("KeyStoreException {}" , p12pass);
+
+        }
+        FileInputStream p12stream = null;
+        try {
+            p12stream = new FileInputStream( p12file );
+        } catch (FileNotFoundException ex) {
+            ex.printStackTrace();
+            logger.info("FileNotFoundException {}" , ex);
+        }
+
+            try {
+                ks.load(p12stream, p12pass.toCharArray());
+            }
+            catch (IOException | NoSuchAlgorithmException | CertificateException ex) {
+                logger.info("IOException 1 {}" , ex);
+            }
+            try {
+                p12stream.close();
+            } catch (IOException ex) {
+                ex.printStackTrace();
+                logger.info("IOException 2 {}" , ex);
+            }
+
+        // Get Certificate & Private key from KeyStore
+        try {
             pKey = (PrivateKey) ks.getKey(signer, p12pass.toCharArray());
+        } catch (KeyStoreException ex) {
+            ex.printStackTrace();
+        } catch (NoSuchAlgorithmException ex) {
+            ex.printStackTrace();
+        } catch (UnrecoverableKeyException ex) {
+            ex.printStackTrace();
+        }
+        logger.info("pKey {}" , pKey);
+        try {
             pCertificate = (X509Certificate)ks.getCertificate(signer);
+        } catch (KeyStoreException ex) {
+            ex.printStackTrace();
+        }
+        logger.info("pCertificate {}" , pCertificate);
+
             SignerDN = pCertificate.getSubjectDN().toString();
+            logger.info("SignerDN {}" , SignerDN);
 
             // Create a list of Certificates to include in the final CMS
             ArrayList<X509Certificate> certList = new ArrayList<X509Certificate>();
@@ -110,10 +162,17 @@ public class AfipWSAAClient {
                 Security.addProvider(new BouncyCastleProvider());
             }
 
+        try {
             cstore = CertStore.getInstance("Collection", new CollectionCertStoreParameters(certList), "BC");
-        }
-        catch (Exception e) {
-            e.printStackTrace();
+        } catch (InvalidAlgorithmParameterException ex) {
+            ex.printStackTrace();
+            logger.info("InvalidAlgorithmParameterException {}" , ex);
+        } catch (NoSuchAlgorithmException ex) {
+            ex.printStackTrace();
+            logger.info("NoSuchAlgorithmException {}" , ex);
+        } catch (NoSuchProviderException ex) {
+            ex.printStackTrace();
+            logger.info("NoSuchProviderException {}" , ex);
         }
 
         //
@@ -363,6 +422,7 @@ public class AfipWSAAClient {
 
         } catch (SOAPException e) {
             e.printStackTrace();
+            logger.error("Error al crear el mensaje SOAP para el CAE", e);
             return null;
         }
     }

@@ -43,8 +43,21 @@ public class User  {
     @Column(name = "USU_CUIT")
     private String cuit;
 
+    @Column(name = "USU_EMAIL")
+    private String email;
+
     @Column(name = "USU_PHONE")
     private String phone;
+
+    @Column(name = "USU_CITY")
+    private String city;
+
+    @Column(name = "USU_DIRECTION")
+    private String direction;
+
+    @Column(name = "USU_POSTAL")
+    private String postal;
+
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     @JsonIgnore

@@ -957,6 +957,7 @@ Caused by: org.h2.jdbc.JdbcSQLInvalidAuthorizationSpecException: Wrong user name
 	at org.h2.message.DbException.getJdbcSQLException(DbException.java:461)
 	at org.h2.message.DbException.getJdbcSQLException(DbException.java:429)
 	... 97 more
+<<<<<<< HEAD
 2022-01-14 18:16:12 database: flush
 org.h2.message.DbException: Error General : "java.lang.IllegalStateException: The file is locked: nio:/home/nico/Documentos/GitHub/ecomm-be/data/ecomm.mv.db [1.4.200/7]"
 General error: "java.lang.IllegalStateException: The file is locked: nio:/home/nico/Documentos/GitHub/ecomm-be/data/ecomm.mv.db [1.4.200/7]" [50000-200]
@@ -1084,12 +1085,22 @@ General error: "java.lang.IllegalStateException: The file is locked: nio:/home/n
 	at org.h2.engine.Engine.createSession(Engine.java:29)
 	at org.h2.engine.SessionRemote.connectEmbeddedOrServer(SessionRemote.java:340)
 	at org.h2.jdbc.JdbcConnection.<init>(JdbcConnection.java:173)
+=======
+2022-01-07 11:19:16 jdbc[776]: null
+org.h2.message.DbException: The connection was not closed by the application and is garbage collected [90018-200]
+	at org.h2.message.DbException.get(DbException.java:205)
+	at org.h2.message.DbException.get(DbException.java:181)
+	at org.h2.message.DbException.get(DbException.java:170)
+	at org.h2.jdbc.JdbcConnection.closeOld(JdbcConnection.java:245)
+	at org.h2.jdbc.JdbcConnection.<init>(JdbcConnection.java:186)
+>>>>>>> bf36ae6b1122208774771efa4633020f79b69d0a
 	at org.h2.jdbc.JdbcConnection.<init>(JdbcConnection.java:152)
 	at org.h2.Driver.connect(Driver.java:69)
 	at com.zaxxer.hikari.util.DriverDataSource.getConnection(DriverDataSource.java:138)
 	at com.zaxxer.hikari.pool.PoolBase.newConnection(PoolBase.java:364)
 	at com.zaxxer.hikari.pool.PoolBase.newPoolEntry(PoolBase.java:206)
 	at com.zaxxer.hikari.pool.HikariPool.createPoolEntry(HikariPool.java:476)
+<<<<<<< HEAD
 	at com.zaxxer.hikari.pool.HikariPool.checkFailFast(HikariPool.java:561)
 	at com.zaxxer.hikari.pool.HikariPool.<init>(HikariPool.java:115)
 	at com.zaxxer.hikari.HikariDataSource.getConnection(HikariDataSource.java:112)
@@ -1145,6 +1156,22 @@ Caused by: java.lang.IllegalStateException: The file is locked: nio:/home/nico/D
 2022-01-14 18:16:15 database: flush
 org.h2.message.DbException: Error General : "java.lang.IllegalStateException: The file is locked: nio:/home/nico/Documentos/GitHub/ecomm-be/data/ecomm.mv.db [1.4.200/7]"
 General error: "java.lang.IllegalStateException: The file is locked: nio:/home/nico/Documentos/GitHub/ecomm-be/data/ecomm.mv.db [1.4.200/7]" [50000-200]
+=======
+	at com.zaxxer.hikari.pool.HikariPool.access$100(HikariPool.java:71)
+	at com.zaxxer.hikari.pool.HikariPool$PoolEntryCreator.call(HikariPool.java:726)
+	at com.zaxxer.hikari.pool.HikariPool$PoolEntryCreator.call(HikariPool.java:712)
+	at java.util.concurrent.FutureTask.run$$$capture(FutureTask.java:266)
+	at java.util.concurrent.FutureTask.run(FutureTask.java)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)
+	at java.lang.Thread.run(Thread.java:748)
+Caused by: org.h2.jdbc.JdbcSQLNonTransientConnectionException: The connection was not closed by the application and is garbage collected [90018-200]
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:622)
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:429)
+	... 19 more
+2022-01-08 21:58:35 database: flush
+org.h2.message.DbException: General error: "java.lang.IllegalStateException: The file is locked: nio:/Users/fedeberon/IdeaProjects/ecomm/data/ecomm.mv.db [1.4.200/7]" [50000-200]
+>>>>>>> bf36ae6b1122208774771efa4633020f79b69d0a
 	at org.h2.message.DbException.get(DbException.java:194)
 	at org.h2.message.DbException.convert(DbException.java:347)
 	at org.h2.mvstore.db.MVTableEngine$1.uncaughtException(MVTableEngine.java:93)
@@ -1171,6 +1198,7 @@ General error: "java.lang.IllegalStateException: The file is locked: nio:/home/n
 	at com.zaxxer.hikari.pool.PoolBase.newConnection(PoolBase.java:364)
 	at com.zaxxer.hikari.pool.PoolBase.newPoolEntry(PoolBase.java:206)
 	at com.zaxxer.hikari.pool.HikariPool.createPoolEntry(HikariPool.java:476)
+<<<<<<< HEAD
 	at com.zaxxer.hikari.pool.HikariPool.checkFailFast(HikariPool.java:561)
 	at com.zaxxer.hikari.pool.HikariPool.<init>(HikariPool.java:115)
 	at com.zaxxer.hikari.HikariDataSource.getConnection(HikariDataSource.java:112)
@@ -1299,3 +1327,30 @@ The connection was not closed by the application and is garbage collected [90018
 	at org.h2.message.DbException.getJdbcSQLException(DbException.java:622)
 	at org.h2.message.DbException.getJdbcSQLException(DbException.java:429)
 	... 18 more
+=======
+	at com.zaxxer.hikari.pool.HikariPool.access$100(HikariPool.java:71)
+	at com.zaxxer.hikari.pool.HikariPool$PoolEntryCreator.call(HikariPool.java:726)
+	at com.zaxxer.hikari.pool.HikariPool$PoolEntryCreator.call(HikariPool.java:712)
+	at java.util.concurrent.FutureTask.run$$$capture(FutureTask.java:266)
+	at java.util.concurrent.FutureTask.run(FutureTask.java)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)
+	at java.lang.Thread.run(Thread.java:748)
+Caused by: org.h2.jdbc.JdbcSQLNonTransientException: General error: "java.lang.IllegalStateException: The file is locked: nio:/Users/fedeberon/IdeaProjects/ecomm/data/ecomm.mv.db [1.4.200/7]" [50000-200]
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:505)
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:429)
+	... 34 more
+Caused by: java.lang.IllegalStateException: The file is locked: nio:/Users/fedeberon/IdeaProjects/ecomm/data/ecomm.mv.db [1.4.200/7]
+	at org.h2.mvstore.DataUtils.newIllegalStateException(DataUtils.java:950)
+	at org.h2.mvstore.FileStore.open(FileStore.java:166)
+	at org.h2.mvstore.MVStore.<init>(MVStore.java:381)
+	... 28 more
+Caused by: java.nio.channels.OverlappingFileLockException
+	at sun.nio.ch.SharedFileLockTable.checkList(FileLockTable.java:255)
+	at sun.nio.ch.SharedFileLockTable.add(FileLockTable.java:152)
+	at sun.nio.ch.FileChannelImpl.tryLock(FileChannelImpl.java:1107)
+	at org.h2.store.fs.FileNio.tryLock(FilePathNio.java:121)
+	at java.nio.channels.FileChannel.tryLock(FileChannel.java:1155)
+	at org.h2.mvstore.FileStore.open(FileStore.java:163)
+	... 29 more
+>>>>>>> bf36ae6b1122208774771efa4633020f79b69d0a

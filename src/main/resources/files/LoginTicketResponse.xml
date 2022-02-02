@@ -4,8 +4,8 @@
         <source>CN=wsaahomo, O=AFIP, C=AR, SERIALNUMBER=CUIT 33693450239</source>
         <destination>SERIALNUMBER=CUIT 20285640661, CN=fedeberonhomomac</destination>
         <uniqueId>2940615350</uniqueId>
-        <generationTime>2021-10-31 09:29:18</generationTime>
-        <expirationTime>2021-10-31 21:29:18</expirationTime>
+        <generationTime>2022-01-31T12:27:38.951-03:00</generationTime>
+        <expirationTime>2022-02-01T00:27:38.951-03:00</expirationTime>
     </header>
     <credentials>
         <token>PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9InllcyI/Pgo8c3NvIHZlcnNpb249IjIuMCI+CiAgICA8aWQgc3JjPSJDTj13c2FhaG9tbywgTz1BRklQLCBDPUFSLCBTRVJJQUxOVU1CRVI9Q1VJVCAzMzY5MzQ1MDIzOSIgdW5pcXVlX2lkPSI2OTM4NzU1NDUiIGdlbl90aW1lPSIxNjM1NjgzMjk4IiBleHBfdGltZT0iMTYzNTcyNjU1OCIvPgogICAgPG9wZXJhdGlvbiB0eXBlPSJsb2dpbiIgdmFsdWU9ImdyYW50ZWQiPgogICAgICAgIDxsb2dpbiBlbnRpdHk9IjMzNjkzNDUwMjM5IiBzZXJ2aWNlPSJ3c210eGNhIiB1aWQ9IlNFUklBTE5VTUJFUj1DVUlUIDIwMjg1NjQwNjYxLCBDTj1mZWRlYmVyb25ob21vbWFjIiBhdXRobWV0aG9kPSJjbXMiIHJlZ21ldGhvZD0iMjIiPgogICAgICAgICAgICA8cmVsYXRpb25zPgogICAgICAgICAgICAgICAgPHJlbGF0aW9uIGtleT0iMjAyODU2NDA2NjEiIHJlbHR5cGU9IjQiLz4KICAgICAgICAgICAgPC9yZWxhdGlvbnM+CiAgICAgICAgPC9sb2dpbj4KICAgIDwvb3BlcmF0aW9uPgo8L3Nzbz4K</token>
