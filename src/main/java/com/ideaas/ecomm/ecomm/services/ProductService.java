@@ -83,6 +83,7 @@ public class ProductService implements IProductService {
     @Override
     public List<Product> search(final String value) {
         List<Product> optionalProducts = dao.findAllByNameIgnoreCase(value);
+        optionalProducts.forEach(oneProduct -> addImagesOnProduct(oneProduct));
 
         return optionalProducts;
     }
