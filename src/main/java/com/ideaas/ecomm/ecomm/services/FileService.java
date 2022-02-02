@@ -73,7 +73,7 @@ public class FileService {
                     try {
                         images.add(new Image(file.getFileName().toString(), false));
                     }
-                    finally {
+                    finally { 
                         return FileVisitResult.CONTINUE;
                     }
                 }
