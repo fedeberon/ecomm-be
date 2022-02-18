@@ -35,3 +35,6 @@ build/
 src/main/resources/application.properties
 
 data/**
+src/main/resources/application.properties
+data/ecomm.trace.db
+data/ecomm.mv.db

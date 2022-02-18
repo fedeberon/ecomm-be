@@ -7,7 +7,9 @@ import com.ideaas.ecomm.ecomm.services.interfaces.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,7 +19,6 @@ public class UserService implements IUserService {
 
     private UserDao dao;
     private IAuthenticationFacade authenticationFacade;
-
     @Autowired
     public UserService(final UserDao dao,
                        final IAuthenticationFacade authenticationFacade) {
@@ -37,8 +38,10 @@ public class UserService implements IUserService {
 
     @Override
     public User save(final User user) {
-        user.setUsername(user.getCardId());
-        user.setPassword("123");
+        BCryptPasswordEncoder passwordEncoder =new BCryptPasswordEncoder();
+        String password = passwordEncoder.encode(user.getPassword());
+        user.setUsername(user.getEmail());
+        user.setPassword(password);
 
         return dao.save(user);
     }
