@@ -4,6 +4,7 @@ import com.ideaas.ecomm.ecomm.domain.AFIP.LoginTicketResponse;
 import com.ideaas.ecomm.ecomm.domain.AFIP.Person;
 import com.ideaas.ecomm.ecomm.domain.Bill;
 import com.ideaas.ecomm.ecomm.domain.User;
+import com.ideaas.ecomm.ecomm.enums.BillType;
 import com.ideaas.ecomm.ecomm.payload.BillRequest;
 import com.ideaas.ecomm.ecomm.payload.BillResponse;
 import com.ideaas.ecomm.ecomm.payload.CAEAResponse;
@@ -19,7 +20,8 @@ public interface IBillService {
                                String idPersona);
 
     LastBillIdResponse getLastBillId(LoginTicketResponse ticketResponse,
-                                     LastBillIdResponse lastBillIdResponse);
+                                     LastBillIdResponse lastBillIdResponse,
+                                     BillType billType);
 
     CAEAResponse createCAERequest(LoginTicketResponse ticketResponse,
                                   String CUIT);
@@ -34,4 +36,6 @@ public interface IBillService {
     Bill get(Long id);
 
     List<Bill>  findAllByUser(User user);
+
+    void getBillTypes(LoginTicketResponse ticketResponse);
 }

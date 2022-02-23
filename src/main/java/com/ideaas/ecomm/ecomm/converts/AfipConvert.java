@@ -13,6 +13,7 @@ import javax.xml.bind.JAXBException;
 import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPMessage;
 import javax.xml.stream.XMLInputFactory;
+import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 import javax.xml.transform.TransformerConfigurationException;
@@ -72,16 +73,27 @@ public class AfipConvert {
         return personaReturn;
     }
 
-    public static LastBillIdResponse convertoToLastBillId(final String xml) {
+    public static LastBillIdResponse convertoToLastBillId(String xml) {
         try {
+            xml = xml.replace("soap:", "");
+            xml = xml.replace("xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\"", "");
+            xml = xml.replace("xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"", "");
+            xml = xml.replace("xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\"", "");
+            xml = xml.replace("xmlns=\"http://ar.gov.afip.dif.FEV1/\"", "");
+            xml = xml.replace("xmlns=\"http://ar.gov.afip.dif.FEV1/\"", "");
+
             JAXBContext jc = JAXBContext.newInstance(new Class[] { LastBillIdResponse.class });
             StringReader reader = new StringReader(xml);
             XMLInputFactory xif = XMLInputFactory.newFactory();
             XMLStreamReader xmlReader = xif.createXMLStreamReader(reader);
-
             xmlReader.nextTag();
-            while (!xmlReader.getLocalName().equals("consultarUltimoComprobanteAutorizadoResponse")) {
-                xmlReader.nextTag();
+            while (!xmlReader.getLocalName().equals("FECompUltimoAutorizadoResult")) {
+               logger.info(xmlReader.getLocalName());
+               try {
+                   xmlReader.nextTag();
+               } catch (XMLStreamException e) {
+                   xmlReader.nextTag();
+               }
             }
             javax.xml.bind.Unmarshaller jaxbUnmarshaller = jc.createUnmarshaller();
             javax.xml.bind.JAXBElement<LastBillIdResponse> jb = jaxbUnmarshaller.unmarshal(xmlReader, LastBillIdResponse.class);
@@ -149,6 +161,7 @@ public class AfipConvert {
 
     public static LoginTicket convertToLoginTicketResponse(final String xml) {
         try {
+
             logger.info("XML recieved: {}", xml);
             JAXBContext jc = JAXBContext.newInstance(new Class[] { LoginTicket.class });
             StringReader reader = new StringReader(xml);

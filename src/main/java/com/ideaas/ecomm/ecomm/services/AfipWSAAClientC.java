@@ -1,2 +1,4 @@
-package com.ideaas.ecomm.ecomm.services;public class AfipWSAAClientC {
+package com.ideaas.ecomm.ecomm.services;
+
+public class AfipWSAAClientC {
 }

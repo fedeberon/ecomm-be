@@ -18,7 +18,8 @@ public class LocalDateTimeAdapter extends XmlAdapter<String, LocalDateTime> {
 
     @Override
     public LocalDateTime unmarshal(String dateTime) {
-        return LocalDateTime.parse(dateTime, dateFormat);
+        LocalDateTime date = LocalDateTime.parse(dateTime, dateFormat);
+        return date;
     }
 
 }

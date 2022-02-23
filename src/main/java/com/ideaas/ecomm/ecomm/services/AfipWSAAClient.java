@@ -23,6 +23,7 @@ import org.springframework.stereotype.Component;
 import javax.xml.rpc.ParameterMode;
 import javax.xml.soap.MessageFactory;
 import javax.xml.soap.MimeHeaders;
+import javax.xml.soap.SOAPBody;
 import javax.xml.soap.SOAPElement;
 import javax.xml.soap.SOAPEnvelope;
 import javax.xml.soap.SOAPException;
@@ -44,6 +45,7 @@ import java.security.cert.CertificateException;
 import java.security.cert.CollectionCertStoreParameters;
 import java.security.cert.X509Certificate;
 import java.text.DecimalFormat;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -62,7 +64,7 @@ public class AfipWSAAClient {
 
     //https://www.afip.gob.ar/fe/ayuda/documentos/Manual-desarrollador-V.0.16.pdf
 
-    static String invokeWSAA(byte [] LoginTicketRequest_xml_cms, String endpoint){
+    static String invokeWSAA(byte[] LoginTicketRequest_xml_cms, String endpoint) {
         String LoginTicketResponse = null;
         try {
 
@@ -72,29 +74,29 @@ public class AfipWSAAClient {
             //
             // Prepare the call for the Web service
             //
-            call.setTargetEndpointAddress( new java.net.URL(endpoint) );
+            call.setTargetEndpointAddress(new java.net.URL(endpoint));
             call.setOperationName("loginCms");
-            call.addParameter( "request", XMLType.XSD_STRING, ParameterMode.IN );
-            call.setReturnType( XMLType.XSD_STRING );
+            call.addParameter("request", XMLType.XSD_STRING, ParameterMode.IN);
+            call.setReturnType(XMLType.XSD_STRING);
 
             //
             // Make the actual call and assign the answer to a String
             //
-            LoginTicketResponse = (String) call.invoke(new Object[] { Base64.encode (LoginTicketRequest_xml_cms) } );
+            LoginTicketResponse = (String) call.invoke(new Object[]{Base64.encode(LoginTicketRequest_xml_cms)});
 
-            logger.info("LoginTicketResponse {}" , LoginTicketResponse);
+            logger.info("LoginTicketResponse {}", LoginTicketResponse);
 
         } catch (Exception e) {
-            logger.info("Excepcion {}" , LoginTicketResponse);
+            logger.info("Excepcion {}", LoginTicketResponse);
             e.printStackTrace();
         }
         return (LoginTicketResponse);
     }
 
-    public static byte [] create_cms(String p12file, String p12pass, String signer, String dstDN, String service) {
+    public static byte[] create_cms(String p12file, String p12pass, String signer, String dstDN, String service) {
         PrivateKey pKey = null;
         X509Certificate pCertificate = null;
-        byte [] asn1_cms = null;
+        byte[] asn1_cms = null;
         CertStore cstore = null;
         String LoginTicketRequest_xml;
         String SignerDN = null;
@@ -103,35 +105,34 @@ public class AfipWSAAClient {
         // Manage Keys & Certificates
         //
 
-            // Create a keystore using keys from the pkcs#12 p12file
+        // Create a keystore using keys from the pkcs#12 p12file
         KeyStore ks = null;
         try {
             ks = KeyStore.getInstance("pkcs12");
         } catch (KeyStoreException ex) {
             ex.printStackTrace();
-            logger.info("KeyStoreException {}" , p12pass);
+            logger.info("KeyStoreException {}", p12pass);
 
         }
         FileInputStream p12stream = null;
         try {
-            p12stream = new FileInputStream( p12file );
+            p12stream = new FileInputStream(p12file);
         } catch (FileNotFoundException ex) {
             ex.printStackTrace();
-            logger.info("FileNotFoundException {}" , ex);
+            logger.info("FileNotFoundException {}", ex);
         }
 
-            try {
-                ks.load(p12stream, p12pass.toCharArray());
-            }
-            catch (IOException | NoSuchAlgorithmException | CertificateException ex) {
-                logger.info("IOException 1 {}" , ex);
-            }
-            try {
-                p12stream.close();
-            } catch (IOException ex) {
-                ex.printStackTrace();
-                logger.info("IOException 2 {}" , ex);
-            }
+        try {
+            ks.load(p12stream, p12pass.toCharArray());
+        } catch (IOException | NoSuchAlgorithmException | CertificateException ex) {
+            logger.info("IOException 1 {}", ex);
+        }
+        try {
+            p12stream.close();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            logger.info("IOException 2 {}", ex);
+        }
 
         // Get Certificate & Private key from KeyStore
         try {
@@ -143,36 +144,36 @@ public class AfipWSAAClient {
         } catch (UnrecoverableKeyException ex) {
             ex.printStackTrace();
         }
-        logger.info("pKey {}" , pKey);
+        logger.info("pKey {}", pKey);
         try {
-            pCertificate = (X509Certificate)ks.getCertificate(signer);
+            pCertificate = (X509Certificate) ks.getCertificate(signer);
         } catch (KeyStoreException ex) {
             ex.printStackTrace();
         }
-        logger.info("pCertificate {}" , pCertificate);
+        logger.info("pCertificate {}", pCertificate);
 
-            SignerDN = pCertificate.getSubjectDN().toString();
-            logger.info("SignerDN {}" , SignerDN);
+        SignerDN = pCertificate.getSubjectDN().toString();
+        logger.info("SignerDN {}", SignerDN);
 
-            // Create a list of Certificates to include in the final CMS
-            ArrayList<X509Certificate> certList = new ArrayList<X509Certificate>();
-            certList.add(pCertificate);
+        // Create a list of Certificates to include in the final CMS
+        ArrayList<X509Certificate> certList = new ArrayList<X509Certificate>();
+        certList.add(pCertificate);
 
-            if (Security.getProvider("BC") == null) {
-                Security.addProvider(new BouncyCastleProvider());
-            }
+        if (Security.getProvider("BC") == null) {
+            Security.addProvider(new BouncyCastleProvider());
+        }
 
         try {
             cstore = CertStore.getInstance("Collection", new CollectionCertStoreParameters(certList), "BC");
         } catch (InvalidAlgorithmParameterException ex) {
             ex.printStackTrace();
-            logger.info("InvalidAlgorithmParameterException {}" , ex);
+            logger.info("InvalidAlgorithmParameterException {}", ex);
         } catch (NoSuchAlgorithmException ex) {
             ex.printStackTrace();
-            logger.info("NoSuchAlgorithmException {}" , ex);
+            logger.info("NoSuchAlgorithmException {}", ex);
         } catch (NoSuchProviderException ex) {
             ex.printStackTrace();
-            logger.info("NoSuchProviderException {}" , ex);
+            logger.info("NoSuchProviderException {}", ex);
         }
 
         //
@@ -201,34 +202,33 @@ public class AfipWSAAClient {
 
             //
             asn1_cms = signed.getEncoded();
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
         return (asn1_cms);
     }
 
-    public static String create_LoginTicketRequest (String SignerDN, String dstDN, String service) {
+    public static String create_LoginTicketRequest(String SignerDN, String dstDN, String service) {
         String LoginTicketRequest_xml;
         Date GenTime = new Date();
         GregorianCalendar gentime = new GregorianCalendar();
         GregorianCalendar exptime = new GregorianCalendar();
         String UniqueId = new Long(GenTime.getTime() / 1000).toString();
-        exptime.setTime(new Date(GenTime.getTime() +  1000));
+        exptime.setTime(new Date(GenTime.getTime() + 1000));
         LocalDateTime start = LocalDateTime.now();
 
         LoginTicketRequest_xml = "<?xml version=\"1.0\" encoding=\"UTF\u00AD8\"?>"
-                                +"<loginTicketRequest version=\"1.0\">"
-                                +"<header>"
-                                +"<source>" + SignerDN + "</source>"
-                                +"<destination>" + dstDN + "</destination>"
-                                +"<uniqueId>" + UniqueId + "</uniqueId>"
-                                +"<generationTime>" + start + "</generationTime>"
-                                +"<expirationTime>" + start.plusMinutes(1) + "</expirationTime>"
-                                +"</header>"
-                                +"<service>" + service + "</service>"
-                                +"</loginTicketRequest>";
+                + "<loginTicketRequest version=\"1.0\">"
+                + "<header>"
+                + "<source>" + SignerDN + "</source>"
+                + "<destination>" + dstDN + "</destination>"
+                + "<uniqueId>" + UniqueId + "</uniqueId>"
+                + "<generationTime>" + start + "</generationTime>"
+                + "<expirationTime>" + start.plusMinutes(1) + "</expirationTime>"
+                + "</header>"
+                + "<service>" + service + "</service>"
+                + "</loginTicketRequest>";
 
         System.out.println("TRA: " + LoginTicketRequest_xml);
 
@@ -239,7 +239,7 @@ public class AfipWSAAClient {
     public static SOAPMessage createGetLastBillId(final LoginTicketResponse ticketResponse,
                                                   final LastBillIdResponse lastBillIdResponse) {
         try {
-            MessageFactory messageFactory  = MessageFactory.newInstance();
+            MessageFactory messageFactory = MessageFactory.newInstance();
             SOAPMessage soapMessage = messageFactory.createMessage();
             SOAPPart soapPart = soapMessage.getSOAPPart();
             SOAPEnvelope envelope = soapPart.getEnvelope();
@@ -273,10 +273,47 @@ public class AfipWSAAClient {
     }
 
 
+    public static SOAPMessage createGetLastBillIdTypeC(final LoginTicketResponse ticketResponse,
+                                                       final LastBillIdResponse lastBillIdResponse) {
+        try {
+            MessageFactory messageFactory = MessageFactory.newInstance();
+            SOAPMessage soapMessage = messageFactory.createMessage();
+            SOAPPart soapPart = soapMessage.getSOAPPart();
+            SOAPEnvelope envelope = soapPart.getEnvelope();
+            javax.xml.soap.SOAPBody soapBody = envelope.getBody();
+            envelope.addNamespaceDeclaration("ar", "http://ar.gov.afip.dif.FEV1/");
+            SOAPElement fECompUltimoAutorizado = soapBody.addChildElement("FECompUltimoAutorizado", "ar");
+
+            SOAPElement authElement = fECompUltimoAutorizado.addChildElement("Auth", "ar");
+            SOAPElement tokenElement = authElement.addChildElement("Token", "ar");
+            tokenElement.addTextNode(ticketResponse.getToken());
+            SOAPElement signElement2 = authElement.addChildElement("Sign", "ar");
+            signElement2.addTextNode(ticketResponse.getSign());
+            SOAPElement cuitElement = authElement.addChildElement("Cuit", "ar");
+            cuitElement.addTextNode(lastBillIdResponse.getCuit());
+
+            SOAPElement ptoVta = fECompUltimoAutorizado.addChildElement("PtoVta", "ar");
+            ptoVta.addTextNode("1");
+            SOAPElement cbteTipo = fECompUltimoAutorizado.addChildElement("CbteTipo", "ar");
+            cbteTipo.addTextNode(lastBillIdResponse.getBillType().getCode());
+
+            MimeHeaders headers = soapMessage.getMimeHeaders();
+            headers.addHeader("SOAPAction", "http://ar.gov.afip.dif.FEV1/FECompUltimoAutorizado");
+            soapMessage.saveChanges();
+
+            return soapMessage;
+
+        } catch (SOAPException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+
     public static SOAPMessage createGetCAE(final LoginTicketResponse ticketResponse,
                                            final String CUIT) {
         try {
-            MessageFactory messageFactory  = MessageFactory.newInstance();
+            MessageFactory messageFactory = MessageFactory.newInstance();
             SOAPMessage soapMessage = messageFactory.createMessage();
             SOAPPart soapPart = soapMessage.getSOAPPart();
             SOAPEnvelope envelope = soapPart.getEnvelope();
@@ -316,7 +353,7 @@ public class AfipWSAAClient {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
         try {
-            MessageFactory messageFactory  = MessageFactory.newInstance();
+            MessageFactory messageFactory = MessageFactory.newInstance();
             SOAPMessage soapMessage = messageFactory.createMessage();
             SOAPPart soapPart = soapMessage.getSOAPPart();
             SOAPEnvelope envelope = soapPart.getEnvelope();
@@ -386,7 +423,7 @@ public class AfipWSAAClient {
                     SOAPElement precioUnitarioElement = itemElement.addChildElement("precioUnitario");
                     precioUnitarioElement.addTextNode(String.valueOf(item.getPrice()));
                     SOAPElement codigoCondicionIVAElement = itemElement.addChildElement("codigoCondicionIVA");
-                    if(billRequest.getBillType().equals(BillType.A)) {
+                    if (billRequest.getBillType().equals(BillType.A)) {
                         SOAPElement importeIVAAElement = itemElement.addChildElement("importeIVA");
                         importeIVAAElement.addTextNode(String.valueOf(getIva(billRequest, item)));
                     }
@@ -399,7 +436,7 @@ public class AfipWSAAClient {
                 }
             });
 
-            if(billRequest.getBillType().equals(BillType.A)) {
+            if (billRequest.getBillType().equals(BillType.A)) {
 
                 SOAPElement arraySubtotalesIVAElement = comprobanteCAERequestElement.addChildElement("arraySubtotalesIVA");
                 SOAPElement subtotalIVAElement = arraySubtotalesIVAElement.addChildElement("subtotalIVA");
@@ -438,11 +475,13 @@ public class AfipWSAAClient {
     }
 
     private static Double getIva(final BillRequest billRequest,
-                                 final Item item){
+                                 final Item item) {
         switch (billRequest.getBillType()) {
             case A:
-                return item.getPrice() * item.getQuantity()  * 21 / 100;
+                return item.getPrice() * item.getQuantity() * 21 / 100;
             case B:
+                return 0.00;
+            case C:
                 return 0.00;
         }
         throw new IllegalStateException("There was not posible find a 'IVA' condition type to return a value.");
@@ -507,6 +546,136 @@ public class AfipWSAAClient {
     }
 
 
+    public static SOAPMessage createBillTyoeC(final LoginTicketResponse ticketResponse,
+                                              final BillRequest billRequest,
+                                              final LastBillIdResponse lastBillIdResponse) {
+        DateTimeFormatter formatterBill = DateTimeFormatter.ofPattern("YYYYMMdd");
+
+        try {
+            MessageFactory messageFactory = MessageFactory.newInstance();
+            SOAPMessage soapMessage = messageFactory.createMessage();
+            SOAPPart soapPart = soapMessage.getSOAPPart();
+            SOAPEnvelope envelope = soapPart.getEnvelope();
+            javax.xml.soap.SOAPBody soapBody = envelope.getBody();
+            envelope.addNamespaceDeclaration("ar", "http://ar.gov.afip.dif.FEV1/");
+            SOAPElement fECAESolicitar = soapBody.addChildElement("FECAESolicitar", "ar");
+
+            SOAPElement auth = fECAESolicitar.addChildElement("Auth", "ar");
+            SOAPElement tokenElement = auth.addChildElement("Token", "ar");
+            tokenElement.addTextNode(ticketResponse.getToken());
+            SOAPElement signElement = auth.addChildElement("Sign", "ar");
+            signElement.addTextNode(ticketResponse.getSign());
+            SOAPElement cuitElement = auth.addChildElement("Cuit", "ar");
+            cuitElement.addTextNode("20285640661");
+
+            SOAPElement feCAEReq = fECAESolicitar.addChildElement("FeCAEReq", "ar");
+
+            SOAPElement feCabReq = feCAEReq.addChildElement("FeCabReq", "ar");
+            SOAPElement cantReg = feCabReq.addChildElement("CantReg", "ar");
+            cantReg.addTextNode("1");
+            SOAPElement ptoVta = feCabReq.addChildElement("PtoVta", "ar");
+            ptoVta.addTextNode(String.valueOf(billRequest.getPuntoDeVenta()));
+            SOAPElement cbteTipo = feCabReq.addChildElement("CbteTipo", "ar");
+            cbteTipo.addTextNode(String.valueOf(billRequest.getBillType().getCode()));
+
+            // Detalle
+            SOAPElement feDetReq = feCAEReq.addChildElement("FeDetReq", "ar");
+            SOAPElement feDetReqArray = feDetReq.addChildElement("FECAEDetRequest", "ar");
+            SOAPElement concepto = feDetReqArray.addChildElement("Concepto", "ar");
+            concepto.addTextNode("1");
+            SOAPElement docTipo = feDetReqArray.addChildElement("DocTipo", "ar");
+            docTipo.addTextNode("96");
+            SOAPElement docNro = feDetReqArray.addChildElement("DocNro", "ar");
+            docNro.addTextNode(billRequest.getCuit());
+            SOAPElement cbteDesde = feDetReqArray.addChildElement("CbteDesde", "ar");
+            cbteDesde.addTextNode(String.valueOf(lastBillIdResponse.nextBillId()));
+            SOAPElement cbteHasta = feDetReqArray.addChildElement("CbteHasta", "ar");
+            cbteHasta.addTextNode(String.valueOf(lastBillIdResponse.nextBillId()));
+            SOAPElement impTotalIVA = feDetReqArray.addChildElement("CbteFch", "ar");
+            impTotalIVA.addTextNode(formatterBill.format(billRequest.getDate()));
+            SOAPElement impTotal = feDetReqArray.addChildElement("ImpTotal", "ar");
+            impTotal.addTextNode(String.valueOf(billRequest.getTotalAmount()));
+            SOAPElement impTotConc = feDetReqArray.addChildElement("ImpTotConc", "ar");
+            impTotConc.addTextNode("0");
+            // Si ImpNeto es mayor a 0 el objeto IVA es obligatorio
+            SOAPElement impNeto = feDetReqArray.addChildElement("ImpNeto", "ar");
+            impNeto.addTextNode(String.valueOf(billRequest.getTotalAmount()));
+            SOAPElement impOpEx = feDetReqArray.addChildElement("ImpOpEx", "ar");
+            impOpEx.addTextNode("0");
+            SOAPElement impTrib = feDetReqArray.addChildElement("ImpTrib", "ar");
+            impTrib.addTextNode("0");
+            SOAPElement impIVAPerc = feDetReqArray.addChildElement("ImpIVA", "ar");
+            impIVAPerc.addTextNode("0");
+            // FchServDesde, FchServHasta, FchVtoPago Debe informarse solo si Concepto es igual a 2 o 3
+            //SOAPElement fechaDesde = feDetReqArray.addChildElement("FchServDesde", "ar");
+            //fechaDesde.addTextNode(formatterBill.format(billRequest.getDate()));
+            //SOAPElement impTotalIVAPerc = feDetReqArray.addChildElement("FchServHasta", "ar");
+            //impTotalIVAPerc.addTextNode(formatterBill.format(billRequest.getDate()));
+            //SOAPElement impTribPercep = feDetReqArray.addChildElement("FchVtoPago", "ar");
+            //impTribPercep.addTextNode(formatterBill.format(billRequest.getDate()));
+            SOAPElement impMonOrig = feDetReqArray.addChildElement("MonId", "ar");
+            impMonOrig.addTextNode("PES");
+            SOAPElement impMonCotiz = feDetReqArray.addChildElement("MonCotiz", "ar");
+            impMonCotiz.addTextNode("1");
+            //Comprobantes Asociados
+            // Debera informar CbtesAsoc solo si el CbteTipo que se informa es igual a 1, 2, 3, 6, 7, 8, 12, 13, 51, 52, 53, 201, 202, 203, 206, 207, 208, 211, 212, 213
+            //SOAPElement cbtesAsoc = feDetReqArray.addChildElement("CbtesAsoc", "ar");
+            //SOAPElement cbteAsoc = cbtesAsoc.addChildElement("CbteAsoc", "ar");
+            //SOAPElement cbteAsocTipo = cbteAsoc.addChildElement("Tipo", "ar");
+            //cbteAsocTipo.addTextNode(String.valueOf(billRequest.getBillType().getCode()));
+            //SOAPElement cbteAsocPtoVta = cbteAsoc.addChildElement("PtoVta", "ar");
+            //cbteAsocPtoVta.addTextNode(String.valueOf(billRequest.getPuntoDeVenta()));
+            //SOAPElement cbteAsocNro = cbteAsoc.addChildElement("Nro", "ar");
+            //cbteAsocNro.addTextNode(String.valueOf(lastBillIdResponse.nextBillId()));
+            //SOAPElement cbtesAsocCbteFch = cbteAsoc.addChildElement("Cuit", "ar");
+            //cbtesAsocCbteFch.addTextNode(billRequest.getCuit());
+            //SOAPElement cbteAsocCbteFch = cbteAsoc.addChildElement("CbteFch", "ar");
+            //cbteAsocCbteFch.addTextNode(formatterBill.format(LocalDateTime.now()));
+
+            //Iva
+            //SOAPElement iva = cbteAsoc.addChildElement("Iva", "ar");
+            //SOAPElement ivaAlicIva = iva.addChildElement("AlicIva", "ar");
+            //SOAPElement ivaId = ivaAlicIva.addChildElement("Id", "ar");
+            //ivaId.addTextNode("3");
+            //SOAPElement ivaBaseImp = ivaAlicIva.addChildElement("BaseImp", "ar");
+            //ivaBaseImp.addTextNode("100");
+            //SOAPElement ivaImporte = ivaAlicIva.addChildElement("Importe", "ar");
+            //ivaImporte.addTextNode("100");
+
+            return soapMessage;
 
 
+        } catch (SOAPException e) {
+            e.printStackTrace();
+            logger.error("Error al crear el mensaje SOAP para el CAE", e);
+            return null;
+        }
+    }
+
+
+    public static SOAPMessage createGetTiposCbte(final LoginTicketResponse ticketResponse) {
+        try {
+            SOAPMessage soapMessage = MessageFactory.newInstance().createMessage();
+            SOAPPart soapPart = soapMessage.getSOAPPart();
+            SOAPEnvelope envelope = soapPart.getEnvelope();
+            envelope.addNamespaceDeclaration("ar", "http://ar.gov.afip.dif.FEV1/");
+            SOAPBody soapBody = envelope.getBody();
+            SOAPElement soapBodyElem = soapBody.addChildElement("FEParamGetTiposCbte", "ar");
+            SOAPElement auth = soapBodyElem.addChildElement("Auth", "ar");
+            SOAPElement tokenElement = auth.addChildElement("Token", "ar");
+            tokenElement.addTextNode(ticketResponse.getToken());
+            SOAPElement signElement = auth.addChildElement("Sign", "ar");
+            signElement.addTextNode(ticketResponse.getSign());
+            SOAPElement cuitElement = auth.addChildElement("Cuit", "ar");
+            cuitElement.addTextNode("20285640661");
+
+            return soapMessage;
+
+        } catch (SOAPException e) {
+            e.printStackTrace();
+            logger.error("Error al crear el mensaje SOAP para el CAE", e);
+            return null;
+        }
+    }
 }
+

@@ -12,6 +12,7 @@ import com.ideaas.ecomm.ecomm.domain.Product;
 import com.ideaas.ecomm.ecomm.domain.ProductToCart;
 import com.ideaas.ecomm.ecomm.domain.User;
 import com.ideaas.ecomm.ecomm.domain.Wallet;
+import com.ideaas.ecomm.ecomm.enums.BillType;
 import com.ideaas.ecomm.ecomm.exception.AfipException;
 import com.ideaas.ecomm.ecomm.exception.LoginTicketException;
 import com.ideaas.ecomm.ecomm.payload.BillRequest;
@@ -47,8 +48,10 @@ import static com.ideaas.ecomm.ecomm.converts.AfipConvert.printSOAPResponse;
 import static com.ideaas.ecomm.ecomm.converts.AfipExceptionConvert.convertToErrorAfip;
 import static com.ideaas.ecomm.ecomm.converts.AfipValidationConverter.convertToValidationAfip;
 import static com.ideaas.ecomm.ecomm.services.AfipWSAAClient.createBill;
+import static com.ideaas.ecomm.ecomm.services.AfipWSAAClient.createBillTyoeC;
 import static com.ideaas.ecomm.ecomm.services.AfipWSAAClient.createGetCAE;
 import static com.ideaas.ecomm.ecomm.services.AfipWSAAClient.createGetLastBillId;
+import static com.ideaas.ecomm.ecomm.services.AfipWSAAClient.createGetLastBillIdTypeC;
 import static com.ideaas.ecomm.ecomm.services.AfipWSAAClient.createGetPersona;
 
 @Service
@@ -56,10 +59,20 @@ public class BillService implements IBillService {
 
     private static final Logger logger = LoggerFactory.getLogger(BillService.class);
 
+    // wsmtxca
+    /*
     public static String AFIP_A5_SERVICE   = "https://aws.afip.gov.ar/sr-padron/webservices/personaServiceA5";
     public static String AFIP_CAE          = "https://fwshomo.afip.gov.ar/wsmtxca/services/MTXCAService";
     public static String AFIP_LAST_BILL_ID = "https://fwshomo.afip.gov.ar/wsmtxca/services/MTXCAService";
     public static String AFIP_BILLIMG      = "https://fwshomo.afip.gov.ar/wsmtxca/services/MTXCAService";
+    */
+
+    // https://wswhomo.afip.gov.ar/wsfev1/service.asmx
+    public static String AFIP_A5_SERVICE   = "https://aws.afip.gov.ar/sr-padron/webservices/personaServiceA5";
+    public static String AFIP_CAE          = "https://fwshomo.afip.gov.ar/wsmtxca/services/MTXCAService";
+    public static String AFIP_LAST_BILL_ID = "https://wswhomo.afip.gov.ar/wsfev1/service.asmx?op=FECompUltimoAutorizado";
+    public static String AFIP_BILLING      = "https://wswhomo.afip.gov.ar/wsfev1/service.asmx?op=FECAESolicitar";
+    public static String AFIP_BILLING_TYPE = "https://wswhomo.afip.gov.ar/wsfev1/service.asmx?op=FECompConsultar";
 
     private ICheckoutService checkoutService;
     private BillDao dao;
@@ -107,10 +120,24 @@ public class BillService implements IBillService {
 
     @Override
     public LastBillIdResponse getLastBillId(final LoginTicketResponse ticketResponse,
-                                            final LastBillIdResponse lastBillIdResponse) {
+                                            final LastBillIdResponse lastBillIdResponse,
+                                            final BillType billType) {
         String asAString = null;
         try {
-            SOAPMessage request = createGetLastBillId(ticketResponse, lastBillIdResponse);
+            SOAPMessage request = null;
+
+            switch (billType) {
+                case A:
+                case B:
+                    request = createGetLastBillIdTypeC(ticketResponse, lastBillIdResponse);
+                    //request = createGetLastBillId(ticketResponse, lastBillIdResponse);
+                    break;
+                case C:
+                    request = createGetLastBillIdTypeC(ticketResponse, lastBillIdResponse);
+                    break;
+            }
+
+            createGetLastBillId(ticketResponse, lastBillIdResponse);
             String requestAsAString = printSOAPResponse(request);
             logger.info("Request: " + requestAsAString);
             SOAPMessage response = callService(AFIP_LAST_BILL_ID, request);
@@ -145,15 +172,15 @@ public class BillService implements IBillService {
             final Checkout checkout = checkoutService.get(billRequest.getCheckoutId());
             prepareBillingItems(billRequest, checkout);
             final LastBillIdResponse lastBillIdRequest = new LastBillIdResponse("20285640661", billRequest.getBillType());
-            logger.info("lastBillIdRequest: " + lastBillIdRequest);
-            final LastBillIdResponse lastBillId = this.getLastBillId(ticketResponse, lastBillIdRequest);
-            logger.info("lastBillId: " + lastBillId);
-
-            final SOAPMessage request = createBill(ticketResponse, billRequest, lastBillId);
+            final LastBillIdResponse lastBillId = this.getLastBillId(ticketResponse, lastBillIdRequest, billRequest.getBillType());
+            final SOAPMessage request =
+                    billRequest.getBillType() == BillType.C
+                            ? createBillTyoeC(ticketResponse, billRequest, lastBillId)
+                            : createBill(ticketResponse, billRequest, lastBillId);
             final String requestAsAString = printSOAPResponse(request);
             logger.info("Request: " + requestAsAString);
 
-            final SOAPMessage response = callService(AFIP_BILLIMG, request);
+            final SOAPMessage response = callService(AFIP_BILLING, request);
             final String asAString = printSOAPResponse(response);
             logger.info("AFIP response: " + asAString);
 
@@ -175,6 +202,34 @@ public class BillService implements IBillService {
             throw ex;
         } catch (Exception ex) {
             //Errors errors = convertToErrorAfip(asAString);
+            logger.error("[AFIP ERROR]: " + ex.getMessage());
+            throw new AfipException("There was a problem with AFIP services. Exception: " + ex);
+        }
+    }
+
+    @Override
+    public void getBillTypes(final LoginTicketResponse ticketResponse) {
+        try {
+            final SOAPMessage request = AfipWSAAClient.createGetTiposCbte(ticketResponse);
+            final String requestAsAString = printSOAPResponse(request);
+            logger.info("Request: " + requestAsAString);
+            final SOAPMessage response = callService(AFIP_BILLING_TYPE, request);
+            final String asAString = printSOAPResponse(response);
+            logger.info("AFIP response: " + asAString);
+
+            if(response.getSOAPBody().hasFault()) {
+                final Fault fault = convertToValidationAfip(asAString);
+
+                throw new AfipException("[AFIP ERROR]: Description: " + fault.getDetail());
+            }
+
+        } catch (LoginTicketException ex) {
+            logger.error("[LoginTicketException]: " + ex.getMessage());
+            throw ex;
+        } catch (AfipException ex) {
+            logger.error("[LoginTicketException]: " + ex.getMessage());
+            throw ex;
+        } catch (Exception ex) {
             logger.error("[AFIP ERROR]: " + ex.getMessage());
             throw new AfipException("There was a problem with AFIP services. Exception: " + ex);
         }
