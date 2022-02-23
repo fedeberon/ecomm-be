@@ -1,6 +1,7 @@
 package com.ideaas.ecomm.ecomm.controller;
 
 import com.ideaas.ecomm.ecomm.domain.AuthenticationRequest;
+import com.ideaas.ecomm.ecomm.domain.UpdateCredentialsRequest;
 import com.ideaas.ecomm.ecomm.domain.User;
 import com.ideaas.ecomm.ecomm.exception.InvalidPasswordOrUsernameException;
 import com.ideaas.ecomm.ecomm.payload.AuthenticationResponse;
@@ -69,5 +70,31 @@ public class AuthenticationController {
         } catch (Exception e) {
             throw new DisabledException("USER_DISABLED", e);
         }   
-    }      
+    } 
+    
+    
+
+    @PostMapping("/udpateCredentials")
+    public ResponseEntity<AuthenticationResponse> createAuthenticationToken(@RequestBody UpdateCredentialsRequest updateCredentialsRequest) throws Exception {
+        
+        try{
+            User user = userService.get(updateCredentialsRequest.getUsername());
+            // Ecriptar password
+            user.setPassword(updateCredentialsRequest.getNewPassword());
+
+            return ResponseEntity.ok().body(tokenResponse);
+            
+            } catch (DisabledException e) {
+                System.out.println(e);
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+            } catch (BadCredentialsException e) {
+                System.out.println(e); 
+                return ResponseEntity.status(HttpStatus.GONE).build();
+            }
+    }
+
+
+
+
+
 }
