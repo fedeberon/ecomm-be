@@ -3,6 +3,7 @@ package com.ideaas.ecomm.ecomm.services.interfaces;
 import com.ideaas.ecomm.ecomm.domain.AFIP.LoginTicketResponse;
 import com.ideaas.ecomm.ecomm.domain.AFIP.Person;
 import com.ideaas.ecomm.ecomm.domain.Bill;
+import com.ideaas.ecomm.ecomm.domain.Checkout;
 import com.ideaas.ecomm.ecomm.domain.User;
 import com.ideaas.ecomm.ecomm.enums.BillType;
 import com.ideaas.ecomm.ecomm.payload.BillRequest;
@@ -29,7 +30,7 @@ public interface IBillService {
     BillResponse createBilling(LoginTicketResponse ticketResponse,
                                BillRequest billRequest);
 
-    Bill save(BillResponse response);
+    Bill save(BillResponse response, Checkout checkout);
 
     List<Bill> findAll();
 
@@ -38,4 +39,5 @@ public interface IBillService {
     List<Bill>  findAllByUser(User user);
 
     void getBillTypes(LoginTicketResponse ticketResponse);
+
 }

@@ -1,5 +1,6 @@
 package com.ideaas.ecomm.ecomm.converts;
 
+import com.ideaas.ecomm.ecomm.payload.BillResponse;
 import com.ideaas.ecomm.ecomm.payload.LastBillIdResponse;
 import com.ideaas.ecomm.ecomm.payload.LoginTicket;
 import com.ideaas.ecomm.ecomm.util.FileUtil;
@@ -41,5 +42,15 @@ public class AfipConvertTest {
         assertNotNull(loginTicket.getLastId());
 
     }
+
+    @Test
+    public void shouldConvertToBill() throws IOException {
+        File resource = FileUtil.loadEmployeesWithSpringInternalClass("files/Bill.xml");
+        String xml = new String(Files.readAllBytes(resource.toPath()));
+        BillResponse bill = AfipConvert.convertoToBillResponse(xml);
+
+        assertNotNull(bill.getCAE());
+    }
+
 
 }

@@ -29,7 +29,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("billing")
@@ -105,8 +104,7 @@ public class BillingController {
         LoginTicketResponse ticketResponse = afipService.get("wsfe");
         BillResponse billResponse = billService.createBilling(ticketResponse, billRequest);
         Checkout checkout = checkoutService.changeStateTo(CheckoutState.PAID_OUT, billRequest.getCheckoutId());
-        billResponse.setCheckout(checkout);
-        Bill bill = billService.save(billResponse);
+        Bill bill = billService.save(billResponse, checkout);
 
         return ResponseEntity.ok(bill);
     }
@@ -141,4 +139,6 @@ public class BillingController {
 
         return ResponseEntity.ok(billsTypes);
     }
+
+
 }

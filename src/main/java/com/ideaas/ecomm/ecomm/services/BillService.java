@@ -1,6 +1,5 @@
 package com.ideaas.ecomm.ecomm.services;
 
-import com.ideaas.ecomm.ecomm.converts.AfipConvert;
 import com.ideaas.ecomm.ecomm.converts.exceptions.Errors;
 import com.ideaas.ecomm.ecomm.converts.exceptions.Fault;
 import com.ideaas.ecomm.ecomm.domain.AFIP.LoginTicketResponse;
@@ -26,7 +25,6 @@ import com.ideaas.ecomm.ecomm.services.interfaces.ICheckoutService;
 import com.ideaas.ecomm.ecomm.services.interfaces.IProductService;
 import com.ideaas.ecomm.ecomm.services.interfaces.IUserService;
 import com.ideaas.ecomm.ecomm.services.interfaces.IWalletService;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +34,8 @@ import org.springframework.stereotype.Service;
 import javax.xml.soap.SOAPConnection;
 import javax.xml.soap.SOAPConnectionFactory;
 import javax.xml.soap.SOAPMessage;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -85,7 +85,7 @@ public class BillService implements IBillService {
                        final BillDao dao,
                        final IUserService userService,
                        final IWalletService walletService,
-                       final IProductService productService ){
+                       final IProductService productService){
         this.checkoutService = checkoutService;
         this.dao = dao;
         this.userService = userService;
@@ -190,8 +190,9 @@ public class BillService implements IBillService {
                 throw new AfipException("[AFIP ERROR]: Description: " + fault.getDetail());
             }
 
-            final BillResponse billResponse = convertoToBillResponse(asAString);
-
+            BillResponse billResponse = convertoToBillResponse(asAString);
+            billResponse.setNroComprobante(Long.parseLong(lastBillId.getLastId()));
+            billResponse.setBillType(billRequest.getBillType());
             return billResponse;
 
         } catch (LoginTicketException ex) {
@@ -270,17 +271,17 @@ public class BillService implements IBillService {
     }
 
     @Override
-    public Bill save(BillResponse response) {
+    public Bill save(final BillResponse response, final Checkout checkout) {
         final User user = userService.getCurrent();
         Bill bill = new Bill.BillBuilder()
-                .withBillType(response.getVoucher().getBillType())
-                .withCAE(response.getVoucher().getCAE())
-                .withCuit(response.getVoucher().getCuit())
-                .withDate(response.getVoucher().getDate())
-                .withDueDateCAE(response.getVoucher().getDueDateCAE())
-                .withNumber(response.getVoucher().getNumber())
-                .withPointNumber(response.getVoucher().getPointNumber())
-                .withCheckout(response.getCheckout())
+                .withCAE(response.getCAE())
+                .withBillType(response.getBillType().getCode())
+                .withCuit(response.getDocNro())
+                .withDueDateCAE(response.getCAEFchVto())
+                .withNumber(response.getNroComprobante())
+                .withPointNumber(response.getPuntoDeVenta())
+                .withDate(LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss")))
+                .withCheckout(checkout)
                 .withUser(user)
                 .build();
         
@@ -335,5 +336,7 @@ public class BillService implements IBillService {
     public List<Bill> findAllByUser(final User user){
         return dao.findAllByUser(user, Sort.by(Sort.Direction.DESC, "id"));
     }
+
+
 
 }

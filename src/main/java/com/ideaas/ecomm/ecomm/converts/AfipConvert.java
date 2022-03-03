@@ -9,16 +9,25 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
+import javax.xml.bind.Unmarshaller;
+import javax.xml.soap.MessageFactory;
+import javax.xml.soap.SOAPBody;
+import javax.xml.soap.SOAPEnvelope;
 import javax.xml.soap.SOAPException;
+import javax.xml.soap.SOAPHeader;
 import javax.xml.soap.SOAPMessage;
+import javax.xml.soap.SOAPPart;
 import javax.xml.stream.XMLInputFactory;
-import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.StringReader;
 import java.io.StringWriter;
 
@@ -109,17 +118,27 @@ public class AfipConvert {
         return null;
     }
 
-    public static BillResponse convertoToBillResponse(final String xml) {
+    public static BillResponse convertoToBillResponse(String xml) {
         try {
+            xml = xml.replace("soap:", "");
+            xml = xml.replace("xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"", "");
+            xml = xml.replace(" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\"", "");
+            xml = xml.replace("xmlns=\"http://ar.gov.afip.dif.FEV1/\"", "");
+            xml = xml.replace("xmlns=\"http://ar.gov.afip.dif.FEV1/\"", "");
             JAXBContext jc = JAXBContext.newInstance(new Class[] { BillResponse.class });
             StringReader reader = new StringReader(xml);
             XMLInputFactory xif = XMLInputFactory.newFactory();
             XMLStreamReader xmlReader = xif.createXMLStreamReader(reader);
-
             xmlReader.nextTag();
-            while (!xmlReader.getLocalName().equals("autorizarComprobanteResponse")) {
-                xmlReader.nextTag();
+
+            while (!xmlReader.getLocalName().equals("FECAEDetResponse")) {
+                try {
+                    xmlReader.nextTag();
+                } catch (XMLStreamException e) {
+                    xmlReader.nextTag();
+                }
             }
+
             javax.xml.bind.Unmarshaller jaxbUnmarshaller = jc.createUnmarshaller();
             javax.xml.bind.JAXBElement<BillResponse> jb = jaxbUnmarshaller.unmarshal(xmlReader, BillResponse.class);
             xmlReader.close();
@@ -131,6 +150,7 @@ public class AfipConvert {
         } catch (JAXBException e) {
             e.printStackTrace();
         }
+
         return null;
     }
 
@@ -161,7 +181,6 @@ public class AfipConvert {
 
     public static LoginTicket convertToLoginTicketResponse(final String xml) {
         try {
-
             logger.info("XML recieved: {}", xml);
             JAXBContext jc = JAXBContext.newInstance(new Class[] { LoginTicket.class });
             StringReader reader = new StringReader(xml);
@@ -186,5 +205,29 @@ public class AfipConvert {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public static <T> T getJavaObjectFromSoapXml(String data, Class<T> clazz) {
+        try {
+            XMLInputFactory xif = XMLInputFactory.newFactory();
+            StringReader reader = new StringReader(data);
+            XMLStreamReader xsr = xif.createXMLStreamReader(reader);
+            xsr.nextTag();
+            while (!xsr.getLocalName().equalsIgnoreCase(clazz.getSimpleName())) {
+                logger.info("XML recieved: {}", xsr.getLocalName());
+                xsr.nextTag();
+            }
+
+            JAXBContext jc = JAXBContext.newInstance(clazz);
+            Unmarshaller unmarshaller = jc.createUnmarshaller();
+
+            JAXBElement<T> je = unmarshaller.unmarshal(xsr, clazz);
+
+            return je.getValue();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 }
