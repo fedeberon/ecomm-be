@@ -52,7 +52,6 @@ public class AfipService  implements IAfipService {
         final String endpoint = "https://wsaahomo.afip.gov.ar/ws/services/LoginCms";
         final String dstDN = "CN=wsaahomo, O=AFIP, C=AR, SERIALNUMBER=CUIT 33693450239";
         final String p12file = certificatedPath;
-        logger.info("p12file {}" , p12file);
         final String signer = "fedeberon";
         final String p12pass = "1234";
         final byte[] LoginTicketRequest_xml_cms = client.create_cms(p12file, p12pass, signer, dstDN, service);
