@@ -173,10 +173,7 @@ public class BillService implements IBillService {
             prepareBillingItems(billRequest, checkout);
             final LastBillIdResponse lastBillIdRequest = new LastBillIdResponse("20285640661", billRequest.getBillType());
             final LastBillIdResponse lastBillId = this.getLastBillId(ticketResponse, lastBillIdRequest, billRequest.getBillType());
-            final SOAPMessage request =
-                    billRequest.getBillType() == BillType.C
-                            ? createBillTyoeC(ticketResponse, billRequest, lastBillId)
-                            : createBill(ticketResponse, billRequest, lastBillId);
+            final SOAPMessage request = createBillTyoeC(ticketResponse, billRequest, lastBillId);
             final String requestAsAString = printSOAPResponse(request);
             logger.info("Request: " + requestAsAString);
 
@@ -191,8 +188,13 @@ public class BillService implements IBillService {
             }
 
             BillResponse billResponse = convertoToBillResponse(asAString);
-            billResponse.setNroComprobante(Long.parseLong(lastBillId.getLastId()));
+            billResponse.setNroComprobante(lastBillId.nextBillId().longValue());
             billResponse.setBillType(billRequest.getBillType());
+
+            if(Objects.isNull(billResponse.getCAE())) {
+                throw new AfipException("[AFIP ERROR]: Hubo un error al intentar crear la Factura: ");
+            }
+
             return billResponse;
 
         } catch (LoginTicketException ex) {

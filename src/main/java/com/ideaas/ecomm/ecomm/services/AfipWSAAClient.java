@@ -594,9 +594,15 @@ public class AfipWSAAClient {
             SOAPElement impTotalIVA = feDetReqArray.addChildElement("CbteFch", "ar");
             impTotalIVA.addTextNode(formatterBill.format(billRequest.getDate()));
             SOAPElement impTotal = feDetReqArray.addChildElement("ImpTotal", "ar");
-            impTotal.addTextNode(String.valueOf(billRequest.getTotalAmount()));
+            if (billRequest.getBillType().equals(BillType.B) || billRequest.getBillType().equals(BillType.A)) {
+                impTotal.addTextNode(String.valueOf(billRequest.getTotalAmount() * 1.21)); // 21%
+            } else {
+                impTotal.addTextNode(String.valueOf(billRequest.getTotalAmount()));
+            }
+
             SOAPElement impTotConc = feDetReqArray.addChildElement("ImpTotConc", "ar");
             impTotConc.addTextNode("0");
+
             // Si ImpNeto es mayor a 0 el objeto IVA es obligatorio
             SOAPElement impNeto = feDetReqArray.addChildElement("ImpNeto", "ar");
             impNeto.addTextNode(String.valueOf(billRequest.getTotalAmount()));
@@ -605,7 +611,12 @@ public class AfipWSAAClient {
             SOAPElement impTrib = feDetReqArray.addChildElement("ImpTrib", "ar");
             impTrib.addTextNode("0");
             SOAPElement impIVAPerc = feDetReqArray.addChildElement("ImpIVA", "ar");
-            impIVAPerc.addTextNode("0");
+
+            if (billRequest.getBillType().equals(BillType.B) || billRequest.getBillType().equals(BillType.A)) {
+                impIVAPerc.addTextNode(String.valueOf(billRequest.getTotalAmount() * 0.21));
+            } else {
+                impIVAPerc.addTextNode("0");
+            }
             // FchServDesde, FchServHasta, FchVtoPago Debe informarse solo si Concepto es igual a 2 o 3
             //SOAPElement fechaDesde = feDetReqArray.addChildElement("FchServDesde", "ar");
             //fechaDesde.addTextNode(formatterBill.format(billRequest.getDate()));
@@ -633,15 +644,16 @@ public class AfipWSAAClient {
             //cbteAsocCbteFch.addTextNode(formatterBill.format(LocalDateTime.now()));
 
             //Iva
-            //SOAPElement iva = cbteAsoc.addChildElement("Iva", "ar");
-            //SOAPElement ivaAlicIva = iva.addChildElement("AlicIva", "ar");
-            //SOAPElement ivaId = ivaAlicIva.addChildElement("Id", "ar");
-            //ivaId.addTextNode("3");
-            //SOAPElement ivaBaseImp = ivaAlicIva.addChildElement("BaseImp", "ar");
-            //ivaBaseImp.addTextNode("100");
-            //SOAPElement ivaImporte = ivaAlicIva.addChildElement("Importe", "ar");
-            //ivaImporte.addTextNode("100");
-
+            if (billRequest.getBillType().equals(BillType.B) || billRequest.getBillType().equals(BillType.A)) {
+                SOAPElement iva = feDetReqArray.addChildElement("Iva", "ar");
+                SOAPElement ivaAlicIva = iva.addChildElement("AlicIva", "ar");
+                SOAPElement ivaId = ivaAlicIva.addChildElement("Id", "ar");
+                ivaId.addTextNode("5");
+                SOAPElement ivaBaseImp = ivaAlicIva.addChildElement("BaseImp", "ar");
+                ivaBaseImp.addTextNode(String.valueOf(billRequest.getTotalAmount()));
+                SOAPElement ivaImporte = ivaAlicIva.addChildElement("Importe", "ar");
+                ivaImporte.addTextNode(String.valueOf(billRequest.getTotalAmount() * 0.21));
+            }
             return soapMessage;
 
 

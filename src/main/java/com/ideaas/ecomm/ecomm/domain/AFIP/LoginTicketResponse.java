@@ -48,6 +48,8 @@ public class LoginTicketResponse {
         this.token = builder.getCredential().getToken();
         this.sign = builder.getCredential().getSign();
         this.generationTime = builder.getHeader().getGenerationTime();
+        this.generationTime = builder.getHeader().getGenerationTime();
+        this.expirationTime = builder.getHeader().getExpirationTime();
     }
 }
 
