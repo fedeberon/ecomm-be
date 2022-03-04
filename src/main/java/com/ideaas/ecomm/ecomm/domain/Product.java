@@ -47,4 +47,7 @@ public class Product {
     @Column(name = "PRO_POINT")    
     private Long points = 0l;
 
+    @Column(name = "PRO_PROMO")    
+    private Boolean promo = false;
+
 }
