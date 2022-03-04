@@ -1,0 +1,15 @@
+[Unit]
+Description=servicioDulceBB
+After=network.service
+StartLimitIntervalSec=0
+
+[Service]
+Type=simple
+User=root
+Restart=on-failure
+WorkingDirectory=/usr/local/dulceBB/ecomm-be/target/
+ExecStart=java -jar ecomm-0.0.1-SNAPSHOT.jar
+
+
+[Install]
+WantedBy=multi-user.target
