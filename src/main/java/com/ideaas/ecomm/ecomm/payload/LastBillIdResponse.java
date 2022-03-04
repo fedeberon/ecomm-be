@@ -8,15 +8,16 @@ import lombok.Setter;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
 
-@SuppressWarnings("all")
-@XmlAccessorType(XmlAccessType.FIELD)
 @Getter
 @Setter
+@XmlAccessorType(XmlAccessType.FIELD)
+@XmlRootElement(name = "FECompUltimoAutorizadoResponse")
 @NoArgsConstructor
 public class LastBillIdResponse {
 
-    @XmlElement(name = "numeroComprobante")
+    @XmlElement(name = "CbteNro")
     private String lastId;
 
     private String cuit;
@@ -42,4 +43,5 @@ public class LastBillIdResponse {
                 ", billType=" + billType +
                 '}';
     }
+
 }

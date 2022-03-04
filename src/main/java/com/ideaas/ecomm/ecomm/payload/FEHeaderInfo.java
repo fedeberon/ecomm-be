@@ -5,17 +5,22 @@ import lombok.Setter;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @Getter
 @Setter
-@XmlRootElement(name = "FeDetResp")
-public class FeDetResp {
+public class FEHeaderInfo {
 
-    @XmlAttribute
-    private FEDetResponse fEDetResponse;
+    @XmlElement(name = "ambiente")
+    private String ambiente;
+
+    @XmlElement(name = "fecha")
+    private String fecha;
+
+    @XmlElement(name = "id")
+    private String id;
+
 
 }
+

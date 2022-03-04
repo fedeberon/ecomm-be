@@ -8,7 +8,8 @@ import java.util.Arrays;
 public enum BillType {
 
     A("1"),
-    B("6");
+    B("6"),
+    C("11");
 
     private String code;
 

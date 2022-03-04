@@ -5,34 +5,17 @@ import lombok.Setter;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
-@XmlRootElement( name = "FeDetResp" )
 @XmlAccessorType(XmlAccessType.FIELD)
 @Getter
 @Setter
+@XmlRootElement(name = "FEDetResponse")
 public class FEDetResponse {
 
-    @XmlElement(name = "Concepto")
-    private String concepto;
-
-    @XmlElement(name = "DocTipo")
-    private String cocTipo;
-
-    @XmlElement(name = "DocNro")
-    private String docNro;
-
-    @XmlElement(name = "Resultado")
-    private String resultado;
-
-    @XmlElement(name = "CAE")
-    private String CAE;
-
-    @XmlElement(name = "CbteFch")
-    private String cbteFch;
-
-    @XmlElement(name = "CAEFchVto")
-    private String cAEFchVto;
+    @XmlAttribute
+    public FECAEDetResponse fECAEDetResponse;
 
 }
