@@ -79,4 +79,15 @@ public class ProductController {
 
         return ResponseEntity.ok(products);
     }
+
+
+    @PostMapping("/promotion")
+    public ResponseEntity<Product> setPromotion(final @RequestBody Product product) {
+        Product productToUpdate = productService.get(product.getId());
+        productToUpdate.setPromo(product.getPromo());
+        productService.save(productToUpdate);
+
+        return ResponseEntity.ok(productToUpdate);
+    }
+
 }
