@@ -9,7 +9,9 @@ import com.ideaas.ecomm.ecomm.domain.Wallet;
 
 public interface WalletDao extends JpaRepository<Wallet, Long>{
 
-   List<Wallet>  findByUser(User user); 
+   List<Wallet>  findByUser(User user);
+
+
 
 
 }
