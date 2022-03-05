@@ -12,6 +12,7 @@ import com.ideaas.ecomm.ecomm.domain.ProductToCart;
 import com.ideaas.ecomm.ecomm.domain.User;
 import com.ideaas.ecomm.ecomm.domain.Wallet;
 import com.ideaas.ecomm.ecomm.enums.BillType;
+import com.ideaas.ecomm.ecomm.enums.WalletTransactionType;
 import com.ideaas.ecomm.ecomm.exception.AfipException;
 import com.ideaas.ecomm.ecomm.exception.LoginTicketException;
 import com.ideaas.ecomm.ecomm.payload.BillRequest;
@@ -47,7 +48,6 @@ import static com.ideaas.ecomm.ecomm.converts.AfipConvert.convertoToLastBillId;
 import static com.ideaas.ecomm.ecomm.converts.AfipConvert.printSOAPResponse;
 import static com.ideaas.ecomm.ecomm.converts.AfipExceptionConvert.convertToErrorAfip;
 import static com.ideaas.ecomm.ecomm.converts.AfipValidationConverter.convertToValidationAfip;
-import static com.ideaas.ecomm.ecomm.services.AfipWSAAClient.createBill;
 import static com.ideaas.ecomm.ecomm.services.AfipWSAAClient.createBillTyoeC;
 import static com.ideaas.ecomm.ecomm.services.AfipWSAAClient.createGetCAE;
 import static com.ideaas.ecomm.ecomm.services.AfipWSAAClient.createGetLastBillId;
@@ -204,7 +204,6 @@ public class BillService implements IBillService {
             logger.error("[LoginTicketException]: " + ex.getMessage());
             throw ex;
         } catch (Exception ex) {
-            //Errors errors = convertToErrorAfip(asAString);
             logger.error("[AFIP ERROR]: " + ex.getMessage());
             throw new AfipException("There was a problem with AFIP services. Exception: " + ex);
         }
@@ -287,43 +286,16 @@ public class BillService implements IBillService {
                 .withUser(user)
                 .build();
         
-                productToCartInWallet(user, bill.getCheckout().getProducts());  
-                discountAmountStock(bill.getCheckout().getProducts());
+                walletService.productToCartInWallet(user, bill.getCheckout().getProducts(), WalletTransactionType.BUY);
+                productService.discountAmountStock(bill.getCheckout().getProducts());
 
 
         return dao.save(bill);
     }
 
 
-    private void productToCartInWallet(final User user, final List<ProductToCart> productToCarts){
-        List<Wallet> wallets = new ArrayList<>();
-        productToCarts.forEach(productToCart -> {
-            Product product = productToCart.getProduct();
-            Long points = Objects.isNull(product.getPoints()) || product.getPoints() == 0
-                            ? Math.round(product.getPrice() * 5 / 100)
-                            : product.getPoints();
-            Wallet oneWallet = new Wallet(product,
-                                          user,
-                                          productToCart.getQuantity(),
-                                          points * productToCart.getQuantity());
-            wallets.add(oneWallet);
-        });
-
-        walletService.saveAll(wallets);
-    }
 
 
-
-    private void discountAmountStock(final List<ProductToCart> productToCarts) {
-        productToCarts.forEach(productToCart -> {
-            Product product = productToCart.getProduct();
-            Long stock =  product.getStock() - productToCart.getQuantity();
-            product.setStock(stock);
-            productService.save(product);
-        });
-    }
-
- 
     @Override
     public List<Bill> findAll(){
         return dao.findAll(Sort.by(Sort.Direction.DESC, "id"));
@@ -338,7 +310,5 @@ public class BillService implements IBillService {
     public List<Bill> findAllByUser(final User user){
         return dao.findAllByUser(user, Sort.by(Sort.Direction.DESC, "id"));
     }
-
-
 
 }

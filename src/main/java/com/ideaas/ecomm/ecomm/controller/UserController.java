@@ -66,19 +66,9 @@ public class UserController {
     @GetMapping("/wallet/points/{username}")
     public ResponseEntity<Long> getPointsWalletByUser(@PathVariable final String username) {
         final User user = userService.get(username);
-        final List<Wallet> walletOfUser = walletService.findAllByUser(user);
-        Long points = getPointsWalletByUser(user);
+        Long points = walletService.getPointsWalletByUser(user);
 
         return ResponseEntity.ok(points);
-    }
-
-
-    /**
-     * Gets points of wallet by user
-     */
-    public Long getPointsWalletByUser(final User user) {
-        final List<Wallet> walletOfUser = walletService.findAllByUser(user);
-        return walletOfUser.stream().mapToLong(Wallet::getPoints).sum();
     }
 
 }

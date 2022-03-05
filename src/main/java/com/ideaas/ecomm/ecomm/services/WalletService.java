@@ -1,7 +1,10 @@
 package com.ideaas.ecomm.ecomm.services;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
+import com.ideaas.ecomm.ecomm.enums.WalletTransactionType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -40,5 +43,48 @@ public class WalletService implements IWalletService {
 		return dao.findByUser(user);
 	}
 
-	
+	/**
+	 * Gets points of wallet by user
+	 */
+	public Long getPointsWalletByUser(final User user) {
+		final List<Wallet> walletOfUser = this.findAllByUser(user);
+		return walletOfUser.stream().mapToLong(Wallet::getPoints).sum();
+	}
+
+
+	@Override
+	public void productToCartInWallet(final User user,
+									  final List<ProductToCart> productToCarts,
+									  final WalletTransactionType type) {
+		final List<Wallet> wallets = new ArrayList<>();
+		productToCarts.forEach(productToCart -> {
+			final Product product = productToCart.getProduct();
+			Long points = null;
+
+			switch (type) {
+				case SALE:
+					points = Math.round(product.getPrice() * productToCart.getQuantity());
+					break;
+				case BUY:
+					points = Objects.isNull(product.getPoints()) || product.getPoints() == 0
+							? Math.round(product.getPrice() * 5 / 100)
+							: product.getPoints();
+					break;
+				default:
+					break;
+			}
+
+			final Wallet wallet =  Wallet.builder()
+					.product(product)
+					.user(user)
+					.quantity(productToCart.getQuantity())
+					.points(points * productToCart.getQuantity() * type.getValue())
+					.build();
+
+			wallets.add(wallet);
+
+		});
+
+		this.saveAll(wallets);
+	}
 }
