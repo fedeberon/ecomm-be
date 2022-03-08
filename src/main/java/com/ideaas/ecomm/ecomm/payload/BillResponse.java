@@ -50,5 +50,11 @@ public class BillResponse {
 
     private int puntoDeVenta;
 
+    private String creditCard;
+
+    private String coupon;
+
+    private String CUIT;
+
 
 }

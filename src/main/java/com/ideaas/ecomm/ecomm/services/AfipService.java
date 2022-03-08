@@ -39,6 +39,7 @@ public class AfipService  implements IAfipService {
 
         } else {
             LoginTicketResponse loginTicketResponse = getAuthentication(service);
+            loginTicketResponse.setService(service);
             loginTicketService.save(loginTicketResponse);
 
             return loginTicketResponse;
