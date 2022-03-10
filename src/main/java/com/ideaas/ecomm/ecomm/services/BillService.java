@@ -7,10 +7,7 @@ import com.ideaas.ecomm.ecomm.domain.AFIP.Person;
 import com.ideaas.ecomm.ecomm.domain.Bill;
 import com.ideaas.ecomm.ecomm.domain.Checkout;
 import com.ideaas.ecomm.ecomm.domain.Item;
-import com.ideaas.ecomm.ecomm.domain.Product;
-import com.ideaas.ecomm.ecomm.domain.ProductToCart;
 import com.ideaas.ecomm.ecomm.domain.User;
-import com.ideaas.ecomm.ecomm.domain.Wallet;
 import com.ideaas.ecomm.ecomm.enums.BillType;
 import com.ideaas.ecomm.ecomm.enums.WalletTransactionType;
 import com.ideaas.ecomm.ecomm.exception.AfipException;
@@ -21,6 +18,7 @@ import com.ideaas.ecomm.ecomm.payload.CAEAResponse;
 import com.ideaas.ecomm.ecomm.payload.LastBillIdResponse;
 import com.ideaas.ecomm.ecomm.payload.PersonPayload;
 import com.ideaas.ecomm.ecomm.repository.BillDao;
+import com.ideaas.ecomm.ecomm.services.interfaces.IAfipService;
 import com.ideaas.ecomm.ecomm.services.interfaces.IBillService;
 import com.ideaas.ecomm.ecomm.services.interfaces.ICheckoutService;
 import com.ideaas.ecomm.ecomm.services.interfaces.IProductService;
@@ -68,7 +66,7 @@ public class BillService implements IBillService {
     */
 
     // https://wswhomo.afip.gov.ar/wsfev1/service.asmx
-    public static String AFIP_A5_SERVICE   = "https://aws.afip.gov.ar/sr-padron/webservices/personaServiceA5";
+    public static String AFIP_A5_SERVICE   = "https://awshomo.afip.gov.ar/sr-padron/webservices/personaServiceA5";
     public static String AFIP_CAE          = "https://fwshomo.afip.gov.ar/wsmtxca/services/MTXCAService";
     public static String AFIP_LAST_BILL_ID = "https://wswhomo.afip.gov.ar/wsfev1/service.asmx?op=FECompUltimoAutorizado";
     public static String AFIP_BILLING      = "https://wswhomo.afip.gov.ar/wsfev1/service.asmx?op=FECAESolicitar";
@@ -79,18 +77,21 @@ public class BillService implements IBillService {
     private IUserService userService;
     private IWalletService walletService;
     private IProductService productService;
+    private IAfipService afipService;
 
     @Autowired
     public BillService(final ICheckoutService checkoutService,
                        final BillDao dao,
                        final IUserService userService,
                        final IWalletService walletService,
-                       final IProductService productService){
+                       final IProductService productService,
+                       final IAfipService afipService){
         this.checkoutService = checkoutService;
         this.dao = dao;
         this.userService = userService;
         this.walletService = walletService;
         this.productService = productService;
+        this.afipService = afipService;
     }
 
 
@@ -190,6 +191,9 @@ public class BillService implements IBillService {
             BillResponse billResponse = convertoToBillResponse(asAString);
             billResponse.setNroComprobante(lastBillId.nextBillId().longValue());
             billResponse.setBillType(billRequest.getBillType());
+            billResponse.setCreditCard(billRequest.getCreditCard());
+            billResponse.setCoupon(billRequest.getCoupon());
+            billResponse.setCUIT(billRequest.getCuit());
 
             if(Objects.isNull(billResponse.getCAE())) {
                 throw new AfipException("[AFIP ERROR]: Hubo un error al intentar crear la Factura: ");
@@ -274,6 +278,11 @@ public class BillService implements IBillService {
     @Override
     public Bill save(final BillResponse response, final Checkout checkout) {
         final User user = userService.getCurrent();
+        LoginTicketResponse ticketResponse = afipService.get("ws_sr_padron_a5");
+        final Person person = createPersonRequest(ticketResponse.getToken(),
+                                                  ticketResponse.getSign(),
+                                                   "20285640661",
+                                                    response.getCUIT());
         Bill bill = new Bill.BillBuilder()
                 .withCAE(response.getCAE())
                 .withBillType(response.getBillType().getCode())
@@ -284,6 +293,9 @@ public class BillService implements IBillService {
                 .withDate(LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss")))
                 .withCheckout(checkout)
                 .withUser(user)
+                .withCoupon(response.getCoupon())
+                .withCreditCard(response.getCreditCard())
+                .withPerson(person)
                 .build();
         
                 walletService.productToCartInWallet(user, bill.getCheckout().getProducts(), WalletTransactionType.BUY);
