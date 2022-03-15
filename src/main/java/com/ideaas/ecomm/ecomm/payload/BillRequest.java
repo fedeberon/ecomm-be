@@ -38,6 +38,10 @@ public class BillRequest {
 
     private Long checkoutId;
 
+    private String creditCard;
+
+    private String coupon;
+
     private Cart cart;
 
     public Double getTotalAmount() {

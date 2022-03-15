@@ -4,6 +4,7 @@ import com.ideaas.ecomm.ecomm.domain.Brand;
 import com.ideaas.ecomm.ecomm.domain.Category;
 import com.ideaas.ecomm.ecomm.domain.Image;
 import com.ideaas.ecomm.ecomm.domain.Product;
+import com.ideaas.ecomm.ecomm.domain.ProductToCart;
 import com.ideaas.ecomm.ecomm.payload.SearchBrandRequest;
 import com.ideaas.ecomm.ecomm.repository.ProductDao;
 import com.ideaas.ecomm.ecomm.services.interfaces.IProductService;
@@ -103,6 +104,17 @@ public class ProductService implements IProductService {
             collection.add(new Brand(v.getId()));
         }
         return collection;
+    }
+
+
+    @Override
+    public void discountAmountStock(final List<ProductToCart> productToCarts) {
+        productToCarts.forEach(productToCart -> {
+            Product product = productToCart.getProduct();
+            Long stock =  product.getStock() - productToCart.getQuantity();
+            product.setStock(stock);
+            save(product);
+        });
     }
 
 }

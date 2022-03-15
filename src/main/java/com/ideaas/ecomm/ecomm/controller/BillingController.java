@@ -5,6 +5,7 @@ import com.ideaas.ecomm.ecomm.domain.AFIP.Person;
 import com.ideaas.ecomm.ecomm.domain.Bill;
 import com.ideaas.ecomm.ecomm.domain.Checkout;
 import com.ideaas.ecomm.ecomm.domain.User;
+import com.ideaas.ecomm.ecomm.enums.BillType;
 import com.ideaas.ecomm.ecomm.enums.CheckoutState;
 import com.ideaas.ecomm.ecomm.payload.BillRequest;
 import com.ideaas.ecomm.ecomm.payload.BillResponse;
@@ -26,6 +27,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Arrays;
 import java.util.List;
 
 @RestController
@@ -90,7 +92,7 @@ public class BillingController {
         /*LoginTicketResponse ticketResponse = new LoginTicketResponse();
         ticketResponse.setToken(token);
         ticketResponse.setSign(sign);*/
-        LastBillIdResponse lastBillId = billService.getLastBillId(ticketResponse, lastBillIdRequest);
+        LastBillIdResponse lastBillId = billService.getLastBillId(ticketResponse, lastBillIdRequest, lastBillIdRequest.getBillType());
         lastBillId.setBillType(lastBillIdRequest.getBillType());
         lastBillId.setCuit(lastBillIdRequest.getCuit());
 
@@ -99,11 +101,10 @@ public class BillingController {
 
     @PostMapping
     public ResponseEntity<Bill> create(final @RequestBody BillRequest billRequest) {
-        LoginTicketResponse ticketResponse = afipService.get("wsmtxca");
+        LoginTicketResponse ticketResponse = afipService.get("wsfe");
         BillResponse billResponse = billService.createBilling(ticketResponse, billRequest);
         Checkout checkout = checkoutService.changeStateTo(CheckoutState.PAID_OUT, billRequest.getCheckoutId());
-        billResponse.setCheckout(checkout);
-        Bill bill = billService.save(billResponse);
+        Bill bill = billService.save(billResponse, checkout);
 
         return ResponseEntity.ok(bill);
     }
@@ -129,4 +130,15 @@ public class BillingController {
 
         return ResponseEntity.ok(bills);
     }
+
+    @GetMapping("/billTypes")
+    public ResponseEntity<List<BillType>> getByCheckoutId() {
+        LoginTicketResponse ticketResponse = afipService.get("wsfe");
+        List<BillType> billsTypes = Arrays.asList(BillType.values());
+        billService.getBillTypes(ticketResponse);
+
+        return ResponseEntity.ok(billsTypes);
+    }
+
+
 }

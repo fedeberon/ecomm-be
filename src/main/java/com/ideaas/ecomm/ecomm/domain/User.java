@@ -27,7 +27,6 @@ public class User  {
     @Column(name = "USU_USERNAME")
     private String username;
 
-    @JsonIgnore
     @Column(name = "USU_PASSWORD")
     private String password;
 

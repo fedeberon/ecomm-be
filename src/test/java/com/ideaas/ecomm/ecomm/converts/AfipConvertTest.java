@@ -1,5 +1,7 @@
 package com.ideaas.ecomm.ecomm.converts;
 
+import com.ideaas.ecomm.ecomm.payload.BillResponse;
+import com.ideaas.ecomm.ecomm.payload.LastBillIdResponse;
 import com.ideaas.ecomm.ecomm.payload.LoginTicket;
 import com.ideaas.ecomm.ecomm.util.FileUtil;
 import org.junit.Test;
@@ -23,5 +25,32 @@ public class AfipConvertTest {
         assertNotNull(loginTicket.getCredential().getSign());
 
     }
+
+
+    @Test
+    public void shouldConvertToLastBillId() throws IOException {
+        File resource = FileUtil.loadEmployeesWithSpringInternalClass("files/GetLastBillId.xml");
+        String loginTicketResponse = new String(Files.readAllBytes(resource.toPath()));
+        loginTicketResponse = loginTicketResponse.replace("soap:", "");
+        loginTicketResponse = loginTicketResponse.replace("xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\"", "");
+        loginTicketResponse = loginTicketResponse.replace("xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"", "");
+        loginTicketResponse = loginTicketResponse.replace("xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\"", "");
+        loginTicketResponse = loginTicketResponse.replace("xmlns=\"http://ar.gov.afip.dif.FEV1/\"", "");
+        loginTicketResponse = loginTicketResponse.replace("xmlns=\"http://ar.gov.afip.dif.FEV1/\"", "");
+        LastBillIdResponse loginTicket = AfipConvert.convertoToLastBillId(loginTicketResponse);
+
+        assertNotNull(loginTicket.getLastId());
+
+    }
+
+    @Test
+    public void shouldConvertToBill() throws IOException {
+        File resource = FileUtil.loadEmployeesWithSpringInternalClass("files/Bill.xml");
+        String xml = new String(Files.readAllBytes(resource.toPath()));
+        BillResponse bill = AfipConvert.convertoToBillResponse(xml);
+
+        assertNotNull(bill.getCAE());
+    }
+
 
 }

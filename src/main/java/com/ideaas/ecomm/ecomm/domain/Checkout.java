@@ -39,7 +39,6 @@ public class Checkout {
     @Enumerated(EnumType.STRING)
     private CheckoutState checkoutState;
 
-
     public Double getTotalAmount() {
         return products.stream().mapToDouble(i -> i.getPrice() * i.getQuantity()).sum();
     }

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/"
+               xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+               xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <soap:Header>
+        <FEHeaderInfo xmlns="http://ar.gov.afip.dif.FEV1/">
+            <ambiente>HomologacionExterno - efa</ambiente>
+            <fecha>2022-02-25T20:10:37.1305653-03:00</fecha>
+            <id>4.4.0.0</id>
+        </FEHeaderInfo>
+    </soap:Header>
+    <soap:Body>
+        <FECAESolicitarResponse xmlns="http://ar.gov.afip.dif.FEV1/">
+            <FECAESolicitarResult>
+                <FeCabResp>
+                    <Cuit>20285640661</Cuit>
+                    <PtoVta>1</PtoVta>
+                    <CbteTipo>11</CbteTipo>
+                    <FchProceso>20220225201037</FchProceso>
+                    <CantReg>1</CantReg>
+                    <Resultado>A</Resultado>
+                    <Reproceso>N</Reproceso>
+                </FeCabResp>
+                <FeDetResp>
+                    <FECAEDetResponse>
+                        <Concepto>1</Concepto>
+                        <DocTipo>96</DocTipo>
+                        <DocNro>20285646661</DocNro>
+                        <CbteDesde>5</CbteDesde>
+                        <CbteHasta>5</CbteHasta>
+                        <CbteFch>20220225</CbteFch>
+                        <Resultado>A</Resultado>
+                        <CAE>72081988661143</CAE>
+                        <CAEFchVto>20220307</CAEFchVto>
+                    </FECAEDetResponse>
+                </FeDetResp>
+            </FECAESolicitarResult>
+        </FECAESolicitarResponse>
+    </soap:Body>
+</soap:Envelope>

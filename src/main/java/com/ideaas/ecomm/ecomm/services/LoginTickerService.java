@@ -29,7 +29,7 @@ public class LoginTickerService implements ILoginTicketService {
 
     @Override
     public Optional<LoginTicketResponse> getActive(final String service){
-        return dao.getActive(LocalDateTime.now());
+        return dao.getActive(LocalDateTime.now(), service);
     }
 
 }

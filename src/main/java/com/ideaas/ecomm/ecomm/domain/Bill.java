@@ -13,6 +13,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
@@ -62,6 +63,13 @@ public class Bill {
     @JsonIgnore
     private User user;
 
+    @Column(name = "creditCard")
+    private String creditCard;
+
+    @Column(name = "coupon")
+    private String coupon;
+
+
     public Double getTotalAmount() {
         return checkout.getProducts().stream().mapToDouble(i -> i.getPrice() * i.getQuantity()).sum();
     }
@@ -76,6 +84,9 @@ public class Bill {
         this.dueDateCAE = builder.dueDateCAE;
         this.checkout = builder.checkout;
         this.user = builder.user;
+        this.creditCard = builder.creditCard;
+        this.coupon = builder.coupon;
+        this.person = builder.person;
     }
 
     public BillType getBillTypeName() {
@@ -102,6 +113,12 @@ public class Bill {
         private Checkout checkout;
 
         private User user;
+
+        private String creditCard;
+
+        private String coupon;
+
+        private Person person;
 
 
         public BillBuilder withCuit(final String cuit) {
@@ -155,6 +172,24 @@ public class Bill {
 
         public BillBuilder withUser(final User user) {
             this.user = user;
+
+            return this;
+        }
+
+        public BillBuilder withCreditCard(final String creditCard) {
+            this.creditCard = creditCard;
+
+            return this;
+        }
+
+        public BillBuilder withCoupon(final String coupon) {
+            this.coupon = coupon;
+
+            return this;
+        }
+
+        public BillBuilder withPerson(final Person person) {
+            this.person = person;
 
             return this;
         }
