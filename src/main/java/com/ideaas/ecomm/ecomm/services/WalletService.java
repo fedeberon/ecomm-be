@@ -62,14 +62,11 @@ public class WalletService implements IWalletService {
 			Long points = null;
 
 			switch (type) {
-				case SALE:
+				case BUY:
 					points = Math.round(product.getPrice() * productToCart.getQuantity());
 					break;
-				case BUY:
-					points = Objects.isNull(product.getPoints()) || product.getPoints() == 0
-							? Math.round(product.getPrice() * 5 / 100)
-							: product.getPoints();
-					break;
+				case SALE:
+					points = getPoint(productToCart.getProduct());
 				default:
 					break;
 			}
@@ -78,7 +75,7 @@ public class WalletService implements IWalletService {
 					.product(product)
 					.user(user)
 					.quantity(productToCart.getQuantity())
-					.points(points * productToCart.getQuantity() * type.getValue())
+					.points(points * type.getValue())
 					.build();
 
 			wallets.add(wallet);
@@ -86,5 +83,22 @@ public class WalletService implements IWalletService {
 		});
 
 		this.saveAll(wallets);
+	}
+
+	private Long getPoint(final Product product) {
+		System.out.print("Tiene promocion" + product.getPromo());
+		if(product.getPromo()){
+			System.out.print("entro al if");
+			return 0L;
+		}
+		else {
+			System.out.print("entro al else");
+			Long points = Objects.isNull(product.getPoints()) || product.getPoints() == 0
+				? Math.round(product.getPrice() * 5 / 100)
+				: product.getPoints();
+
+			return points;
+		}
+
 	}
 }
