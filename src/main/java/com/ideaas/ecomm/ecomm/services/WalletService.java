@@ -1,5 +1,6 @@
 package com.ideaas.ecomm.ecomm.services;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -76,6 +77,7 @@ public class WalletService implements IWalletService {
 					.user(user)
 					.quantity(productToCart.getQuantity())
 					.points(points * type.getValue())
+					.date(LocalDateTime.now())
 					.build();
 
 			wallets.add(wallet);
@@ -86,19 +88,15 @@ public class WalletService implements IWalletService {
 	}
 
 	private Long getPoint(final Product product) {
-		System.out.print("Tiene promocion" + product.getPromo());
 		if(product.getPromo()){
-			System.out.print("entro al if");
 			return 0L;
 		}
 		else {
-			System.out.print("entro al else");
 			Long points = Objects.isNull(product.getPoints()) || product.getPoints() == 0
 				? Math.round(product.getPrice() * 5 / 100)
 				: product.getPoints();
 
 			return points;
 		}
-
 	}
 }
