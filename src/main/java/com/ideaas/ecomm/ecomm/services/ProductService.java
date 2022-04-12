@@ -76,7 +76,7 @@ public class ProductService implements IProductService {
     public List<Product> byCategory(final String nameOfCategory) {
         Category category = categoryService.findAllByNameEquals(nameOfCategory);
         List<Product> optionalProducts = dao.findAllByCategory(category);
-
+        optionalProducts.forEach(oneProduct -> addImagesOnProduct(oneProduct));
         return optionalProducts;
     }
 
