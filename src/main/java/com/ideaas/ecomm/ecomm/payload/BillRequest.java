@@ -44,6 +44,8 @@ public class BillRequest {
 
     private Cart cart;
 
+    private String username;
+
     public Double getTotalAmount() {
         return items.stream().mapToDouble(i -> i.getPrice() * i.getQuantity()).sum();
     }

@@ -277,7 +277,7 @@ public class BillService implements IBillService {
 
     @Override
     public Bill save(final BillResponse response, final Checkout checkout) {
-        final User user = userService.getCurrent();
+        final User user = userService.get(checkout.getUsername());
         LoginTicketResponse ticketResponse = afipService.get("ws_sr_padron_a5");
         final Person person = createPersonRequest(ticketResponse.getToken(),
                                                   ticketResponse.getSign(),
