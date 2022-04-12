@@ -104,6 +104,7 @@ public class BillingController {
         LoginTicketResponse ticketResponse = afipService.get("wsfe");
         BillResponse billResponse = billService.createBilling(ticketResponse, billRequest);
         Checkout checkout = checkoutService.changeStateTo(CheckoutState.PAID_OUT, billRequest.getCheckoutId());
+        checkout.setUsername(billRequest.getUsername());
         Bill bill = billService.save(billResponse, checkout);
 
         return ResponseEntity.ok(bill);
