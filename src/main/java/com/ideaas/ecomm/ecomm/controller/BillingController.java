@@ -50,7 +50,8 @@ public class BillingController {
     private IUserService userService;
 
     @Autowired
-    public BillingController(final ILoginTicketService loginTicketService, final IAfipService afipService,
+    public BillingController(final ILoginTicketService loginTicketService, 
+                             final IAfipService afipService,
                              final IBillService billService,
                              final ICheckoutService checkoutService,
                              final IUserService userService) {
