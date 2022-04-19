@@ -584,9 +584,25 @@ public class AfipWSAAClient {
             SOAPElement concepto = feDetReqArray.addChildElement("Concepto", "ar");
             concepto.addTextNode("1");
             SOAPElement docTipo = feDetReqArray.addChildElement("DocTipo", "ar");
-            docTipo.addTextNode("96");
-            SOAPElement docNro = feDetReqArray.addChildElement("DocNro", "ar");
-            docNro.addTextNode(billRequest.getCuit());
+
+            if (billRequest.getBillType().equals(BillType.B) || billRequest.getBillType().equals(BillType.A)) {
+
+                if (billRequest.getBillType().equals(BillType.B) && billRequest.getTotalAmount() > 10000) {
+                    docTipo.addTextNode("99");
+                    SOAPElement docNro = feDetReqArray.addChildElement("DocNro", "ar");
+                    docNro.addTextNode("0");
+
+                } else {
+                    docTipo.addTextNode("80");
+                    SOAPElement docNro = feDetReqArray.addChildElement("DocNro", "ar");
+                    docNro.addTextNode(billRequest.getCuit());
+                }
+            } else {
+                docTipo.addTextNode("96");
+                SOAPElement docNro = feDetReqArray.addChildElement("DocNro", "ar");
+                docNro.addTextNode(billRequest.getCuit());
+            }
+
             SOAPElement cbteDesde = feDetReqArray.addChildElement("CbteDesde", "ar");
             cbteDesde.addTextNode(String.valueOf(lastBillIdResponse.nextBillId()));
             SOAPElement cbteHasta = feDetReqArray.addChildElement("CbteHasta", "ar");
