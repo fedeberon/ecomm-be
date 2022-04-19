@@ -64,10 +64,7 @@ public class BillingController {
 
     @RequestMapping("{CUIT}")
     public ResponseEntity<Person> getByCUIT(@PathVariable String CUIT) {
-        //final LoginTicketResponse ticketResponse = afipService.getAuthentication("ws_sr_padron_a5");
-        LoginTicketResponse ticketResponse = new LoginTicketResponse();
-        ticketResponse.setToken("PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9InllcyI/Pgo8c3NvIHZlcnNpb249IjIuMCI+CiAgICA8aWQgc3JjPSJDTj13c2FhLCBPPUFGSVAsIEM9QVIsIFNFUklBTE5VTUJFUj1DVUlUIDMzNjkzNDUwMjM5IiB1bmlxdWVfaWQ9IjQwNDM5NzY3MTAiIGdlbl90aW1lPSIxNjM1ODUxMjY4IiBleHBfdGltZT0iMTYzNTg5NDUyOCIvPgogICAgPG9wZXJhdGlvbiB0eXBlPSJsb2dpbiIgdmFsdWU9ImdyYW50ZWQiPgogICAgICAgIDxsb2dpbiBlbnRpdHk9IjMzNjkzNDUwMjM5IiBzZXJ2aWNlPSJ3c19zcl9wYWRyb25fYTUiIHVpZD0iU0VSSUFMTlVNQkVSPUNVSVQgMjAyODU2NDA2NjEsIENOPWZlZGViZXJvbiIgYXV0aG1ldGhvZD0iY21zIiByZWdtZXRob2Q9IjIyIj4KICAgICAgICAgICAgPHJlbGF0aW9ucz4KICAgICAgICAgICAgICAgIDxyZWxhdGlvbiBrZXk9IjIwMjg1NjQwNjYxIiByZWx0eXBlPSI0Ii8+CiAgICAgICAgICAgIDwvcmVsYXRpb25zPgogICAgICAgIDwvbG9naW4+CiAgICA8L29wZXJhdGlvbj4KPC9zc28+Cg==");
-        ticketResponse.setSign("L+3NtRGf/5AFumKJLMTIi2cQFTFVO0Giz56LzcctiyrCLoUpQVWZ++C/1lfLCrbLputTjqGECN+Aqqhk6XF1Nc56WRbTUbc1DJIlvZtDlp0wkQJkQ5BRoKCE1T4wwRcyqvlV6qvBI2e1SHYRwxgrmk7p2etVk8l+cvKseV7JhJc=");
+        final LoginTicketResponse ticketResponse = afipService.getAuthentication("ws_sr_padron_a5");
         Person person = billService.createPersonRequest(ticketResponse.getToken(),
                                                         ticketResponse.getSign(),
                                          "20285640661",
