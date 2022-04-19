@@ -131,7 +131,9 @@ public class AfipConvert {
             XMLStreamReader xmlReader = xif.createXMLStreamReader(reader);
             xmlReader.nextTag();
 
-            while (!xmlReader.getLocalName().equals("FECAEDetResponse")) {
+            String tagName = hasErrors(xml) ? "Err" : "FECAEDetResponse";
+
+            while (!xmlReader.getLocalName().equals(tagName)) {
                 try {
                     xmlReader.nextTag();
                 } catch (XMLStreamException e) {
@@ -153,6 +155,39 @@ public class AfipConvert {
 
         return null;
     }
+
+    public static boolean hasErrors(String xml) {
+        boolean hasErrors = false;
+        try {
+            xml = xml.replace("soap:", "");
+            xml = xml.replace("xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"", "");
+            xml = xml.replace(" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\"", "");
+            xml = xml.replace("xmlns=\"http://ar.gov.afip.dif.FEV1/\"", "");
+            xml = xml.replace("xmlns=\"http://ar.gov.afip.dif.FEV1/\"", "");
+            JAXBContext jc = JAXBContext.newInstance(new Class[] { BillResponse.class });
+            StringReader reader = new StringReader(xml);
+            XMLInputFactory xif = XMLInputFactory.newFactory();
+            XMLStreamReader xmlReader = xif.createXMLStreamReader(reader);
+            xmlReader.nextTag();
+
+            while (!xmlReader.equals("Err")) {
+                try {
+                    xmlReader.nextTag();
+                } catch (XMLStreamException e) {
+                    xmlReader.nextTag();
+                } finally {
+                    hasErrors = true;
+                }
+            }
+
+        } catch (XMLStreamException e) {
+            e.printStackTrace();
+        } catch (JAXBException e) {
+            e.printStackTrace();
+        }
+        return hasErrors;
+    }
+
 
     public static String printSOAPResponse(SOAPMessage soapResponse) {
         try {

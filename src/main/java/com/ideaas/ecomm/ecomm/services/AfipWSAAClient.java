@@ -603,12 +603,10 @@ public class AfipWSAAClient {
                 docNro.addTextNode(billRequest.getCuit());
             }
 
-            SOAPElement docNro = feDetReqArray.addChildElement("DocNro", "ar");
-            docNro.addTextNode(billRequest.getCuit());
             SOAPElement cbteDesde = feDetReqArray.addChildElement("CbteDesde", "ar");
             cbteDesde.addTextNode(String.valueOf(lastBillIdResponse.nextBillId()));
             SOAPElement cbteHasta = feDetReqArray.addChildElement("CbteHasta", "ar");
-            cbteHasta.addTextNode(String.valueOf(lastBillIdResponse.nextBillId() + 1));
+            cbteHasta.addTextNode(String.valueOf(lastBillIdResponse.nextBillId()));
             SOAPElement impTotalIVA = feDetReqArray.addChildElement("CbteFch", "ar");
             impTotalIVA.addTextNode(formatterBill.format(billRequest.getDate()));
             SOAPElement impTotal = feDetReqArray.addChildElement("ImpTotal", "ar");
