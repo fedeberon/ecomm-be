@@ -15,4 +15,11 @@ public class SearchBrandRequest {
         private boolean active;
 
     }
+
+
+
+    @Getter
+    public static class CategoriesRequest {
+        private Long id; 
+    }
 }

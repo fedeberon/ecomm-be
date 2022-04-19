@@ -1,6 +1,7 @@
 package com.ideaas.ecomm.ecomm.domain;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.Column;
@@ -11,6 +12,7 @@ import javax.persistence.Table;
 @Getter
 @Setter
 @Entity
+@NoArgsConstructor
 @Table(name = "CATEGORIES")
 public class Category {
 
@@ -20,4 +22,8 @@ public class Category {
 
     @Column(name = "CAT_NAME")
     private String name;
+
+    public Category(final Long id){
+        this.id = id;
+    }
 }

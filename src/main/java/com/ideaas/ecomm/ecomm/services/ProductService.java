@@ -7,6 +7,7 @@ import com.ideaas.ecomm.ecomm.domain.Product;
 import com.ideaas.ecomm.ecomm.domain.ProductToCart;
 import com.ideaas.ecomm.ecomm.payload.SearchBrandRequest;
 import com.ideaas.ecomm.ecomm.repository.ProductDao;
+import com.ideaas.ecomm.ecomm.services.interfaces.ICategoryService;
 import com.ideaas.ecomm.ecomm.services.interfaces.IProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,12 +25,12 @@ public class ProductService implements IProductService {
 
     private ProductDao dao;
     private FileService fileService;
-    private CategoryService categoryService;
+    private ICategoryService categoryService;
 
     @Autowired
     public ProductService(final ProductDao dao,
                           final FileService fileService,
-                          final CategoryService categoryService) {
+                          final ICategoryService categoryService) {
         this.dao = dao;
         this.fileService = fileService;
         this.categoryService = categoryService;
@@ -95,6 +96,12 @@ public class ProductService implements IProductService {
         return dao.searchAllByBrandIn(brandsList);
     }
 
+    @Override
+    public List<Product> searchByCategories(List<SearchBrandRequest.CategoriesRequest> categories) {
+        Collection categoriesList = convertToCategoriesCollection(categories);
+        return dao.searchAllByCategoryIn(categoriesList);
+    }
+
     private Collection<Brand> convertToCollection(final List<SearchBrandRequest.BrandRequest> brandRequests) {
         if (brandRequests == null || brandRequests.isEmpty()) {
             return Collections.emptyList();
@@ -102,6 +109,19 @@ public class ProductService implements IProductService {
         Collection<Brand> collection = new ArrayList<>();
         for (SearchBrandRequest.BrandRequest v : brandRequests) {
             collection.add(new Brand(v.getId()));
+        }
+        return collection;
+    }
+
+
+
+    private Collection<Category> convertToCategoriesCollection(final List<SearchBrandRequest.CategoriesRequest> categoryRequests) {
+        if (categoryRequests == null || categoryRequests.isEmpty()) {
+            return Collections.emptyList();
+        }
+        Collection<Category> collection = new ArrayList<>();
+        for (SearchBrandRequest.CategoriesRequest v : categoryRequests) {
+            collection.add(new Category(v.getId()));
         }
         return collection;
     }

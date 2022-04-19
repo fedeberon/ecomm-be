@@ -81,6 +81,14 @@ public class ProductController {
     }
 
 
+    @PostMapping("/search/categories")
+    public ResponseEntity<List<Product>> searchByCategory(final @RequestBody List<SearchBrandRequest.BrandRequest> categoryRequests) {
+        List<Product> products = productService.searchByBrand(categoryRequests);
+
+        return ResponseEntity.ok(products);
+    }
+
+
     @PostMapping("/promotion")
     public ResponseEntity<Product> setPromotion(final @RequestBody Product product) {
         Product productToUpdate = productService.get(product.getId());

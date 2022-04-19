@@ -23,4 +23,6 @@ public interface IProductService {
     List<Product> searchByBrand(List<SearchBrandRequest.BrandRequest> brands);
 
     void discountAmountStock(List<ProductToCart> productToCarts);
+
+    List<Product> searchByCategories(List<SearchBrandRequest.CategoriesRequest> categories);
 }
