@@ -2,7 +2,7 @@ package com.ideaas.ecomm.ecomm.services.interfaces;
 
 import com.ideaas.ecomm.ecomm.domain.Product;
 import com.ideaas.ecomm.ecomm.domain.ProductToCart;
-import com.ideaas.ecomm.ecomm.payload.SearchBrandRequest;
+import com.ideaas.ecomm.ecomm.payload.SearchRequest;
 
 import java.util.List;
 
@@ -20,9 +20,9 @@ public interface IProductService {
 
     List<Product> search(String value);
 
-    List<Product> searchByBrand(List<SearchBrandRequest.BrandRequest> brands);
+    List<Product> searchByBrand(List<SearchRequest.BrandRequest> brands);
 
     void discountAmountStock(List<ProductToCart> productToCarts);
 
-    List<Product> searchByCategories(List<SearchBrandRequest.CategoriesRequest> categories);
+    List<Product> searchByCategories(List<SearchRequest.CategoriesRequest> categories);
 }

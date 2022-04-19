@@ -5,7 +5,7 @@ import com.ideaas.ecomm.ecomm.domain.Category;
 import com.ideaas.ecomm.ecomm.domain.Image;
 import com.ideaas.ecomm.ecomm.domain.Product;
 import com.ideaas.ecomm.ecomm.domain.ProductToCart;
-import com.ideaas.ecomm.ecomm.payload.SearchBrandRequest;
+import com.ideaas.ecomm.ecomm.payload.SearchRequest;
 import com.ideaas.ecomm.ecomm.repository.ProductDao;
 import com.ideaas.ecomm.ecomm.services.interfaces.ICategoryService;
 import com.ideaas.ecomm.ecomm.services.interfaces.IProductService;
@@ -91,23 +91,23 @@ public class ProductService implements IProductService {
     }
 
     @Override
-    public List<Product> searchByBrand(List<SearchBrandRequest.BrandRequest> brands) {
+    public List<Product> searchByBrand(List<SearchRequest.BrandRequest> brands) {
         Collection brandsList = convertToCollection(brands);
         return dao.searchAllByBrandIn(brandsList);
     }
 
     @Override
-    public List<Product> searchByCategories(List<SearchBrandRequest.CategoriesRequest> categories) {
+    public List<Product> searchByCategories(List<SearchRequest.CategoriesRequest> categories) {
         Collection categoriesList = convertToCategoriesCollection(categories);
         return dao.searchAllByCategoryIn(categoriesList);
     }
 
-    private Collection<Brand> convertToCollection(final List<SearchBrandRequest.BrandRequest> brandRequests) {
+    private Collection<Brand> convertToCollection(final List<SearchRequest.BrandRequest> brandRequests) {
         if (brandRequests == null || brandRequests.isEmpty()) {
             return Collections.emptyList();
         }
         Collection<Brand> collection = new ArrayList<>();
-        for (SearchBrandRequest.BrandRequest v : brandRequests) {
+        for (SearchRequest.BrandRequest v : brandRequests) {
             collection.add(new Brand(v.getId()));
         }
         return collection;
@@ -115,12 +115,12 @@ public class ProductService implements IProductService {
 
 
 
-    private Collection<Category> convertToCategoriesCollection(final List<SearchBrandRequest.CategoriesRequest> categoryRequests) {
+    private Collection<Category> convertToCategoriesCollection(final List<SearchRequest.CategoriesRequest> categoryRequests) {
         if (categoryRequests == null || categoryRequests.isEmpty()) {
             return Collections.emptyList();
         }
         Collection<Category> collection = new ArrayList<>();
-        for (SearchBrandRequest.CategoriesRequest v : categoryRequests) {
+        for (SearchRequest.CategoriesRequest v : categoryRequests) {
             collection.add(new Category(v.getId()));
         }
         return collection;
