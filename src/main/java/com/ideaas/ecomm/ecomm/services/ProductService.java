@@ -5,8 +5,9 @@ import com.ideaas.ecomm.ecomm.domain.Category;
 import com.ideaas.ecomm.ecomm.domain.Image;
 import com.ideaas.ecomm.ecomm.domain.Product;
 import com.ideaas.ecomm.ecomm.domain.ProductToCart;
-import com.ideaas.ecomm.ecomm.payload.SearchBrandRequest;
+import com.ideaas.ecomm.ecomm.payload.SearchRequest;
 import com.ideaas.ecomm.ecomm.repository.ProductDao;
+import com.ideaas.ecomm.ecomm.services.interfaces.ICategoryService;
 import com.ideaas.ecomm.ecomm.services.interfaces.IProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,12 +25,12 @@ public class ProductService implements IProductService {
 
     private ProductDao dao;
     private FileService fileService;
-    private CategoryService categoryService;
+    private ICategoryService categoryService;
 
     @Autowired
     public ProductService(final ProductDao dao,
                           final FileService fileService,
-                          final CategoryService categoryService) {
+                          final ICategoryService categoryService) {
         this.dao = dao;
         this.fileService = fileService;
         this.categoryService = categoryService;
@@ -76,32 +77,57 @@ public class ProductService implements IProductService {
     public List<Product> byCategory(final String nameOfCategory) {
         Category category = categoryService.findAllByNameEquals(nameOfCategory);
         List<Product> optionalProducts = dao.findAllByCategory(category);
-
+        optionalProducts.forEach(oneProduct -> addImagesOnProduct(oneProduct));
         return optionalProducts;
     }
 
 
     @Override
     public List<Product> search(final String value) {
-        List<Product> optionalProducts = dao.findAllByNameIgnoreCase(value);
+        List<Product> optionalProducts = dao.findAllByNameContainingIgnoreCase(value);
         optionalProducts.forEach(oneProduct -> addImagesOnProduct(oneProduct));
 
         return optionalProducts;
     }
 
     @Override
-    public List<Product> searchByBrand(List<SearchBrandRequest.BrandRequest> brands) {
+    public List<Product> searchByBrand(List<SearchRequest.BrandRequest> brands) {
         Collection brandsList = convertToCollection(brands);
-        return dao.searchAllByBrandIn(brandsList);
+        List<Product> products = dao.searchAllByBrandIn(brandsList);
+        products.forEach(oneProduct -> addImagesOnProduct(oneProduct));
+        
+        return products;
     }
 
-    private Collection<Brand> convertToCollection(final List<SearchBrandRequest.BrandRequest> brandRequests) {
+    @Override
+    public List<Product> searchByCategories(List<SearchRequest.CategoriesRequest> categories) {
+        Collection categoriesList = convertToCategoriesCollection(categories);
+        List<Product> products =  dao.searchAllByCategoryIn(categoriesList);
+        products.forEach(oneProduct -> addImagesOnProduct(oneProduct));
+        
+        return products;
+    }
+
+    private Collection<Brand> convertToCollection(final List<SearchRequest.BrandRequest> brandRequests) {
         if (brandRequests == null || brandRequests.isEmpty()) {
             return Collections.emptyList();
         }
         Collection<Brand> collection = new ArrayList<>();
-        for (SearchBrandRequest.BrandRequest v : brandRequests) {
+        for (SearchRequest.BrandRequest v : brandRequests) {
             collection.add(new Brand(v.getId()));
+        }
+        return collection;
+    }
+
+
+
+    private Collection<Category> convertToCategoriesCollection(final List<SearchRequest.CategoriesRequest> categoryRequests) {
+        if (categoryRequests == null || categoryRequests.isEmpty()) {
+            return Collections.emptyList();
+        }
+        Collection<Category> collection = new ArrayList<>();
+        for (SearchRequest.CategoriesRequest v : categoryRequests) {
+            collection.add(new Category(v.getId()));
         }
         return collection;
     }

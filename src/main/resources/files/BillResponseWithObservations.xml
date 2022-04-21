@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+    <Header>
+        <FEHeaderInfo >
+            <ambiente>HomologacionExterno - efa</ambiente>
+            <fecha>2022-04-20T19:59:40.9833807-03:00</fecha>
+            <id>4.4.2.0</id>
+        </FEHeaderInfo>
+    </Header>
+    <Body>
+        <FECAESolicitarResponse >
+            <FECAESolicitarResult>
+                <FeCabResp>
+                    <Cuit>20285640661</Cuit>
+                    <PtoVta>1</PtoVta>
+                    <CbteTipo>6</CbteTipo>
+                    <FchProceso>20220420195940</FchProceso>
+                    <CantReg>1</CantReg>
+                    <Resultado>R</Resultado>
+                    <Reproceso>N</Reproceso>
+                </FeCabResp>
+                <FeDetResp>
+                    <FECAEDetResponse>
+                        <Concepto>1</Concepto>
+                        <DocTipo>80</DocTipo>
+                        <DocNro>20285646661</DocNro>
+                        <CbteDesde>103</CbteDesde>
+                        <CbteHasta>103</CbteHasta>
+                        <CbteFch>20220420</CbteFch>
+                        <Resultado>R</Resultado>
+                        <Observaciones>
+                            <Obs>
+                                <Code>10015</Code>
+                                <Msg>Factura B (CbteDesde igual a CbteHasta), DocTipo: 80, DocNro 20285646661 no se encuentra registrado en los padrones de AFIP y no corresponde a una cuit pais.</Msg>
+                            </Obs>
+                        </Observaciones>
+                        <CAE/>
+                        <CAEFchVto/>
+                    </FECAEDetResponse>
+                </FeDetResp>
+            </FECAESolicitarResult>
+        </FECAESolicitarResponse>
+    </Body>
+</Envelope>

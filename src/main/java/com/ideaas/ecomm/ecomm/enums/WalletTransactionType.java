@@ -3,6 +3,7 @@ package com.ideaas.ecomm.ecomm.enums;
 public enum WalletTransactionType {
 
     SALE(-1),
+    PROMO(0),
     BUY(1);
 
     private int value;

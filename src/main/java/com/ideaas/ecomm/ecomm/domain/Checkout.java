@@ -7,16 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.List;
 
 @Entity
@@ -38,6 +29,9 @@ public class Checkout {
 
     @Enumerated(EnumType.STRING)
     private CheckoutState checkoutState;
+
+    @Column(name = "USU_CHE_ID")
+    private String username;
 
     public Double getTotalAmount() {
         return products.stream().mapToDouble(i -> i.getPrice() * i.getQuantity()).sum();

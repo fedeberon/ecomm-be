@@ -15,7 +15,9 @@ public interface ProductDao extends JpaRepository<Product, Long> {
 
     List<Product> findAllByCategory(final Category category);
 
-    List<Product> findAllByNameIgnoreCase(final String value);
+    List<Product> findAllByNameContainingIgnoreCase(final String value);
 
     List<Product> searchAllByBrandIn(Collection<Brand> brandId);
+
+    List<Product> searchAllByCategoryIn(Collection<Category> categories);
 }
