@@ -195,6 +195,10 @@ public class BillService implements IBillService {
             billResponse.setCoupon(billRequest.getCoupon());
             billResponse.setCUIT(billRequest.getCuit());
 
+            if(Objects.nonNull(billResponse.getMsg())) {
+                return billResponse;
+            }
+
             if(Objects.isNull(billResponse.getCAE())) {
                 throw new AfipException("[AFIP ERROR]: Hubo un error al intentar crear la Factura: ");
             }

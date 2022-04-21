@@ -131,7 +131,10 @@ public class AfipConvert {
             XMLStreamReader xmlReader = xif.createXMLStreamReader(reader);
             xmlReader.nextTag();
 
-            String tagName = hasErrors(xml) ? "Err" : "FECAEDetResponse";
+            String tagName = hasErrors(xml, "Err") ? "Err" : "FECAEDetResponse";
+            if (!tagName.equals("Err")) {
+                tagName = hasErrors(xml, "Obs")  ? "Obs" : "FECAEDetResponse";
+            }
 
             while (!xmlReader.getLocalName().equals(tagName)) {
                 try {
@@ -156,7 +159,7 @@ public class AfipConvert {
         return null;
     }
 
-    public static boolean hasErrors(String xml) {
+    public static boolean hasErrors(String xml, String tagName) {
         boolean hasErrors = false;
         try {
             xml = xml.replace("soap:", "");
@@ -170,13 +173,14 @@ public class AfipConvert {
             XMLStreamReader xmlReader = xif.createXMLStreamReader(reader);
             xmlReader.nextTag();
 
-            while (!xmlReader.equals("Err")) {
+            while (!xmlReader.equals(tagName)) {
                 try {
+                    if(xmlReader.getLocalName().equals(tagName)) {
+                        hasErrors = true;
+                    }
                     xmlReader.nextTag();
-                } catch (XMLStreamException e) {
+                } catch (Exception e) {
                     xmlReader.nextTag();
-                } finally {
-                    hasErrors = true;
                 }
             }
 
@@ -184,7 +188,10 @@ public class AfipConvert {
             e.printStackTrace();
         } catch (JAXBException e) {
             e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+
         return hasErrors;
     }
 
