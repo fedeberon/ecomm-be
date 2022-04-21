@@ -98,9 +98,14 @@ public class BillingController {
     }
 
     @PostMapping
-    public ResponseEntity<Bill> create(final @RequestBody BillRequest billRequest) {
+    public ResponseEntity<?> create(final @RequestBody BillRequest billRequest) {
         LoginTicketResponse ticketResponse = afipService.get("wsfe");
         BillResponse billResponse = billService.createBilling(ticketResponse, billRequest);
+
+        if (billResponse.getMsg() != null) {
+            return ResponseEntity.badRequest().body(billResponse.getMsg());
+        }
+
         Checkout checkout = checkoutService.changeStateTo(CheckoutState.PAID_OUT, billRequest.getCheckoutId());
         checkout.setUsername(billRequest.getUsername());
         Bill bill = billService.save(billResponse, checkout);

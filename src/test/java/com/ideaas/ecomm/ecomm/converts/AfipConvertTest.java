@@ -59,8 +59,16 @@ public class AfipConvertTest {
         String xml = new String(Files.readAllBytes(resource.toPath()));
         BillResponse bill = AfipConvert.convertoToBillResponse(xml);
 
-        assertNotNull(bill.getCAE());
+        assertNotNull(bill.getMsg());
     }
 
+    @Test
+    public void shouldConvertToBillResponseWithObservations() throws IOException {
+        File resource = FileUtil.loadEmployeesWithSpringInternalClass("files/BillResponseWithObservations.xml");
+        String xml = new String(Files.readAllBytes(resource.toPath()));
+        BillResponse bill = AfipConvert.convertoToBillResponse(xml);
+
+        assertNotNull(bill.getMsg());
+    }
 
 }
