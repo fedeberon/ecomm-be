@@ -195,7 +195,7 @@ public class BillService implements IBillService {
             billResponse.setCoupon(billRequest.getCoupon());
             billResponse.setCUIT(billRequest.getCuit());
 
-            if(Objects.nonNull(billResponse.getMsg())) {
+            if(!billResponse.getResultado().equals("A") && Objects.nonNull(billResponse.getMsg())) {
                 return billResponse;
             }
 
