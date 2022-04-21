@@ -93,13 +93,19 @@ public class ProductService implements IProductService {
     @Override
     public List<Product> searchByBrand(List<SearchRequest.BrandRequest> brands) {
         Collection brandsList = convertToCollection(brands);
-        return dao.searchAllByBrandIn(brandsList);
+        List<Product> products = dao.searchAllByBrandIn(brandsList);
+        products.forEach(oneProduct -> addImagesOnProduct(oneProduct));
+        
+        return products;
     }
 
     @Override
     public List<Product> searchByCategories(List<SearchRequest.CategoriesRequest> categories) {
         Collection categoriesList = convertToCategoriesCollection(categories);
-        return dao.searchAllByCategoryIn(categoriesList);
+        List<Product> products =  dao.searchAllByCategoryIn(categoriesList);
+        products.forEach(oneProduct -> addImagesOnProduct(oneProduct));
+        
+        return products;
     }
 
     private Collection<Brand> convertToCollection(final List<SearchRequest.BrandRequest> brandRequests) {
