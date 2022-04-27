@@ -58,7 +58,7 @@ public class Person {
     private String description;
 
     @XmlElement(name = "domicilioFiscal")
-    @OneToMany(cascade = {CascadeType.PERSIST}, mappedBy = "persona", fetch = FetchType.LAZY)
+    @OneToMany(cascade = CascadeType.MERGE, mappedBy = "persona", fetch = FetchType.EAGER)
     private Set<Address> addresses;
 
     @XmlElement

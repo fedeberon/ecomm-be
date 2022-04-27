@@ -21,6 +21,7 @@ import com.ideaas.ecomm.ecomm.repository.BillDao;
 import com.ideaas.ecomm.ecomm.services.interfaces.IAfipService;
 import com.ideaas.ecomm.ecomm.services.interfaces.IBillService;
 import com.ideaas.ecomm.ecomm.services.interfaces.ICheckoutService;
+import com.ideaas.ecomm.ecomm.services.interfaces.IPersonaService;
 import com.ideaas.ecomm.ecomm.services.interfaces.IProductService;
 import com.ideaas.ecomm.ecomm.services.interfaces.IUserService;
 import com.ideaas.ecomm.ecomm.services.interfaces.IWalletService;
@@ -58,15 +59,16 @@ public class BillService implements IBillService {
     private static final Logger logger = LoggerFactory.getLogger(BillService.class);
 
     // wsmtxca
-    /*
+
     public static String AFIP_A5_SERVICE   = "https://aws.afip.gov.ar/sr-padron/webservices/personaServiceA5";
+    /*
     public static String AFIP_CAE          = "https://fwshomo.afip.gov.ar/wsmtxca/services/MTXCAService";
     public static String AFIP_LAST_BILL_ID = "https://fwshomo.afip.gov.ar/wsmtxca/services/MTXCAService";
     public static String AFIP_BILLIMG      = "https://fwshomo.afip.gov.ar/wsmtxca/services/MTXCAService";
     */
 
     // https://wswhomo.afip.gov.ar/wsfev1/service.asmx
-    public static String AFIP_A5_SERVICE   = "https://awshomo.afip.gov.ar/sr-padron/webservices/personaServiceA5";
+    //public static String AFIP_A5_SERVICE   = "https://awshomo.afip.gov.ar/sr-padron/webservices/personaServiceA5";
     public static String AFIP_CAE          = "https://fwshomo.afip.gov.ar/wsmtxca/services/MTXCAService";
     public static String AFIP_LAST_BILL_ID = "https://wswhomo.afip.gov.ar/wsfev1/service.asmx?op=FECompUltimoAutorizado";
     public static String AFIP_BILLING      = "https://wswhomo.afip.gov.ar/wsfev1/service.asmx?op=FECAESolicitar";
@@ -78,6 +80,7 @@ public class BillService implements IBillService {
     private IWalletService walletService;
     private IProductService productService;
     private IAfipService afipService;
+    private IPersonaService personService;
 
     @Autowired
     public BillService(final ICheckoutService checkoutService,
@@ -85,13 +88,15 @@ public class BillService implements IBillService {
                        final IUserService userService,
                        final IWalletService walletService,
                        final IProductService productService,
-                       final IAfipService afipService){
+                       final IAfipService afipService,
+                       final IPersonaService personService){
         this.checkoutService = checkoutService;
         this.dao = dao;
         this.userService = userService;
         this.walletService = walletService;
         this.productService = productService;
         this.afipService = afipService;
+        this.personService = personService;
     }
 
 
@@ -112,7 +117,7 @@ public class BillService implements IBillService {
             soapConnection.close();
 
             return personPayload.getPerson();
-        }catch (Exception e) {
+        } catch (Exception e) {
             System.out.print("ERROR DE PARSEO ===========> " + e);
             e.printStackTrace();
         }
@@ -182,7 +187,7 @@ public class BillService implements IBillService {
             final String asAString = printSOAPResponse(response);
             logger.info("AFIP response: " + asAString);
 
-            if(response.getSOAPBody().hasFault()) {
+            if (response.getSOAPBody().hasFault()) {
                 final Fault fault = convertToValidationAfip(asAString);
 
                 throw new AfipException("[AFIP ERROR]: Description: " + fault.getDetail());
@@ -194,14 +199,6 @@ public class BillService implements IBillService {
             billResponse.setCreditCard(billRequest.getCreditCard());
             billResponse.setCoupon(billRequest.getCoupon());
             billResponse.setCUIT(billRequest.getCuit());
-
-            if(!billResponse.getResultado().equals("A") && Objects.nonNull(billResponse.getMsg())) {
-                return billResponse;
-            }
-
-            if(Objects.isNull(billResponse.getCAE())) {
-                throw new AfipException("[AFIP ERROR]: Hubo un error al intentar crear la Factura: ");
-            }
 
             return billResponse;
 
@@ -283,10 +280,9 @@ public class BillService implements IBillService {
     public Bill save(final BillResponse response, final Checkout checkout) {
         final User user = userService.get(checkout.getUsername());
         LoginTicketResponse ticketResponse = afipService.get("ws_sr_padron_a5");
-        final Person person = createPersonRequest(ticketResponse.getToken(),
-                                                  ticketResponse.getSign(),
-                                                   "20285640661",
-                                                    response.getCUIT());
+        Person person = createPersonRequest(ticketResponse.getToken(), ticketResponse.getSign(), "20285640661", response.getCUIT());
+        person = personService.save(person);
+
         Bill bill = new Bill.BillBuilder()
                 .withCAE(response.getCAE())
                 .withBillType(response.getBillType().getCode())

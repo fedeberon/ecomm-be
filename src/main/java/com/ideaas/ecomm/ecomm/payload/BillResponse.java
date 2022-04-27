@@ -48,6 +48,8 @@ public class BillResponse {
     @XmlElement(name="Msg")
     private String msg;
 
+    private Err message;
+
     private BillType billType;
 
     private Long nroComprobante;

@@ -68,7 +68,7 @@ public class AfipConvertTest {
         String xml = new String(Files.readAllBytes(resource.toPath()));
         BillResponse bill = AfipConvert.convertoToBillResponse(xml);
 
-        assertNotNull(bill.getMsg());
+        assertNotNull(bill.getMessage());
     }
 
 }

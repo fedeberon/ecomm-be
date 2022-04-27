@@ -2,6 +2,7 @@ package com.ideaas.ecomm.ecomm.converts;
 
 import com.ideaas.ecomm.ecomm.payload.BillResponse;
 import com.ideaas.ecomm.ecomm.payload.CAEAResponse;
+import com.ideaas.ecomm.ecomm.payload.Err;
 import com.ideaas.ecomm.ecomm.payload.LastBillIdResponse;
 import com.ideaas.ecomm.ecomm.payload.LoginTicket;
 import com.ideaas.ecomm.ecomm.payload.PersonPayload;
@@ -30,6 +31,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringReader;
 import java.io.StringWriter;
+import java.util.Objects;
 
 @SuppressWarnings("all")
 public class AfipConvert {
@@ -131,12 +133,89 @@ public class AfipConvert {
             XMLStreamReader xmlReader = xif.createXMLStreamReader(reader);
             xmlReader.nextTag();
 
-            String tagName = hasErrors(xml, "Err") ? "Err" : "FECAEDetResponse";
-            if (!tagName.equals("Err")) {
-                tagName = hasErrors(xml, "Obs")  ? "Obs" : "FECAEDetResponse";
+            Err tagName = hasErrors(xml, "Err");
+            if (Objects.isNull(tagName)) {
+                tagName = hasErrors(xml, "Obs");
             }
 
+
+            while (!xmlReader.getLocalName().equals("FECAEDetResponse")) {
+                try {
+                    xmlReader.nextTag();
+                } catch (XMLStreamException e) {
+                    xmlReader.nextTag();
+                }
+            }
+
+            javax.xml.bind.Unmarshaller jaxbUnmarshaller = jc.createUnmarshaller();
+            javax.xml.bind.JAXBElement<BillResponse> jb = jaxbUnmarshaller.unmarshal(xmlReader, BillResponse.class);
+            xmlReader.close();
+            BillResponse billResponse = jb.getValue();
+            billResponse.setMessage(tagName);
+
+            return billResponse;
+        } catch (XMLStreamException e) {
+            e.printStackTrace();
+        } catch (JAXBException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    public static Err hasErrors(String xml, String tagName) {
+        try {
+            xml = xml.replace("soap:", "");
+            xml = xml.replace("xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"", "");
+            xml = xml.replace(" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\"", "");
+            xml = xml.replace("xmlns=\"http://ar.gov.afip.dif.FEV1/\"", "");
+            xml = xml.replace("xmlns=\"http://ar.gov.afip.dif.FEV1/\"", "");
+            JAXBContext jc = JAXBContext.newInstance(new Class[] { Err.class });
+            StringReader reader = new StringReader(xml);
+            XMLInputFactory xif = XMLInputFactory.newFactory();
+            XMLStreamReader xmlReader = xif.createXMLStreamReader(reader);
+            xmlReader.nextTag();
+
             while (!xmlReader.getLocalName().equals(tagName)) {
+                try {
+                    System.out.println(xmlReader.getLocalName());
+                    xmlReader.nextTag();
+                } catch (Exception e) {
+                    xmlReader.nextTag();
+                }
+            }
+
+        javax.xml.bind.Unmarshaller jaxbUnmarshaller = jc.createUnmarshaller();
+        javax.xml.bind.JAXBElement<Err> jb = jaxbUnmarshaller.unmarshal(xmlReader, Err.class);
+        xmlReader.close();
+        return jb.getValue();
+
+        } catch (XMLStreamException e) {
+            e.printStackTrace();
+        } catch (JAXBException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+
+    public static BillResponse convertoToBill(String xml) {
+        try {
+            xml = xml.replace("soap:", "");
+            xml = xml.replace("xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"", "");
+            xml = xml.replace(" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\"", "");
+            xml = xml.replace("xmlns=\"http://ar.gov.afip.dif.FEV1/\"", "");
+            xml = xml.replace("xmlns=\"http://ar.gov.afip.dif.FEV1/\"", "");
+            JAXBContext jc = JAXBContext.newInstance(new Class[] { BillResponse.class });
+            StringReader reader = new StringReader(xml);
+            XMLInputFactory xif = XMLInputFactory.newFactory();
+            XMLStreamReader xmlReader = xif.createXMLStreamReader(reader);
+            xmlReader.nextTag();
+
+            while (!xmlReader.getLocalName().equals("FECAEDetResponse")) {
                 try {
                     xmlReader.nextTag();
                 } catch (XMLStreamException e) {
@@ -158,43 +237,6 @@ public class AfipConvert {
 
         return null;
     }
-
-    public static boolean hasErrors(String xml, String tagName) {
-        boolean hasErrors = false;
-        try {
-            xml = xml.replace("soap:", "");
-            xml = xml.replace("xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"", "");
-            xml = xml.replace(" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\"", "");
-            xml = xml.replace("xmlns=\"http://ar.gov.afip.dif.FEV1/\"", "");
-            xml = xml.replace("xmlns=\"http://ar.gov.afip.dif.FEV1/\"", "");
-            JAXBContext jc = JAXBContext.newInstance(new Class[] { BillResponse.class });
-            StringReader reader = new StringReader(xml);
-            XMLInputFactory xif = XMLInputFactory.newFactory();
-            XMLStreamReader xmlReader = xif.createXMLStreamReader(reader);
-            xmlReader.nextTag();
-
-            while (!xmlReader.equals(tagName)) {
-                try {
-                    if(xmlReader.getLocalName().equals(tagName)) {
-                        hasErrors = true;
-                    }
-                    xmlReader.nextTag();
-                } catch (Exception e) {
-                    xmlReader.nextTag();
-                }
-            }
-
-        } catch (XMLStreamException e) {
-            e.printStackTrace();
-        } catch (JAXBException e) {
-            e.printStackTrace();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return hasErrors;
-    }
-
 
     public static String printSOAPResponse(SOAPMessage soapResponse) {
         try {

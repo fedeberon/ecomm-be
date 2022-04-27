@@ -62,9 +62,9 @@ public class BillingController {
         this.userService = userService;
     }
 
-    @RequestMapping("{CUIT}")
+    @GetMapping("/person/{CUIT}")
     public ResponseEntity<Person> getByCUIT(@PathVariable String CUIT) {
-        final LoginTicketResponse ticketResponse = afipService.getAuthentication("ws_sr_padron_a5");
+        final LoginTicketResponse ticketResponse = afipService.get("ws_sr_padron_a5");
         Person person = billService.createPersonRequest(ticketResponse.getToken(),
                                                         ticketResponse.getSign(),
                                          "20285640661",
@@ -102,8 +102,8 @@ public class BillingController {
         LoginTicketResponse ticketResponse = afipService.get("wsfe");
         BillResponse billResponse = billService.createBilling(ticketResponse, billRequest);
 
-        if (billResponse.getMsg() != null) {
-            return ResponseEntity.badRequest().body(billResponse.getMsg());
+        if (billResponse.getMessage() != null && billResponse.getResultado() != "A") {
+            return ResponseEntity.badRequest().body(billResponse.getMessage().getMessage());
         }
 
         Checkout checkout = checkoutService.changeStateTo(CheckoutState.PAID_OUT, billRequest.getCheckoutId());

@@ -112,8 +112,8 @@ public class AfipWSAAClient {
         } catch (KeyStoreException ex) {
             ex.printStackTrace();
             logger.info("KeyStoreException {}", p12pass);
-
         }
+
         FileInputStream p12stream = null;
         try {
             p12stream = new FileInputStream(p12file);
