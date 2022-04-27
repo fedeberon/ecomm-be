@@ -37,6 +37,7 @@ import javax.xml.soap.SOAPMessage;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -118,7 +119,6 @@ public class BillService implements IBillService {
 
             return personPayload.getPerson();
         } catch (Exception e) {
-            System.out.print("ERROR DE PARSEO ===========> " + e);
             e.printStackTrace();
         }
         return null;
@@ -281,7 +281,10 @@ public class BillService implements IBillService {
         final User user = userService.get(checkout.getUsername());
         LoginTicketResponse ticketResponse = afipService.get("ws_sr_padron_a5");
         Person person = createPersonRequest(ticketResponse.getToken(), ticketResponse.getSign(), "20285640661", response.getCUIT());
-        person = personService.save(person);
+
+        if (Objects.nonNull(person)) {
+            person = personService.save(person);
+        }
 
         Bill bill = new Bill.BillBuilder()
                 .withCAE(response.getCAE())
@@ -304,7 +307,6 @@ public class BillService implements IBillService {
 
         return dao.save(bill);
     }
-
 
 
 
