@@ -102,7 +102,7 @@ public class BillingController {
         LoginTicketResponse ticketResponse = afipService.get("wsfe");
         BillResponse billResponse = billService.createBilling(ticketResponse, billRequest);
 
-        if (billResponse.getMessage() != null && billResponse.getResultado() != "A") {
+        if (billResponse.getMessage() != null && !billResponse.getResultado().equalsIgnoreCase("A")) {
             return ResponseEntity.badRequest().body(billResponse.getMessage().getMessage());
         }
 
