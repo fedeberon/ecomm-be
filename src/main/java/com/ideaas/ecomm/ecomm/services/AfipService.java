@@ -21,6 +21,9 @@ public class AfipService  implements IAfipService {
     @Value("${certificatedPath}")
     private String certificatedPath;
 
+    @Value("${certificatedPathProd}")
+    private String certificatedPathProd;
+
     private AfipWSAAClient client;
 
     private ILoginTicketService loginTicketService;
@@ -50,9 +53,10 @@ public class AfipService  implements IAfipService {
     public LoginTicketResponse getAuthentication(final String service) {
         System.setProperty("http.proxyHost", "");
         System.setProperty("http.proxyPort", "80");
-        final String endpoint = "https://wsaahomo.afip.gov.ar/ws/services/LoginCms";
-        final String dstDN = "CN=wsaahomo, O=AFIP, C=AR, SERIALNUMBER=CUIT 33693450239";
-        final String p12file = certificatedPath;
+        final String environment = service.equalsIgnoreCase("ws_sr_padron_a5") ? "wsaa" : "wsaahomo";
+        final String endpoint = "https://" + environment + ".afip.gov.ar/ws/services/LoginCms";
+        final String dstDN = "CN=" + environment + ", O=AFIP, C=AR, SERIALNUMBER=CUIT 33693450239";
+        final String p12file = service.equalsIgnoreCase("ws_sr_padron_a5") ? certificatedPathProd : certificatedPath;
         final String signer = "fedeberon";
         final String p12pass = "1234";
         final byte[] LoginTicketRequest_xml_cms = client.create_cms(p12file, p12pass, signer, dstDN, service);

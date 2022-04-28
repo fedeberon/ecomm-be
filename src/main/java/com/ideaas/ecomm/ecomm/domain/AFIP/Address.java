@@ -1,5 +1,6 @@
 package com.ideaas.ecomm.ecomm.domain.AFIP;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -58,6 +59,7 @@ public class Address {
     @Column(name = "DOM_TIPODOMICILIO")
     private java.lang.String tipoDomicilio;
 
+    @JsonIgnore
     @ManyToOne(cascade = CascadeType.DETACH)
     @JoinColumn(name = "DOM_PER_ID")
     private Person persona;

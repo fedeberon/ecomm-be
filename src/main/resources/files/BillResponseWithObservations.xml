@@ -1,20 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
-    <Header>
-        <FEHeaderInfo >
+<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/"
+               xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+               xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <soap:Header>
+        <FEHeaderInfo xmlns="http://ar.gov.afip.dif.FEV1/">
             <ambiente>HomologacionExterno - efa</ambiente>
-            <fecha>2022-04-20T19:59:40.9833807-03:00</fecha>
+            <fecha>2022-04-26T14:16:39.31821-03:00</fecha>
             <id>4.4.2.0</id>
         </FEHeaderInfo>
-    </Header>
-    <Body>
-        <FECAESolicitarResponse >
+    </soap:Header>
+    <soap:Body>
+        <FECAESolicitarResponse xmlns="http://ar.gov.afip.dif.FEV1/">
             <FECAESolicitarResult>
                 <FeCabResp>
                     <Cuit>20285640661</Cuit>
                     <PtoVta>1</PtoVta>
                     <CbteTipo>6</CbteTipo>
-                    <FchProceso>20220420195940</FchProceso>
+                    <FchProceso>20220426141639</FchProceso>
                     <CantReg>1</CantReg>
                     <Resultado>R</Resultado>
                     <Reproceso>N</Reproceso>
@@ -24,9 +26,9 @@
                         <Concepto>1</Concepto>
                         <DocTipo>80</DocTipo>
                         <DocNro>20285646661</DocNro>
-                        <CbteDesde>103</CbteDesde>
-                        <CbteHasta>103</CbteHasta>
-                        <CbteFch>20220420</CbteFch>
+                        <CbteDesde>106</CbteDesde>
+                        <CbteHasta>106</CbteHasta>
+                        <CbteFch>20220426</CbteFch>
                         <Resultado>R</Resultado>
                         <Observaciones>
                             <Obs>
@@ -40,5 +42,5 @@
                 </FeDetResp>
             </FECAESolicitarResult>
         </FECAESolicitarResponse>
-    </Body>
-</Envelope>
+    </soap:Body>
+</soap:Envelope>
