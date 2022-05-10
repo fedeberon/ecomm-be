@@ -4,6 +4,7 @@ import com.ideaas.ecomm.ecomm.converts.exceptions.Errors;
 import com.ideaas.ecomm.ecomm.converts.exceptions.Fault;
 import com.ideaas.ecomm.ecomm.domain.AFIP.LoginTicketResponse;
 import com.ideaas.ecomm.ecomm.domain.AFIP.Person;
+import com.ideaas.ecomm.ecomm.domain.AFIP.ResponsePerson;
 import com.ideaas.ecomm.ecomm.domain.Bill;
 import com.ideaas.ecomm.ecomm.domain.Checkout;
 import com.ideaas.ecomm.ecomm.domain.Item;
@@ -37,7 +38,6 @@ import javax.xml.soap.SOAPMessage;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -45,6 +45,7 @@ import static com.ideaas.ecomm.ecomm.converts.AfipConvert.convertToCAE;
 import static com.ideaas.ecomm.ecomm.converts.AfipConvert.convertToPersonPayload;
 import static com.ideaas.ecomm.ecomm.converts.AfipConvert.convertoToBillResponse;
 import static com.ideaas.ecomm.ecomm.converts.AfipConvert.convertoToLastBillId;
+import static com.ideaas.ecomm.ecomm.converts.AfipConvert.hasFault;
 import static com.ideaas.ecomm.ecomm.converts.AfipConvert.printSOAPResponse;
 import static com.ideaas.ecomm.ecomm.converts.AfipExceptionConvert.convertToErrorAfip;
 import static com.ideaas.ecomm.ecomm.converts.AfipValidationConverter.convertToValidationAfip;
@@ -102,10 +103,10 @@ public class BillService implements IBillService {
 
 
     @Override
-    public Person createPersonRequest(final String token,
-                                      final String sign,
-                                      final String cuitRepresentada,
-                                      final String idPersona) {
+    public ResponsePerson createPersonRequest(final String token,
+                                              final String sign,
+                                              final String cuitRepresentada,
+                                              final String idPersona) {
         try {
             java.net.URL endPoint = new java.net.URL(AFIP_A5_SERVICE);
             SOAPConnectionFactory soapConnectionFactory = SOAPConnectionFactory.newInstance();
@@ -113,11 +114,18 @@ public class BillService implements IBillService {
             SOAPMessage request = createGetPersona(token, sign, cuitRepresentada, idPersona);
             String asAString = printSOAPResponse(request);
             SOAPMessage soapResponse = soapConnection.call(request, endPoint);
+            ResponsePerson response = new ResponsePerson();
             String result = printSOAPResponse(soapResponse);
-            PersonPayload personPayload = convertToPersonPayload(result);
+            Fault fault = hasFault(result);
+            if (Objects.nonNull(fault)) {
+                response.setFault(fault);
+            } else {
+                PersonPayload personPayload = convertToPersonPayload(result);
+                response.setPersonPayload(personPayload);
+            }
             soapConnection.close();
 
-            return personPayload.getPerson();
+            return response;
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -280,10 +288,10 @@ public class BillService implements IBillService {
     public Bill save(final BillResponse response, final Checkout checkout) {
         final User user = userService.get(checkout.getUsername());
         LoginTicketResponse ticketResponse = afipService.get("ws_sr_padron_a5");
-        Person person = createPersonRequest(ticketResponse.getToken(), ticketResponse.getSign(), "20285640661", response.getCUIT());
-
-        if (Objects.nonNull(person)) {
-            person = personService.save(person);
+        ResponsePerson personRequest = createPersonRequest(ticketResponse.getToken(), ticketResponse.getSign(), "20285640661", response.getCUIT());
+        Person person = null;
+        if (Objects.nonNull(personRequest)) {
+             person = personService.save(personRequest.getPersonPayload().getPerson());
         }
 
         Bill bill = new Bill.BillBuilder()

@@ -2,6 +2,7 @@ package com.ideaas.ecomm.ecomm.controller;
 
 import com.ideaas.ecomm.ecomm.domain.AFIP.LoginTicketResponse;
 import com.ideaas.ecomm.ecomm.domain.AFIP.Person;
+import com.ideaas.ecomm.ecomm.domain.AFIP.ResponsePerson;
 import com.ideaas.ecomm.ecomm.domain.Bill;
 import com.ideaas.ecomm.ecomm.domain.Checkout;
 import com.ideaas.ecomm.ecomm.domain.User;
@@ -63,9 +64,9 @@ public class BillingController {
     }
 
     @GetMapping("/person/{CUIT}")
-    public ResponseEntity<Person> getByCUIT(@PathVariable String CUIT) {
+    public ResponseEntity<ResponsePerson> getByCUIT(@PathVariable String CUIT) {
         final LoginTicketResponse ticketResponse = afipService.get("ws_sr_padron_a5");
-        Person person = billService.createPersonRequest(ticketResponse.getToken(),
+        ResponsePerson person = billService.createPersonRequest(ticketResponse.getToken(),
                                                         ticketResponse.getSign(),
                                          "20285640661",
                                                         CUIT);

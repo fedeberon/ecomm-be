@@ -1,5 +1,6 @@
 package com.ideaas.ecomm.ecomm.converts;
 
+import com.ideaas.ecomm.ecomm.converts.exceptions.Fault;
 import com.ideaas.ecomm.ecomm.payload.BillResponse;
 import com.ideaas.ecomm.ecomm.payload.CAEAResponse;
 import com.ideaas.ecomm.ecomm.payload.Err;
@@ -73,6 +74,8 @@ public class AfipConvert {
         XMLInputFactory xif = XMLInputFactory.newFactory();
         XMLStreamReader xmlReader = xif.createXMLStreamReader(reader);
         xmlReader.nextTag();
+
+
         while (!xmlReader.getLocalName().equals("personaReturn")) {
             xmlReader.nextTag();
         }
@@ -83,6 +86,44 @@ public class AfipConvert {
 
         return personaReturn;
     }
+
+    /**
+     * It converts the xml to a Fault object.
+     * @param xml as {@link String} with result fron AFIP.
+     * @return {@link Fault} object.
+     * @throws JAXBException
+     * @throws XMLStreamException
+     */
+    public static Fault hasFault(final String xml) throws JAXBException, XMLStreamException {
+        JAXBContext jc = JAXBContext.newInstance(new Class[] { Fault.class });
+        StringReader reader = new StringReader(xml);
+        XMLInputFactory xif = XMLInputFactory.newFactory();
+        XMLStreamReader xmlReader = xif.createXMLStreamReader(reader);
+        xmlReader.nextTag();
+        boolean hasFault = false;
+        while (!xmlReader.getLocalName().equals("Fault") && !xmlReader.isEndElement()) {
+            try {
+                xmlReader.nextTag();
+            } catch (Exception e) {
+                xmlReader.nextTag();
+            }
+        }
+        javax.xml.bind.Unmarshaller jaxbUnmarshaller = jc.createUnmarshaller();
+        javax.xml.bind.JAXBElement<Fault> jb = null;
+        try {
+            jb = jaxbUnmarshaller.unmarshal(xmlReader, Fault.class);
+        } catch (IllegalStateException e) {
+            e.printStackTrace();
+
+            return null;
+        }
+        xmlReader.close();
+        Fault personaReturn = jb.getValue();
+
+        return personaReturn;
+
+    }
+
 
     public static LastBillIdResponse convertoToLastBillId(String xml) {
         try {

@@ -2,6 +2,7 @@ package com.ideaas.ecomm.ecomm.services.interfaces;
 
 import com.ideaas.ecomm.ecomm.domain.AFIP.LoginTicketResponse;
 import com.ideaas.ecomm.ecomm.domain.AFIP.Person;
+import com.ideaas.ecomm.ecomm.domain.AFIP.ResponsePerson;
 import com.ideaas.ecomm.ecomm.domain.Bill;
 import com.ideaas.ecomm.ecomm.domain.Checkout;
 import com.ideaas.ecomm.ecomm.domain.User;
@@ -15,10 +16,10 @@ import java.util.List;
 
 public interface IBillService {
 
-    Person createPersonRequest(String token,
-                               String sign,
-                               String cuitRepresentada,
-                               String idPersona);
+    ResponsePerson createPersonRequest(String token,
+                                       String sign,
+                                       String cuitRepresentada,
+                                       String idPersona);
 
     LastBillIdResponse getLastBillId(LoginTicketResponse ticketResponse,
                                      LastBillIdResponse lastBillIdResponse,
