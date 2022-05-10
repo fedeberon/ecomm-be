@@ -518,6 +518,15 @@ public class AfipWSAAClient {
         throw new IllegalStateException("There was not posible find a 'TIPO DE DNI' type");
     }
 
+    /**
+     * Invoke prepare the object to send to the webservice of a person.
+     * @param token
+     * @param sign
+     * @param cuitRepresentada of the user authorized.
+     * @param idPersona of the person.
+     * @return the {@link SOAPMessage} to send to the webservice.
+     * @throws Exception
+     */
     public static SOAPMessage createGetPersona(final String token,
                                                final String sign,
                                                final String cuitRepresentada,
