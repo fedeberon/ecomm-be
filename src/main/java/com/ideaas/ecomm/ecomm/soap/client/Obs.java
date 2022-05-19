@@ -8,9 +8,9 @@ import javax.xml.bind.annotation.XmlType;
 
 
 /**
- * <p>Clase Java para Obs complex type.
+ * <p>Java class for Obs complex type.
  * 
- * <p>El siguiente fragmento de esquema especifica el contenido que se espera que haya en esta clase.
+ * <p>The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType name="Obs"&gt;
@@ -40,7 +40,7 @@ public class Obs {
     protected String msg;
 
     /**
-     * Obtiene el valor de la propiedad code.
+     * Gets the value of the code property.
      * 
      */
     public int getCode() {
@@ -48,7 +48,7 @@ public class Obs {
     }
 
     /**
-     * Define el valor de la propiedad code.
+     * Sets the value of the code property.
      * 
      */
     public void setCode(int value) {
@@ -56,7 +56,7 @@ public class Obs {
     }
 
     /**
-     * Obtiene el valor de la propiedad msg.
+     * Gets the value of the msg property.
      * 
      * @return
      *     possible object is
@@ -68,7 +68,7 @@ public class Obs {
     }
 
     /**
-     * Define el valor de la propiedad msg.
+     * Sets the value of the msg property.
      * 
      * @param value
      *     allowed object is

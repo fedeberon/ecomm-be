@@ -8,9 +8,9 @@ import javax.xml.bind.annotation.XmlType;
 
 
 /**
- * <p>Clase Java para FECAEASinMovResponse complex type.
+ * <p>Java class for FECAEASinMovResponse complex type.
  * 
- * <p>El siguiente fragmento de esquema especifica el contenido que se espera que haya en esta clase.
+ * <p>The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType name="FECAEASinMovResponse"&gt;
@@ -46,7 +46,7 @@ public class FECAEASinMovResponse
     protected ArrayOfEvt events;
 
     /**
-     * Obtiene el valor de la propiedad resultado.
+     * Gets the value of the resultado property.
      * 
      * @return
      *     possible object is
@@ -58,7 +58,7 @@ public class FECAEASinMovResponse
     }
 
     /**
-     * Define el valor de la propiedad resultado.
+     * Sets the value of the resultado property.
      * 
      * @param value
      *     allowed object is
@@ -70,7 +70,7 @@ public class FECAEASinMovResponse
     }
 
     /**
-     * Obtiene el valor de la propiedad errors.
+     * Gets the value of the errors property.
      * 
      * @return
      *     possible object is
@@ -82,7 +82,7 @@ public class FECAEASinMovResponse
     }
 
     /**
-     * Define el valor de la propiedad errors.
+     * Sets the value of the errors property.
      * 
      * @param value
      *     allowed object is
@@ -94,7 +94,7 @@ public class FECAEASinMovResponse
     }
 
     /**
-     * Obtiene el valor de la propiedad events.
+     * Gets the value of the events property.
      * 
      * @return
      *     possible object is
@@ -106,7 +106,7 @@ public class FECAEASinMovResponse
     }
 
     /**
-     * Define el valor de la propiedad events.
+     * Sets the value of the events property.
      * 
      * @param value
      *     allowed object is

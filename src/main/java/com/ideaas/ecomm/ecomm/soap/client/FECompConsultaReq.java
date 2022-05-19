@@ -8,9 +8,9 @@ import javax.xml.bind.annotation.XmlType;
 
 
 /**
- * <p>Clase Java para FECompConsultaReq complex type.
+ * <p>Java class for FECompConsultaReq complex type.
  * 
- * <p>El siguiente fragmento de esquema especifica el contenido que se espera que haya en esta clase.
+ * <p>The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType name="FECompConsultaReq"&gt;
@@ -44,7 +44,7 @@ public class FECompConsultaReq {
     protected int ptoVta;
 
     /**
-     * Obtiene el valor de la propiedad cbteTipo.
+     * Gets the value of the cbteTipo property.
      * 
      */
     public int getCbteTipo() {
@@ -52,7 +52,7 @@ public class FECompConsultaReq {
     }
 
     /**
-     * Define el valor de la propiedad cbteTipo.
+     * Sets the value of the cbteTipo property.
      * 
      */
     public void setCbteTipo(int value) {
@@ -60,7 +60,7 @@ public class FECompConsultaReq {
     }
 
     /**
-     * Obtiene el valor de la propiedad cbteNro.
+     * Gets the value of the cbteNro property.
      * 
      */
     public long getCbteNro() {
@@ -68,7 +68,7 @@ public class FECompConsultaReq {
     }
 
     /**
-     * Define el valor de la propiedad cbteNro.
+     * Sets the value of the cbteNro property.
      * 
      */
     public void setCbteNro(long value) {
@@ -76,7 +76,7 @@ public class FECompConsultaReq {
     }
 
     /**
-     * Obtiene el valor de la propiedad ptoVta.
+     * Gets the value of the ptoVta property.
      * 
      */
     public int getPtoVta() {
@@ -84,7 +84,7 @@ public class FECompConsultaReq {
     }
 
     /**
-     * Define el valor de la propiedad ptoVta.
+     * Sets the value of the ptoVta property.
      * 
      */
     public void setPtoVta(int value) {

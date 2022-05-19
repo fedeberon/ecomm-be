@@ -8,9 +8,9 @@ import javax.xml.bind.annotation.XmlType;
 
 
 /**
- * <p>Clase Java para DummyResponse complex type.
+ * <p>Java class for DummyResponse complex type.
  * 
- * <p>El siguiente fragmento de esquema especifica el contenido que se espera que haya en esta clase.
+ * <p>The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType name="DummyResponse"&gt;
@@ -44,7 +44,7 @@ public class DummyResponse {
     protected String authServer;
 
     /**
-     * Obtiene el valor de la propiedad appServer.
+     * Gets the value of the appServer property.
      * 
      * @return
      *     possible object is
@@ -56,7 +56,7 @@ public class DummyResponse {
     }
 
     /**
-     * Define el valor de la propiedad appServer.
+     * Sets the value of the appServer property.
      * 
      * @param value
      *     allowed object is
@@ -68,7 +68,7 @@ public class DummyResponse {
     }
 
     /**
-     * Obtiene el valor de la propiedad dbServer.
+     * Gets the value of the dbServer property.
      * 
      * @return
      *     possible object is
@@ -80,7 +80,7 @@ public class DummyResponse {
     }
 
     /**
-     * Define el valor de la propiedad dbServer.
+     * Sets the value of the dbServer property.
      * 
      * @param value
      *     allowed object is
@@ -92,7 +92,7 @@ public class DummyResponse {
     }
 
     /**
-     * Obtiene el valor de la propiedad authServer.
+     * Gets the value of the authServer property.
      * 
      * @return
      *     possible object is
@@ -104,7 +104,7 @@ public class DummyResponse {
     }
 
     /**
-     * Define el valor de la propiedad authServer.
+     * Sets the value of the authServer property.
      * 
      * @param value
      *     allowed object is

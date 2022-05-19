@@ -9,9 +9,9 @@ import javax.xml.bind.annotation.XmlType;
 
 
 /**
- * <p>Clase Java para anonymous complex type.
+ * <p>Java class for anonymous complex type.
  * 
- * <p>El siguiente fragmento de esquema especifica el contenido que se espera que haya en esta clase.
+ * <p>The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType&gt;
@@ -38,7 +38,7 @@ public class FEParamGetTiposConceptoResponse {
     protected ConceptoTipoResponse feParamGetTiposConceptoResult;
 
     /**
-     * Obtiene el valor de la propiedad feParamGetTiposConceptoResult.
+     * Gets the value of the feParamGetTiposConceptoResult property.
      * 
      * @return
      *     possible object is
@@ -50,7 +50,7 @@ public class FEParamGetTiposConceptoResponse {
     }
 
     /**
-     * Define el valor de la propiedad feParamGetTiposConceptoResult.
+     * Sets the value of the feParamGetTiposConceptoResult property.
      * 
      * @param value
      *     allowed object is

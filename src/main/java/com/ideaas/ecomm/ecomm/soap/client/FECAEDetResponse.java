@@ -8,9 +8,9 @@ import javax.xml.bind.annotation.XmlType;
 
 
 /**
- * <p>Clase Java para FECAEDetResponse complex type.
+ * <p>Java class for FECAEDetResponse complex type.
  * 
- * <p>El siguiente fragmento de esquema especifica el contenido que se espera que haya en esta clase.
+ * <p>The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType name="FECAEDetResponse"&gt;
@@ -42,7 +42,7 @@ public class FECAEDetResponse
     protected String caeFchVto;
 
     /**
-     * Obtiene el valor de la propiedad cae.
+     * Gets the value of the cae property.
      * 
      * @return
      *     possible object is
@@ -54,7 +54,7 @@ public class FECAEDetResponse
     }
 
     /**
-     * Define el valor de la propiedad cae.
+     * Sets the value of the cae property.
      * 
      * @param value
      *     allowed object is
@@ -66,7 +66,7 @@ public class FECAEDetResponse
     }
 
     /**
-     * Obtiene el valor de la propiedad caeFchVto.
+     * Gets the value of the caeFchVto property.
      * 
      * @return
      *     possible object is
@@ -78,7 +78,7 @@ public class FECAEDetResponse
     }
 
     /**
-     * Define el valor de la propiedad caeFchVto.
+     * Sets the value of the caeFchVto property.
      * 
      * @param value
      *     allowed object is

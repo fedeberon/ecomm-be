@@ -8,9 +8,9 @@ import javax.xml.bind.annotation.XmlType;
 
 
 /**
- * <p>Clase Java para PaisTipo complex type.
+ * <p>Java class for PaisTipo complex type.
  * 
- * <p>El siguiente fragmento de esquema especifica el contenido que se espera que haya en esta clase.
+ * <p>The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType name="PaisTipo"&gt;
@@ -40,7 +40,7 @@ public class PaisTipo {
     protected String desc;
 
     /**
-     * Obtiene el valor de la propiedad id.
+     * Gets the value of the id property.
      * 
      */
     public short getId() {
@@ -48,7 +48,7 @@ public class PaisTipo {
     }
 
     /**
-     * Define el valor de la propiedad id.
+     * Sets the value of the id property.
      * 
      */
     public void setId(short value) {
@@ -56,7 +56,7 @@ public class PaisTipo {
     }
 
     /**
-     * Obtiene el valor de la propiedad desc.
+     * Gets the value of the desc property.
      * 
      * @return
      *     possible object is
@@ -68,7 +68,7 @@ public class PaisTipo {
     }
 
     /**
-     * Define el valor de la propiedad desc.
+     * Sets the value of the desc property.
      * 
      * @param value
      *     allowed object is

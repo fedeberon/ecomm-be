@@ -8,9 +8,9 @@ import javax.xml.bind.annotation.XmlType;
 
 
 /**
- * <p>Clase Java para FECompConsResponse complex type.
+ * <p>Java class for FECompConsResponse complex type.
  * 
- * <p>El siguiente fragmento de esquema especifica el contenido que se espera que haya en esta clase.
+ * <p>The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType name="FECompConsResponse"&gt;
@@ -66,7 +66,7 @@ public class FECompConsResponse
     protected int cbteTipo;
 
     /**
-     * Obtiene el valor de la propiedad resultado.
+     * Gets the value of the resultado property.
      * 
      * @return
      *     possible object is
@@ -78,7 +78,7 @@ public class FECompConsResponse
     }
 
     /**
-     * Define el valor de la propiedad resultado.
+     * Sets the value of the resultado property.
      * 
      * @param value
      *     allowed object is
@@ -90,7 +90,7 @@ public class FECompConsResponse
     }
 
     /**
-     * Obtiene el valor de la propiedad codAutorizacion.
+     * Gets the value of the codAutorizacion property.
      * 
      * @return
      *     possible object is
@@ -102,7 +102,7 @@ public class FECompConsResponse
     }
 
     /**
-     * Define el valor de la propiedad codAutorizacion.
+     * Sets the value of the codAutorizacion property.
      * 
      * @param value
      *     allowed object is
@@ -114,7 +114,7 @@ public class FECompConsResponse
     }
 
     /**
-     * Obtiene el valor de la propiedad emisionTipo.
+     * Gets the value of the emisionTipo property.
      * 
      * @return
      *     possible object is
@@ -126,7 +126,7 @@ public class FECompConsResponse
     }
 
     /**
-     * Define el valor de la propiedad emisionTipo.
+     * Sets the value of the emisionTipo property.
      * 
      * @param value
      *     allowed object is
@@ -138,7 +138,7 @@ public class FECompConsResponse
     }
 
     /**
-     * Obtiene el valor de la propiedad fchVto.
+     * Gets the value of the fchVto property.
      * 
      * @return
      *     possible object is
@@ -150,7 +150,7 @@ public class FECompConsResponse
     }
 
     /**
-     * Define el valor de la propiedad fchVto.
+     * Sets the value of the fchVto property.
      * 
      * @param value
      *     allowed object is
@@ -162,7 +162,7 @@ public class FECompConsResponse
     }
 
     /**
-     * Obtiene el valor de la propiedad fchProceso.
+     * Gets the value of the fchProceso property.
      * 
      * @return
      *     possible object is
@@ -174,7 +174,7 @@ public class FECompConsResponse
     }
 
     /**
-     * Define el valor de la propiedad fchProceso.
+     * Sets the value of the fchProceso property.
      * 
      * @param value
      *     allowed object is
@@ -186,7 +186,7 @@ public class FECompConsResponse
     }
 
     /**
-     * Obtiene el valor de la propiedad observaciones.
+     * Gets the value of the observaciones property.
      * 
      * @return
      *     possible object is
@@ -198,7 +198,7 @@ public class FECompConsResponse
     }
 
     /**
-     * Define el valor de la propiedad observaciones.
+     * Sets the value of the observaciones property.
      * 
      * @param value
      *     allowed object is
@@ -210,7 +210,7 @@ public class FECompConsResponse
     }
 
     /**
-     * Obtiene el valor de la propiedad ptoVta.
+     * Gets the value of the ptoVta property.
      * 
      */
     public int getPtoVta() {
@@ -218,7 +218,7 @@ public class FECompConsResponse
     }
 
     /**
-     * Define el valor de la propiedad ptoVta.
+     * Sets the value of the ptoVta property.
      * 
      */
     public void setPtoVta(int value) {
@@ -226,7 +226,7 @@ public class FECompConsResponse
     }
 
     /**
-     * Obtiene el valor de la propiedad cbteTipo.
+     * Gets the value of the cbteTipo property.
      * 
      */
     public int getCbteTipo() {
@@ -234,7 +234,7 @@ public class FECompConsResponse
     }
 
     /**
-     * Define el valor de la propiedad cbteTipo.
+     * Sets the value of the cbteTipo property.
      * 
      */
     public void setCbteTipo(int value) {

@@ -8,9 +8,9 @@ import javax.xml.bind.annotation.XmlType;
 
 
 /**
- * <p>Clase Java para Opcional complex type.
+ * <p>Java class for Opcional complex type.
  * 
- * <p>El siguiente fragmento de esquema especifica el contenido que se espera que haya en esta clase.
+ * <p>The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType name="Opcional"&gt;
@@ -40,7 +40,7 @@ public class Opcional {
     protected String valor;
 
     /**
-     * Obtiene el valor de la propiedad id.
+     * Gets the value of the id property.
      * 
      * @return
      *     possible object is
@@ -52,7 +52,7 @@ public class Opcional {
     }
 
     /**
-     * Define el valor de la propiedad id.
+     * Sets the value of the id property.
      * 
      * @param value
      *     allowed object is
@@ -64,7 +64,7 @@ public class Opcional {
     }
 
     /**
-     * Obtiene el valor de la propiedad valor.
+     * Gets the value of the valor property.
      * 
      * @return
      *     possible object is
@@ -76,7 +76,7 @@ public class Opcional {
     }
 
     /**
-     * Define el valor de la propiedad valor.
+     * Sets the value of the valor property.
      * 
      * @param value
      *     allowed object is

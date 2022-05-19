@@ -9,9 +9,9 @@ import javax.xml.bind.annotation.XmlType;
 
 
 /**
- * <p>Clase Java para FECabRequest complex type.
+ * <p>Java class for FECabRequest complex type.
  * 
- * <p>El siguiente fragmento de esquema especifica el contenido que se espera que haya en esta clase.
+ * <p>The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType name="FECabRequest"&gt;
@@ -49,7 +49,7 @@ public class FECabRequest {
     protected int cbteTipo;
 
     /**
-     * Obtiene el valor de la propiedad cantReg.
+     * Gets the value of the cantReg property.
      * 
      */
     public int getCantReg() {
@@ -57,7 +57,7 @@ public class FECabRequest {
     }
 
     /**
-     * Define el valor de la propiedad cantReg.
+     * Sets the value of the cantReg property.
      * 
      */
     public void setCantReg(int value) {
@@ -65,7 +65,7 @@ public class FECabRequest {
     }
 
     /**
-     * Obtiene el valor de la propiedad ptoVta.
+     * Gets the value of the ptoVta property.
      * 
      */
     public int getPtoVta() {
@@ -73,7 +73,7 @@ public class FECabRequest {
     }
 
     /**
-     * Define el valor de la propiedad ptoVta.
+     * Sets the value of the ptoVta property.
      * 
      */
     public void setPtoVta(int value) {
@@ -81,7 +81,7 @@ public class FECabRequest {
     }
 
     /**
-     * Obtiene el valor de la propiedad cbteTipo.
+     * Gets the value of the cbteTipo property.
      * 
      */
     public int getCbteTipo() {
@@ -89,7 +89,7 @@ public class FECabRequest {
     }
 
     /**
-     * Define el valor de la propiedad cbteTipo.
+     * Sets the value of the cbteTipo property.
      * 
      */
     public void setCbteTipo(int value) {

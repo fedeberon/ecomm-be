@@ -8,9 +8,9 @@ import javax.xml.bind.annotation.XmlType;
 
 
 /**
- * <p>Clase Java para Tributo complex type.
+ * <p>Java class for Tributo complex type.
  * 
- * <p>El siguiente fragmento de esquema especifica el contenido que se espera que haya en esta clase.
+ * <p>The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType name="Tributo"&gt;
@@ -52,7 +52,7 @@ public class Tributo {
     protected double importe;
 
     /**
-     * Obtiene el valor de la propiedad id.
+     * Gets the value of the id property.
      * 
      */
     public short getId() {
@@ -60,7 +60,7 @@ public class Tributo {
     }
 
     /**
-     * Define el valor de la propiedad id.
+     * Sets the value of the id property.
      * 
      */
     public void setId(short value) {
@@ -68,7 +68,7 @@ public class Tributo {
     }
 
     /**
-     * Obtiene el valor de la propiedad desc.
+     * Gets the value of the desc property.
      * 
      * @return
      *     possible object is
@@ -80,7 +80,7 @@ public class Tributo {
     }
 
     /**
-     * Define el valor de la propiedad desc.
+     * Sets the value of the desc property.
      * 
      * @param value
      *     allowed object is
@@ -92,7 +92,7 @@ public class Tributo {
     }
 
     /**
-     * Obtiene el valor de la propiedad baseImp.
+     * Gets the value of the baseImp property.
      * 
      */
     public double getBaseImp() {
@@ -100,7 +100,7 @@ public class Tributo {
     }
 
     /**
-     * Define el valor de la propiedad baseImp.
+     * Sets the value of the baseImp property.
      * 
      */
     public void setBaseImp(double value) {
@@ -108,7 +108,7 @@ public class Tributo {
     }
 
     /**
-     * Obtiene el valor de la propiedad alic.
+     * Gets the value of the alic property.
      * 
      */
     public double getAlic() {
@@ -116,7 +116,7 @@ public class Tributo {
     }
 
     /**
-     * Define el valor de la propiedad alic.
+     * Sets the value of the alic property.
      * 
      */
     public void setAlic(double value) {
@@ -124,7 +124,7 @@ public class Tributo {
     }
 
     /**
-     * Obtiene el valor de la propiedad importe.
+     * Gets the value of the importe property.
      * 
      */
     public double getImporte() {
@@ -132,7 +132,7 @@ public class Tributo {
     }
 
     /**
-     * Define el valor de la propiedad importe.
+     * Sets the value of the importe property.
      * 
      */
     public void setImporte(double value) {

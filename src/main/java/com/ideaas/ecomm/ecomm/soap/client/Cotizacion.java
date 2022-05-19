@@ -8,9 +8,9 @@ import javax.xml.bind.annotation.XmlType;
 
 
 /**
- * <p>Clase Java para Cotizacion complex type.
+ * <p>Java class for Cotizacion complex type.
  * 
- * <p>El siguiente fragmento de esquema especifica el contenido que se espera que haya en esta clase.
+ * <p>The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType name="Cotizacion"&gt;
@@ -44,7 +44,7 @@ public class Cotizacion {
     protected String fchCotiz;
 
     /**
-     * Obtiene el valor de la propiedad monId.
+     * Gets the value of the monId property.
      * 
      * @return
      *     possible object is
@@ -56,7 +56,7 @@ public class Cotizacion {
     }
 
     /**
-     * Define el valor de la propiedad monId.
+     * Sets the value of the monId property.
      * 
      * @param value
      *     allowed object is
@@ -68,7 +68,7 @@ public class Cotizacion {
     }
 
     /**
-     * Obtiene el valor de la propiedad monCotiz.
+     * Gets the value of the monCotiz property.
      * 
      */
     public double getMonCotiz() {
@@ -76,7 +76,7 @@ public class Cotizacion {
     }
 
     /**
-     * Define el valor de la propiedad monCotiz.
+     * Sets the value of the monCotiz property.
      * 
      */
     public void setMonCotiz(double value) {
@@ -84,7 +84,7 @@ public class Cotizacion {
     }
 
     /**
-     * Obtiene el valor de la propiedad fchCotiz.
+     * Gets the value of the fchCotiz property.
      * 
      * @return
      *     possible object is
@@ -96,7 +96,7 @@ public class Cotizacion {
     }
 
     /**
-     * Define el valor de la propiedad fchCotiz.
+     * Sets the value of the fchCotiz property.
      * 
      * @param value
      *     allowed object is

@@ -8,9 +8,9 @@ import javax.xml.bind.annotation.XmlType;
 
 
 /**
- * <p>Clase Java para FECAEARequest complex type.
+ * <p>Java class for FECAEARequest complex type.
  * 
- * <p>El siguiente fragmento de esquema especifica el contenido que se espera que haya en esta clase.
+ * <p>The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType name="FECAEARequest"&gt;
@@ -40,7 +40,7 @@ public class FECAEARequest {
     protected ArrayOfFECAEADetRequest feDetReq;
 
     /**
-     * Obtiene el valor de la propiedad feCabReq.
+     * Gets the value of the feCabReq property.
      * 
      * @return
      *     possible object is
@@ -52,7 +52,7 @@ public class FECAEARequest {
     }
 
     /**
-     * Define el valor de la propiedad feCabReq.
+     * Sets the value of the feCabReq property.
      * 
      * @param value
      *     allowed object is
@@ -64,7 +64,7 @@ public class FECAEARequest {
     }
 
     /**
-     * Obtiene el valor de la propiedad feDetReq.
+     * Gets the value of the feDetReq property.
      * 
      * @return
      *     possible object is
@@ -76,7 +76,7 @@ public class FECAEARequest {
     }
 
     /**
-     * Define el valor de la propiedad feDetReq.
+     * Sets the value of the feDetReq property.
      * 
      * @param value
      *     allowed object is

@@ -8,9 +8,9 @@ import javax.xml.bind.annotation.XmlType;
 
 
 /**
- * <p>Clase Java para PtoVenta complex type.
+ * <p>Java class for PtoVenta complex type.
  * 
- * <p>El siguiente fragmento de esquema especifica el contenido que se espera que haya en esta clase.
+ * <p>The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType name="PtoVenta"&gt;
@@ -48,7 +48,7 @@ public class PtoVenta {
     protected String fchBaja;
 
     /**
-     * Obtiene el valor de la propiedad nro.
+     * Gets the value of the nro property.
      * 
      */
     public int getNro() {
@@ -56,7 +56,7 @@ public class PtoVenta {
     }
 
     /**
-     * Define el valor de la propiedad nro.
+     * Sets the value of the nro property.
      * 
      */
     public void setNro(int value) {
@@ -64,7 +64,7 @@ public class PtoVenta {
     }
 
     /**
-     * Obtiene el valor de la propiedad emisionTipo.
+     * Gets the value of the emisionTipo property.
      * 
      * @return
      *     possible object is
@@ -76,7 +76,7 @@ public class PtoVenta {
     }
 
     /**
-     * Define el valor de la propiedad emisionTipo.
+     * Sets the value of the emisionTipo property.
      * 
      * @param value
      *     allowed object is
@@ -88,7 +88,7 @@ public class PtoVenta {
     }
 
     /**
-     * Obtiene el valor de la propiedad bloqueado.
+     * Gets the value of the bloqueado property.
      * 
      * @return
      *     possible object is
@@ -100,7 +100,7 @@ public class PtoVenta {
     }
 
     /**
-     * Define el valor de la propiedad bloqueado.
+     * Sets the value of the bloqueado property.
      * 
      * @param value
      *     allowed object is
@@ -112,7 +112,7 @@ public class PtoVenta {
     }
 
     /**
-     * Obtiene el valor de la propiedad fchBaja.
+     * Gets the value of the fchBaja property.
      * 
      * @return
      *     possible object is
@@ -124,7 +124,7 @@ public class PtoVenta {
     }
 
     /**
-     * Define el valor de la propiedad fchBaja.
+     * Sets the value of the fchBaja property.
      * 
      * @param value
      *     allowed object is

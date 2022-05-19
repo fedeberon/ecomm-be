@@ -8,9 +8,9 @@ import javax.xml.bind.annotation.XmlType;
 
 
 /**
- * <p>Clase Java para FERegXReqResponse complex type.
+ * <p>Java class for FERegXReqResponse complex type.
  * 
- * <p>El siguiente fragmento de esquema especifica el contenido que se espera que haya en esta clase.
+ * <p>The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType name="FERegXReqResponse"&gt;
@@ -44,7 +44,7 @@ public class FERegXReqResponse {
     protected ArrayOfEvt events;
 
     /**
-     * Obtiene el valor de la propiedad regXReq.
+     * Gets the value of the regXReq property.
      * 
      */
     public int getRegXReq() {
@@ -52,7 +52,7 @@ public class FERegXReqResponse {
     }
 
     /**
-     * Define el valor de la propiedad regXReq.
+     * Sets the value of the regXReq property.
      * 
      */
     public void setRegXReq(int value) {
@@ -60,7 +60,7 @@ public class FERegXReqResponse {
     }
 
     /**
-     * Obtiene el valor de la propiedad errors.
+     * Gets the value of the errors property.
      * 
      * @return
      *     possible object is
@@ -72,7 +72,7 @@ public class FERegXReqResponse {
     }
 
     /**
-     * Define el valor de la propiedad errors.
+     * Sets the value of the errors property.
      * 
      * @param value
      *     allowed object is
@@ -84,7 +84,7 @@ public class FERegXReqResponse {
     }
 
     /**
-     * Obtiene el valor de la propiedad events.
+     * Gets the value of the events property.
      * 
      * @return
      *     possible object is
@@ -96,7 +96,7 @@ public class FERegXReqResponse {
     }
 
     /**
-     * Define el valor de la propiedad events.
+     * Sets the value of the events property.
      * 
      * @param value
      *     allowed object is
