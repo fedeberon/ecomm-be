@@ -10,6 +10,8 @@ import com.ideaas.ecomm.ecomm.repository.ProductDao;
 import com.ideaas.ecomm.ecomm.services.interfaces.ICategoryService;
 import com.ideaas.ecomm.ecomm.services.interfaces.IProductService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -37,10 +39,11 @@ public class ProductService implements IProductService {
     }
 
     @Override
-    public List<Product> findAll() {
-        List<Product> products = dao.findAll();
+    public List<Product> findAll(int page, int size) {
+        Page<Product> products = dao.findAll(PageRequest.of(page, size));
         products.forEach(product -> addImagesOnProduct(product));
-        return dao.findAll();
+
+        return products.getContent();
     }
 
     @Override

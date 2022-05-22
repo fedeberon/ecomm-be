@@ -11,6 +11,8 @@ public class SearchRequest {
 
     private List<CategoriesRequest> categoriesRequests;
 
+    private int page;
+
     @Getter
     public static class BrandRequest {
         private Long id;
