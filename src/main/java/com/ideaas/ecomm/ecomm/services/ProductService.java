@@ -39,11 +39,11 @@ public class ProductService implements IProductService {
     }
 
     @Override
-    public List<Product> findAll(int page, int size) {
+    public Page<Product> findAll(int page, int size) {
         Page<Product> products = dao.findAll(PageRequest.of(page, size));
         products.forEach(product -> addImagesOnProduct(product));
 
-        return products.getContent();
+        return products;
     }
 
     @Override

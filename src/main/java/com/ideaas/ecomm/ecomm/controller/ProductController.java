@@ -5,6 +5,7 @@ import com.ideaas.ecomm.ecomm.exception.NotFoundException;
 import com.ideaas.ecomm.ecomm.payload.SearchRequest;
 import com.ideaas.ecomm.ecomm.services.interfaces.IProductService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -31,9 +32,9 @@ public class ProductController {
     }
 
     @GetMapping
-    public List<Product> list(@RequestParam(defaultValue = "1") final Integer page, @RequestParam(defaultValue = "10") final Integer size) {
-        List<Product> products = productService.findAll(page, size);
-         return products;
+    public Page<Product> list(@RequestParam(defaultValue = "1") final Integer page, @RequestParam(defaultValue = "10") final Integer size) {
+        Page<Product> products = productService.findAll(page, size);
+        return products;
     }
 
     @GetMapping("{id}")
