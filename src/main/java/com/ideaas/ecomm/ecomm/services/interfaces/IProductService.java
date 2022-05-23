@@ -3,12 +3,13 @@ package com.ideaas.ecomm.ecomm.services.interfaces;
 import com.ideaas.ecomm.ecomm.domain.Product;
 import com.ideaas.ecomm.ecomm.domain.ProductToCart;
 import com.ideaas.ecomm.ecomm.payload.SearchRequest;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 
 public interface IProductService {
 
-    List<Product> findAll(int page, int size);
+    Page<Product> findAll(int page, int size);
 
     Product save(Product product);
 
