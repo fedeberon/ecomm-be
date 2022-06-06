@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -39,6 +40,14 @@ public class UserController {
 
         return ResponseEntity.status(202).body(userSaved);
     }
+
+    @PutMapping
+    public ResponseEntity<User> update(@RequestBody final User user) {
+        final User userSaved = userService.save(user);
+
+        return ResponseEntity.status(202).body(userSaved);
+    }
+
 
     @GetMapping
     private ResponseEntity<List<User>> findAll(){
