@@ -57,6 +57,9 @@ public class User  {
     @Column(name = "USU_POSTAL")
     private String postal;
 
+    @Column(name = "USU_MELLIZOS")
+    private Boolean twins;
+
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     @JsonIgnore
