@@ -5,6 +5,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -39,12 +40,15 @@ public class Product {
     @JoinColumn(name = "PROD_CAT_ID")
     private Category category;
 
-    @ManyToMany
+    @ManyToMany(cascade = {
+        CascadeType.PERSIST,
+        CascadeType.MERGE
+    })
     @JoinTable(name = "PROD_SIZE",
                 joinColumns = @JoinColumn(name="PRO_ID"),
                 inverseJoinColumns =@JoinColumn(name = "SIZE_ID"))
     @Column
-    private List<Talle> talle;
+    private List<Size> sizes;
 
 
     @OneToOne
