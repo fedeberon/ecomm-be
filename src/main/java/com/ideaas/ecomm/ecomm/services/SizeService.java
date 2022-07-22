@@ -5,7 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.ideaas.ecomm.ecomm.domain.Talle;
+import com.ideaas.ecomm.ecomm.domain.Size;
 import com.ideaas.ecomm.ecomm.repository.SizeDao;
 import com.ideaas.ecomm.ecomm.services.interfaces.ISizeService;
 
@@ -20,7 +20,7 @@ public class SizeService implements ISizeService {
     }
 
     @Override
-    public List<Talle> findAll() {
+    public List<Size> findAll() {
         return dao.findAll();
     }
     
