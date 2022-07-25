@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ideaas.ecomm.ecomm.domain.Talle;
+import com.ideaas.ecomm.ecomm.domain.Size;
 import com.ideaas.ecomm.ecomm.services.interfaces.ISizeService;
 
 @RestController
@@ -23,8 +23,8 @@ public class SizeController {
     }
 
     @GetMapping 
-    private ResponseEntity<List<Talle>> findAll() {
-        List<Talle> talles = sizeService.findAll();
+    private ResponseEntity<List<Size>> findAll() {
+        List<Size> talles = sizeService.findAll();
         
         return ResponseEntity.ok(talles);
     }
