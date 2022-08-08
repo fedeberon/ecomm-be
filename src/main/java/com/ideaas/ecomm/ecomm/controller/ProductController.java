@@ -47,6 +47,12 @@ public class ProductController {
         }
     }
 
+    @GetMapping("/all")
+    public List<Product> list() {
+        List<Product> products = productService.findAll();
+        return products;
+    }
+
     @PostMapping
     public ResponseEntity<Product> save(@RequestBody Product product) {
         Product productSaved = productService.save(product);
