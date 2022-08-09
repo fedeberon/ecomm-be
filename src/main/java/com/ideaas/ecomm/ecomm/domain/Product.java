@@ -3,9 +3,9 @@ package com.ideaas.ecomm.ecomm.domain;
 import lombok.Getter;
 import lombok.Setter;
 
-import com.ideaas.ecomm.ecomm.domain.Category;
 import javax.persistence.*;
 import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -40,12 +40,23 @@ public class Product {
     @JoinColumn(name = "PROD_CAT_ID")
     private Category category;
 
+    @ManyToMany(cascade = {
+        CascadeType.PERSIST,
+        CascadeType.MERGE
+    })
+    @JoinTable(name = "PROD_SIZE",
+                joinColumns = @JoinColumn(name="PRO_ID"),
+                inverseJoinColumns =@JoinColumn(name = "SIZE_ID"))
+    @Column
+    private List<Size> sizes;
+
+
     @OneToOne
     @JoinColumn(name = "PROD_BRAND_ID")
     private Brand brand;
 
     @Column(name = "PRO_POINT")    
-    private Long points = 0l;
+    private Long points = 0L;
 
     @Column(name = "PRO_PROMO")    
     private Boolean promo = false;
