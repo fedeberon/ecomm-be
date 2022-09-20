@@ -8,9 +8,9 @@ import javax.xml.bind.annotation.XmlType;
 
 
 /**
- * <p>Clase Java para CbteAsoc complex type.
+ * <p>Java class for CbteAsoc complex type.
  * 
- * <p>El siguiente fragmento de esquema especifica el contenido que se espera que haya en esta clase.
+ * <p>The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType name="CbteAsoc"&gt;
@@ -52,7 +52,7 @@ public class CbteAsoc {
     protected String cbteFch;
 
     /**
-     * Obtiene el valor de la propiedad tipo.
+     * Gets the value of the tipo property.
      * 
      */
     public int getTipo() {
@@ -60,7 +60,7 @@ public class CbteAsoc {
     }
 
     /**
-     * Define el valor de la propiedad tipo.
+     * Sets the value of the tipo property.
      * 
      */
     public void setTipo(int value) {
@@ -68,7 +68,7 @@ public class CbteAsoc {
     }
 
     /**
-     * Obtiene el valor de la propiedad ptoVta.
+     * Gets the value of the ptoVta property.
      * 
      */
     public int getPtoVta() {
@@ -76,7 +76,7 @@ public class CbteAsoc {
     }
 
     /**
-     * Define el valor de la propiedad ptoVta.
+     * Sets the value of the ptoVta property.
      * 
      */
     public void setPtoVta(int value) {
@@ -84,7 +84,7 @@ public class CbteAsoc {
     }
 
     /**
-     * Obtiene el valor de la propiedad nro.
+     * Gets the value of the nro property.
      * 
      */
     public long getNro() {
@@ -92,7 +92,7 @@ public class CbteAsoc {
     }
 
     /**
-     * Define el valor de la propiedad nro.
+     * Sets the value of the nro property.
      * 
      */
     public void setNro(long value) {
@@ -100,7 +100,7 @@ public class CbteAsoc {
     }
 
     /**
-     * Obtiene el valor de la propiedad cuit.
+     * Gets the value of the cuit property.
      * 
      * @return
      *     possible object is
@@ -112,7 +112,7 @@ public class CbteAsoc {
     }
 
     /**
-     * Define el valor de la propiedad cuit.
+     * Sets the value of the cuit property.
      * 
      * @param value
      *     allowed object is
@@ -124,7 +124,7 @@ public class CbteAsoc {
     }
 
     /**
-     * Obtiene el valor de la propiedad cbteFch.
+     * Gets the value of the cbteFch property.
      * 
      * @return
      *     possible object is
@@ -136,7 +136,7 @@ public class CbteAsoc {
     }
 
     /**
-     * Define el valor de la propiedad cbteFch.
+     * Sets the value of the cbteFch property.
      * 
      * @param value
      *     allowed object is

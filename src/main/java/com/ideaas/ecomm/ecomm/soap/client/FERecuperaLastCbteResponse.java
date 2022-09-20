@@ -8,9 +8,9 @@ import javax.xml.bind.annotation.XmlType;
 
 
 /**
- * <p>Clase Java para FERecuperaLastCbteResponse complex type.
+ * <p>Java class for FERecuperaLastCbteResponse complex type.
  * 
- * <p>El siguiente fragmento de esquema especifica el contenido que se espera que haya en esta clase.
+ * <p>The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType name="FERecuperaLastCbteResponse"&gt;
@@ -52,7 +52,7 @@ public class FERecuperaLastCbteResponse {
     protected ArrayOfEvt events;
 
     /**
-     * Obtiene el valor de la propiedad ptoVta.
+     * Gets the value of the ptoVta property.
      * 
      */
     public int getPtoVta() {
@@ -60,7 +60,7 @@ public class FERecuperaLastCbteResponse {
     }
 
     /**
-     * Define el valor de la propiedad ptoVta.
+     * Sets the value of the ptoVta property.
      * 
      */
     public void setPtoVta(int value) {
@@ -68,7 +68,7 @@ public class FERecuperaLastCbteResponse {
     }
 
     /**
-     * Obtiene el valor de la propiedad cbteTipo.
+     * Gets the value of the cbteTipo property.
      * 
      */
     public int getCbteTipo() {
@@ -76,7 +76,7 @@ public class FERecuperaLastCbteResponse {
     }
 
     /**
-     * Define el valor de la propiedad cbteTipo.
+     * Sets the value of the cbteTipo property.
      * 
      */
     public void setCbteTipo(int value) {
@@ -84,7 +84,7 @@ public class FERecuperaLastCbteResponse {
     }
 
     /**
-     * Obtiene el valor de la propiedad cbteNro.
+     * Gets the value of the cbteNro property.
      * 
      */
     public int getCbteNro() {
@@ -92,7 +92,7 @@ public class FERecuperaLastCbteResponse {
     }
 
     /**
-     * Define el valor de la propiedad cbteNro.
+     * Sets the value of the cbteNro property.
      * 
      */
     public void setCbteNro(int value) {
@@ -100,7 +100,7 @@ public class FERecuperaLastCbteResponse {
     }
 
     /**
-     * Obtiene el valor de la propiedad errors.
+     * Gets the value of the errors property.
      * 
      * @return
      *     possible object is
@@ -112,7 +112,7 @@ public class FERecuperaLastCbteResponse {
     }
 
     /**
-     * Define el valor de la propiedad errors.
+     * Sets the value of the errors property.
      * 
      * @param value
      *     allowed object is
@@ -124,7 +124,7 @@ public class FERecuperaLastCbteResponse {
     }
 
     /**
-     * Obtiene el valor de la propiedad events.
+     * Gets the value of the events property.
      * 
      * @return
      *     possible object is
@@ -136,7 +136,7 @@ public class FERecuperaLastCbteResponse {
     }
 
     /**
-     * Define el valor de la propiedad events.
+     * Sets the value of the events property.
      * 
      * @param value
      *     allowed object is

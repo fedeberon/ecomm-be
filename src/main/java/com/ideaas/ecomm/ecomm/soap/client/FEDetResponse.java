@@ -9,9 +9,9 @@ import javax.xml.bind.annotation.XmlType;
 
 
 /**
- * <p>Clase Java para FEDetResponse complex type.
+ * <p>Java class for FEDetResponse complex type.
  * 
- * <p>El siguiente fragmento de esquema especifica el contenido que se espera que haya en esta clase.
+ * <p>The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType name="FEDetResponse"&gt;
@@ -69,7 +69,7 @@ public class FEDetResponse {
     protected ArrayOfObs observaciones;
 
     /**
-     * Obtiene el valor de la propiedad concepto.
+     * Gets the value of the concepto property.
      * 
      */
     public int getConcepto() {
@@ -77,7 +77,7 @@ public class FEDetResponse {
     }
 
     /**
-     * Define el valor de la propiedad concepto.
+     * Sets the value of the concepto property.
      * 
      */
     public void setConcepto(int value) {
@@ -85,7 +85,7 @@ public class FEDetResponse {
     }
 
     /**
-     * Obtiene el valor de la propiedad docTipo.
+     * Gets the value of the docTipo property.
      * 
      */
     public int getDocTipo() {
@@ -93,7 +93,7 @@ public class FEDetResponse {
     }
 
     /**
-     * Define el valor de la propiedad docTipo.
+     * Sets the value of the docTipo property.
      * 
      */
     public void setDocTipo(int value) {
@@ -101,7 +101,7 @@ public class FEDetResponse {
     }
 
     /**
-     * Obtiene el valor de la propiedad docNro.
+     * Gets the value of the docNro property.
      * 
      */
     public long getDocNro() {
@@ -109,7 +109,7 @@ public class FEDetResponse {
     }
 
     /**
-     * Define el valor de la propiedad docNro.
+     * Sets the value of the docNro property.
      * 
      */
     public void setDocNro(long value) {
@@ -117,7 +117,7 @@ public class FEDetResponse {
     }
 
     /**
-     * Obtiene el valor de la propiedad cbteDesde.
+     * Gets the value of the cbteDesde property.
      * 
      */
     public long getCbteDesde() {
@@ -125,7 +125,7 @@ public class FEDetResponse {
     }
 
     /**
-     * Define el valor de la propiedad cbteDesde.
+     * Sets the value of the cbteDesde property.
      * 
      */
     public void setCbteDesde(long value) {
@@ -133,7 +133,7 @@ public class FEDetResponse {
     }
 
     /**
-     * Obtiene el valor de la propiedad cbteHasta.
+     * Gets the value of the cbteHasta property.
      * 
      */
     public long getCbteHasta() {
@@ -141,7 +141,7 @@ public class FEDetResponse {
     }
 
     /**
-     * Define el valor de la propiedad cbteHasta.
+     * Sets the value of the cbteHasta property.
      * 
      */
     public void setCbteHasta(long value) {
@@ -149,7 +149,7 @@ public class FEDetResponse {
     }
 
     /**
-     * Obtiene el valor de la propiedad cbteFch.
+     * Gets the value of the cbteFch property.
      * 
      * @return
      *     possible object is
@@ -161,7 +161,7 @@ public class FEDetResponse {
     }
 
     /**
-     * Define el valor de la propiedad cbteFch.
+     * Sets the value of the cbteFch property.
      * 
      * @param value
      *     allowed object is
@@ -173,7 +173,7 @@ public class FEDetResponse {
     }
 
     /**
-     * Obtiene el valor de la propiedad resultado.
+     * Gets the value of the resultado property.
      * 
      * @return
      *     possible object is
@@ -185,7 +185,7 @@ public class FEDetResponse {
     }
 
     /**
-     * Define el valor de la propiedad resultado.
+     * Sets the value of the resultado property.
      * 
      * @param value
      *     allowed object is
@@ -197,7 +197,7 @@ public class FEDetResponse {
     }
 
     /**
-     * Obtiene el valor de la propiedad observaciones.
+     * Gets the value of the observaciones property.
      * 
      * @return
      *     possible object is
@@ -209,7 +209,7 @@ public class FEDetResponse {
     }
 
     /**
-     * Define el valor de la propiedad observaciones.
+     * Sets the value of the observaciones property.
      * 
      * @param value
      *     allowed object is

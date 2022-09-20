@@ -8,9 +8,9 @@ import javax.xml.bind.annotation.XmlType;
 
 
 /**
- * <p>Clase Java para AlicIva complex type.
+ * <p>Java class for AlicIva complex type.
  * 
- * <p>El siguiente fragmento de esquema especifica el contenido que se espera que haya en esta clase.
+ * <p>The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType name="AlicIva"&gt;
@@ -44,7 +44,7 @@ public class AlicIva {
     protected double importe;
 
     /**
-     * Obtiene el valor de la propiedad id.
+     * Gets the value of the id property.
      * 
      */
     public int getId() {
@@ -52,7 +52,7 @@ public class AlicIva {
     }
 
     /**
-     * Define el valor de la propiedad id.
+     * Sets the value of the id property.
      * 
      */
     public void setId(int value) {
@@ -60,7 +60,7 @@ public class AlicIva {
     }
 
     /**
-     * Obtiene el valor de la propiedad baseImp.
+     * Gets the value of the baseImp property.
      * 
      */
     public double getBaseImp() {
@@ -68,7 +68,7 @@ public class AlicIva {
     }
 
     /**
-     * Define el valor de la propiedad baseImp.
+     * Sets the value of the baseImp property.
      * 
      */
     public void setBaseImp(double value) {
@@ -76,7 +76,7 @@ public class AlicIva {
     }
 
     /**
-     * Obtiene el valor de la propiedad importe.
+     * Gets the value of the importe property.
      * 
      */
     public double getImporte() {
@@ -84,7 +84,7 @@ public class AlicIva {
     }
 
     /**
-     * Define el valor de la propiedad importe.
+     * Sets the value of the importe property.
      * 
      */
     public void setImporte(double value) {
