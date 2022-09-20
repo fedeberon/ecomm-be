@@ -106,7 +106,6 @@ public class BillingController {
         if (billResponse.getMessage() != null && !billResponse.getResultado().equalsIgnoreCase("A")) {
             return ResponseEntity.badRequest().body(billResponse.getMessage().getMessage());
         }
-
         Checkout checkout = checkoutService.changeStateTo(CheckoutState.PAID_OUT, billRequest.getCheckoutId());
         checkout.setUsername(billRequest.getUsername());
         Bill bill = billService.save(billResponse, checkout);

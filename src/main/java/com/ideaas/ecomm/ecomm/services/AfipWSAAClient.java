@@ -93,6 +93,15 @@ public class AfipWSAAClient {
         return (LoginTicketResponse);
     }
 
+    /**
+     * Retorna el LoginTicketResponse en bytes para ser enviado al WSAA.
+     * @param p12file
+     * @param p12pass
+     * @param signer
+     * @param dstDN
+     * @param service
+     * @return
+     */
     public static byte[] create_cms(String p12file, String p12pass, String signer, String dstDN, String service) {
         PrivateKey pKey = null;
         X509Certificate pCertificate = null;

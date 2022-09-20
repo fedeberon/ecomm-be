@@ -59,6 +59,9 @@ public class AfipService  implements IAfipService {
         final String p12file = service.equalsIgnoreCase("ws_sr_padron_a5") ? certificatedPathProd : certificatedPath;
         final String signer = "fedeberon";
         final String p12pass = "1234";
+
+        logger.info("Getting authentication for service with p12file: " , p12file);
+
         final byte[] LoginTicketRequest_xml_cms = client.create_cms(p12file, p12pass, signer, dstDN, service);
         logger.info("LoginTicketRequest_xml_cms {}" , LoginTicketRequest_xml_cms);
         final String result = client.invokeWSAA(LoginTicketRequest_xml_cms, endpoint);
