@@ -8,9 +8,9 @@ import javax.xml.bind.annotation.XmlType;
 
 
 /**
- * <p>Clase Java para FECAEAResponse complex type.
+ * <p>Java class for FECAEAResponse complex type.
  * 
- * <p>El siguiente fragmento de esquema especifica el contenido que se espera que haya en esta clase.
+ * <p>The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType name="FECAEAResponse"&gt;
@@ -48,7 +48,7 @@ public class FECAEAResponse {
     protected ArrayOfErr errors;
 
     /**
-     * Obtiene el valor de la propiedad feCabResp.
+     * Gets the value of the feCabResp property.
      * 
      * @return
      *     possible object is
@@ -60,7 +60,7 @@ public class FECAEAResponse {
     }
 
     /**
-     * Define el valor de la propiedad feCabResp.
+     * Sets the value of the feCabResp property.
      * 
      * @param value
      *     allowed object is
@@ -72,7 +72,7 @@ public class FECAEAResponse {
     }
 
     /**
-     * Obtiene el valor de la propiedad feDetResp.
+     * Gets the value of the feDetResp property.
      * 
      * @return
      *     possible object is
@@ -84,7 +84,7 @@ public class FECAEAResponse {
     }
 
     /**
-     * Define el valor de la propiedad feDetResp.
+     * Sets the value of the feDetResp property.
      * 
      * @param value
      *     allowed object is
@@ -96,7 +96,7 @@ public class FECAEAResponse {
     }
 
     /**
-     * Obtiene el valor de la propiedad events.
+     * Gets the value of the events property.
      * 
      * @return
      *     possible object is
@@ -108,7 +108,7 @@ public class FECAEAResponse {
     }
 
     /**
-     * Define el valor de la propiedad events.
+     * Sets the value of the events property.
      * 
      * @param value
      *     allowed object is
@@ -120,7 +120,7 @@ public class FECAEAResponse {
     }
 
     /**
-     * Obtiene el valor de la propiedad errors.
+     * Gets the value of the errors property.
      * 
      * @return
      *     possible object is
@@ -132,7 +132,7 @@ public class FECAEAResponse {
     }
 
     /**
-     * Define el valor de la propiedad errors.
+     * Sets the value of the errors property.
      * 
      * @param value
      *     allowed object is

@@ -9,9 +9,9 @@ import javax.xml.bind.annotation.XmlType;
 
 
 /**
- * <p>Clase Java para FECabResponse complex type.
+ * <p>Java class for FECabResponse complex type.
  * 
- * <p>El siguiente fragmento de esquema especifica el contenido que se espera que haya en esta clase.
+ * <p>The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType name="FECabResponse"&gt;
@@ -65,7 +65,7 @@ public class FECabResponse {
     protected String reproceso;
 
     /**
-     * Obtiene el valor de la propiedad cuit.
+     * Gets the value of the cuit property.
      * 
      */
     public long getCuit() {
@@ -73,7 +73,7 @@ public class FECabResponse {
     }
 
     /**
-     * Define el valor de la propiedad cuit.
+     * Sets the value of the cuit property.
      * 
      */
     public void setCuit(long value) {
@@ -81,7 +81,7 @@ public class FECabResponse {
     }
 
     /**
-     * Obtiene el valor de la propiedad ptoVta.
+     * Gets the value of the ptoVta property.
      * 
      */
     public int getPtoVta() {
@@ -89,7 +89,7 @@ public class FECabResponse {
     }
 
     /**
-     * Define el valor de la propiedad ptoVta.
+     * Sets the value of the ptoVta property.
      * 
      */
     public void setPtoVta(int value) {
@@ -97,7 +97,7 @@ public class FECabResponse {
     }
 
     /**
-     * Obtiene el valor de la propiedad cbteTipo.
+     * Gets the value of the cbteTipo property.
      * 
      */
     public int getCbteTipo() {
@@ -105,7 +105,7 @@ public class FECabResponse {
     }
 
     /**
-     * Define el valor de la propiedad cbteTipo.
+     * Sets the value of the cbteTipo property.
      * 
      */
     public void setCbteTipo(int value) {
@@ -113,7 +113,7 @@ public class FECabResponse {
     }
 
     /**
-     * Obtiene el valor de la propiedad fchProceso.
+     * Gets the value of the fchProceso property.
      * 
      * @return
      *     possible object is
@@ -125,7 +125,7 @@ public class FECabResponse {
     }
 
     /**
-     * Define el valor de la propiedad fchProceso.
+     * Sets the value of the fchProceso property.
      * 
      * @param value
      *     allowed object is
@@ -137,7 +137,7 @@ public class FECabResponse {
     }
 
     /**
-     * Obtiene el valor de la propiedad cantReg.
+     * Gets the value of the cantReg property.
      * 
      */
     public int getCantReg() {
@@ -145,7 +145,7 @@ public class FECabResponse {
     }
 
     /**
-     * Define el valor de la propiedad cantReg.
+     * Sets the value of the cantReg property.
      * 
      */
     public void setCantReg(int value) {
@@ -153,7 +153,7 @@ public class FECabResponse {
     }
 
     /**
-     * Obtiene el valor de la propiedad resultado.
+     * Gets the value of the resultado property.
      * 
      * @return
      *     possible object is
@@ -165,7 +165,7 @@ public class FECabResponse {
     }
 
     /**
-     * Define el valor de la propiedad resultado.
+     * Sets the value of the resultado property.
      * 
      * @param value
      *     allowed object is
@@ -177,7 +177,7 @@ public class FECabResponse {
     }
 
     /**
-     * Obtiene el valor de la propiedad reproceso.
+     * Gets the value of the reproceso property.
      * 
      * @return
      *     possible object is
@@ -189,7 +189,7 @@ public class FECabResponse {
     }
 
     /**
-     * Define el valor de la propiedad reproceso.
+     * Sets the value of the reproceso property.
      * 
      * @param value
      *     allowed object is
