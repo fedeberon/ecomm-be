@@ -47,6 +47,11 @@ public class ProductService implements IProductService {
     }
 
     @Override
+    public List<Product> All() {
+        return (List<Product>) dao.findAll();
+    }
+    
+    @Override
     public Product save(final Product product) {
         return dao.save(product);
     }

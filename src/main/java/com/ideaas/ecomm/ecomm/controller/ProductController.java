@@ -39,6 +39,13 @@ public class ProductController {
         return products;
     }
 
+    @GetMapping("/all")
+    private ResponseEntity<List<Product>> All(){
+        List<Product> products = productService.All();
+
+        return ResponseEntity.ok(products);
+    }
+
     @GetMapping("{id}")
     public ResponseEntity<Product> get(@PathVariable final Long id) {
         try {

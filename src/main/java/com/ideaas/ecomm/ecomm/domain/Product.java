@@ -60,6 +60,9 @@ public class Product {
     @Column(name = "PRO_PROMO")    
     private Boolean promo = false;
 
+    @Column(name = "PRO_DELETED")    
+    private Boolean deleted = false;
+
     @Transient
     private List<Size> sizes;
 
