@@ -8,9 +8,9 @@ import javax.xml.bind.annotation.XmlType;
 
 
 /**
- * <p>Clase Java para FECAEADetRequest complex type.
+ * <p>Java class for FECAEADetRequest complex type.
  * 
- * <p>El siguiente fragmento de esquema especifica el contenido que se espera que haya en esta clase.
+ * <p>The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType name="FECAEADetRequest"&gt;
@@ -42,7 +42,7 @@ public class FECAEADetRequest
     protected String cbteFchHsGen;
 
     /**
-     * Obtiene el valor de la propiedad caea.
+     * Gets the value of the caea property.
      * 
      * @return
      *     possible object is
@@ -54,7 +54,7 @@ public class FECAEADetRequest
     }
 
     /**
-     * Define el valor de la propiedad caea.
+     * Sets the value of the caea property.
      * 
      * @param value
      *     allowed object is
@@ -66,7 +66,7 @@ public class FECAEADetRequest
     }
 
     /**
-     * Obtiene el valor de la propiedad cbteFchHsGen.
+     * Gets the value of the cbteFchHsGen property.
      * 
      * @return
      *     possible object is
@@ -78,7 +78,7 @@ public class FECAEADetRequest
     }
 
     /**
-     * Define el valor de la propiedad cbteFchHsGen.
+     * Sets the value of the cbteFchHsGen property.
      * 
      * @param value
      *     allowed object is

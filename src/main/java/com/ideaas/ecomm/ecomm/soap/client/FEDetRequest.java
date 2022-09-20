@@ -9,9 +9,9 @@ import javax.xml.bind.annotation.XmlType;
 
 
 /**
- * <p>Clase Java para FEDetRequest complex type.
+ * <p>Java class for FEDetRequest complex type.
  * 
- * <p>El siguiente fragmento de esquema especifica el contenido que se espera que haya en esta clase.
+ * <p>The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType name="FEDetRequest"&gt;
@@ -129,7 +129,7 @@ public class FEDetRequest {
     protected Periodo periodoAsoc;
 
     /**
-     * Obtiene el valor de la propiedad concepto.
+     * Gets the value of the concepto property.
      * 
      */
     public int getConcepto() {
@@ -137,7 +137,7 @@ public class FEDetRequest {
     }
 
     /**
-     * Define el valor de la propiedad concepto.
+     * Sets the value of the concepto property.
      * 
      */
     public void setConcepto(int value) {
@@ -145,7 +145,7 @@ public class FEDetRequest {
     }
 
     /**
-     * Obtiene el valor de la propiedad docTipo.
+     * Gets the value of the docTipo property.
      * 
      */
     public int getDocTipo() {
@@ -153,7 +153,7 @@ public class FEDetRequest {
     }
 
     /**
-     * Define el valor de la propiedad docTipo.
+     * Sets the value of the docTipo property.
      * 
      */
     public void setDocTipo(int value) {
@@ -161,7 +161,7 @@ public class FEDetRequest {
     }
 
     /**
-     * Obtiene el valor de la propiedad docNro.
+     * Gets the value of the docNro property.
      * 
      */
     public long getDocNro() {
@@ -169,7 +169,7 @@ public class FEDetRequest {
     }
 
     /**
-     * Define el valor de la propiedad docNro.
+     * Sets the value of the docNro property.
      * 
      */
     public void setDocNro(long value) {
@@ -177,7 +177,7 @@ public class FEDetRequest {
     }
 
     /**
-     * Obtiene el valor de la propiedad cbteDesde.
+     * Gets the value of the cbteDesde property.
      * 
      */
     public long getCbteDesde() {
@@ -185,7 +185,7 @@ public class FEDetRequest {
     }
 
     /**
-     * Define el valor de la propiedad cbteDesde.
+     * Sets the value of the cbteDesde property.
      * 
      */
     public void setCbteDesde(long value) {
@@ -193,7 +193,7 @@ public class FEDetRequest {
     }
 
     /**
-     * Obtiene el valor de la propiedad cbteHasta.
+     * Gets the value of the cbteHasta property.
      * 
      */
     public long getCbteHasta() {
@@ -201,7 +201,7 @@ public class FEDetRequest {
     }
 
     /**
-     * Define el valor de la propiedad cbteHasta.
+     * Sets the value of the cbteHasta property.
      * 
      */
     public void setCbteHasta(long value) {
@@ -209,7 +209,7 @@ public class FEDetRequest {
     }
 
     /**
-     * Obtiene el valor de la propiedad cbteFch.
+     * Gets the value of the cbteFch property.
      * 
      * @return
      *     possible object is
@@ -221,7 +221,7 @@ public class FEDetRequest {
     }
 
     /**
-     * Define el valor de la propiedad cbteFch.
+     * Sets the value of the cbteFch property.
      * 
      * @param value
      *     allowed object is
@@ -233,7 +233,7 @@ public class FEDetRequest {
     }
 
     /**
-     * Obtiene el valor de la propiedad impTotal.
+     * Gets the value of the impTotal property.
      * 
      */
     public double getImpTotal() {
@@ -241,7 +241,7 @@ public class FEDetRequest {
     }
 
     /**
-     * Define el valor de la propiedad impTotal.
+     * Sets the value of the impTotal property.
      * 
      */
     public void setImpTotal(double value) {
@@ -249,7 +249,7 @@ public class FEDetRequest {
     }
 
     /**
-     * Obtiene el valor de la propiedad impTotConc.
+     * Gets the value of the impTotConc property.
      * 
      */
     public double getImpTotConc() {
@@ -257,7 +257,7 @@ public class FEDetRequest {
     }
 
     /**
-     * Define el valor de la propiedad impTotConc.
+     * Sets the value of the impTotConc property.
      * 
      */
     public void setImpTotConc(double value) {
@@ -265,7 +265,7 @@ public class FEDetRequest {
     }
 
     /**
-     * Obtiene el valor de la propiedad impNeto.
+     * Gets the value of the impNeto property.
      * 
      */
     public double getImpNeto() {
@@ -273,7 +273,7 @@ public class FEDetRequest {
     }
 
     /**
-     * Define el valor de la propiedad impNeto.
+     * Sets the value of the impNeto property.
      * 
      */
     public void setImpNeto(double value) {
@@ -281,7 +281,7 @@ public class FEDetRequest {
     }
 
     /**
-     * Obtiene el valor de la propiedad impOpEx.
+     * Gets the value of the impOpEx property.
      * 
      */
     public double getImpOpEx() {
@@ -289,7 +289,7 @@ public class FEDetRequest {
     }
 
     /**
-     * Define el valor de la propiedad impOpEx.
+     * Sets the value of the impOpEx property.
      * 
      */
     public void setImpOpEx(double value) {
@@ -297,7 +297,7 @@ public class FEDetRequest {
     }
 
     /**
-     * Obtiene el valor de la propiedad impTrib.
+     * Gets the value of the impTrib property.
      * 
      */
     public double getImpTrib() {
@@ -305,7 +305,7 @@ public class FEDetRequest {
     }
 
     /**
-     * Define el valor de la propiedad impTrib.
+     * Sets the value of the impTrib property.
      * 
      */
     public void setImpTrib(double value) {
@@ -313,7 +313,7 @@ public class FEDetRequest {
     }
 
     /**
-     * Obtiene el valor de la propiedad impIVA.
+     * Gets the value of the impIVA property.
      * 
      */
     public double getImpIVA() {
@@ -321,7 +321,7 @@ public class FEDetRequest {
     }
 
     /**
-     * Define el valor de la propiedad impIVA.
+     * Sets the value of the impIVA property.
      * 
      */
     public void setImpIVA(double value) {
@@ -329,7 +329,7 @@ public class FEDetRequest {
     }
 
     /**
-     * Obtiene el valor de la propiedad fchServDesde.
+     * Gets the value of the fchServDesde property.
      * 
      * @return
      *     possible object is
@@ -341,7 +341,7 @@ public class FEDetRequest {
     }
 
     /**
-     * Define el valor de la propiedad fchServDesde.
+     * Sets the value of the fchServDesde property.
      * 
      * @param value
      *     allowed object is
@@ -353,7 +353,7 @@ public class FEDetRequest {
     }
 
     /**
-     * Obtiene el valor de la propiedad fchServHasta.
+     * Gets the value of the fchServHasta property.
      * 
      * @return
      *     possible object is
@@ -365,7 +365,7 @@ public class FEDetRequest {
     }
 
     /**
-     * Define el valor de la propiedad fchServHasta.
+     * Sets the value of the fchServHasta property.
      * 
      * @param value
      *     allowed object is
@@ -377,7 +377,7 @@ public class FEDetRequest {
     }
 
     /**
-     * Obtiene el valor de la propiedad fchVtoPago.
+     * Gets the value of the fchVtoPago property.
      * 
      * @return
      *     possible object is
@@ -389,7 +389,7 @@ public class FEDetRequest {
     }
 
     /**
-     * Define el valor de la propiedad fchVtoPago.
+     * Sets the value of the fchVtoPago property.
      * 
      * @param value
      *     allowed object is
@@ -401,7 +401,7 @@ public class FEDetRequest {
     }
 
     /**
-     * Obtiene el valor de la propiedad monId.
+     * Gets the value of the monId property.
      * 
      * @return
      *     possible object is
@@ -413,7 +413,7 @@ public class FEDetRequest {
     }
 
     /**
-     * Define el valor de la propiedad monId.
+     * Sets the value of the monId property.
      * 
      * @param value
      *     allowed object is
@@ -425,7 +425,7 @@ public class FEDetRequest {
     }
 
     /**
-     * Obtiene el valor de la propiedad monCotiz.
+     * Gets the value of the monCotiz property.
      * 
      */
     public double getMonCotiz() {
@@ -433,7 +433,7 @@ public class FEDetRequest {
     }
 
     /**
-     * Define el valor de la propiedad monCotiz.
+     * Sets the value of the monCotiz property.
      * 
      */
     public void setMonCotiz(double value) {
@@ -441,7 +441,7 @@ public class FEDetRequest {
     }
 
     /**
-     * Obtiene el valor de la propiedad cbtesAsoc.
+     * Gets the value of the cbtesAsoc property.
      * 
      * @return
      *     possible object is
@@ -453,7 +453,7 @@ public class FEDetRequest {
     }
 
     /**
-     * Define el valor de la propiedad cbtesAsoc.
+     * Sets the value of the cbtesAsoc property.
      * 
      * @param value
      *     allowed object is
@@ -465,7 +465,7 @@ public class FEDetRequest {
     }
 
     /**
-     * Obtiene el valor de la propiedad tributos.
+     * Gets the value of the tributos property.
      * 
      * @return
      *     possible object is
@@ -477,7 +477,7 @@ public class FEDetRequest {
     }
 
     /**
-     * Define el valor de la propiedad tributos.
+     * Sets the value of the tributos property.
      * 
      * @param value
      *     allowed object is
@@ -489,7 +489,7 @@ public class FEDetRequest {
     }
 
     /**
-     * Obtiene el valor de la propiedad iva.
+     * Gets the value of the iva property.
      * 
      * @return
      *     possible object is
@@ -501,7 +501,7 @@ public class FEDetRequest {
     }
 
     /**
-     * Define el valor de la propiedad iva.
+     * Sets the value of the iva property.
      * 
      * @param value
      *     allowed object is
@@ -513,7 +513,7 @@ public class FEDetRequest {
     }
 
     /**
-     * Obtiene el valor de la propiedad opcionales.
+     * Gets the value of the opcionales property.
      * 
      * @return
      *     possible object is
@@ -525,7 +525,7 @@ public class FEDetRequest {
     }
 
     /**
-     * Define el valor de la propiedad opcionales.
+     * Sets the value of the opcionales property.
      * 
      * @param value
      *     allowed object is
@@ -537,7 +537,7 @@ public class FEDetRequest {
     }
 
     /**
-     * Obtiene el valor de la propiedad compradores.
+     * Gets the value of the compradores property.
      * 
      * @return
      *     possible object is
@@ -549,7 +549,7 @@ public class FEDetRequest {
     }
 
     /**
-     * Define el valor de la propiedad compradores.
+     * Sets the value of the compradores property.
      * 
      * @param value
      *     allowed object is
@@ -561,7 +561,7 @@ public class FEDetRequest {
     }
 
     /**
-     * Obtiene el valor de la propiedad periodoAsoc.
+     * Gets the value of the periodoAsoc property.
      * 
      * @return
      *     possible object is
@@ -573,7 +573,7 @@ public class FEDetRequest {
     }
 
     /**
-     * Define el valor de la propiedad periodoAsoc.
+     * Sets the value of the periodoAsoc property.
      * 
      * @param value
      *     allowed object is
