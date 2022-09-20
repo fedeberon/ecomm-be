@@ -14,7 +14,7 @@ import lombok.Setter;
 @Setter
 @Entity
 @Table(name = "SIZE")
-public class Talle {
+public class Size {
     
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

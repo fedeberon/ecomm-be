@@ -8,9 +8,9 @@ import javax.xml.bind.annotation.XmlType;
 
 
 /**
- * <p>Clase Java para Comprador complex type.
+ * <p>Java class for Comprador complex type.
  * 
- * <p>El siguiente fragmento de esquema especifica el contenido que se espera que haya en esta clase.
+ * <p>The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType name="Comprador"&gt;
@@ -44,7 +44,7 @@ public class Comprador {
     protected double porcentaje;
 
     /**
-     * Obtiene el valor de la propiedad docTipo.
+     * Gets the value of the docTipo property.
      * 
      */
     public int getDocTipo() {
@@ -52,7 +52,7 @@ public class Comprador {
     }
 
     /**
-     * Define el valor de la propiedad docTipo.
+     * Sets the value of the docTipo property.
      * 
      */
     public void setDocTipo(int value) {
@@ -60,7 +60,7 @@ public class Comprador {
     }
 
     /**
-     * Obtiene el valor de la propiedad docNro.
+     * Gets the value of the docNro property.
      * 
      */
     public long getDocNro() {
@@ -68,7 +68,7 @@ public class Comprador {
     }
 
     /**
-     * Define el valor de la propiedad docNro.
+     * Sets the value of the docNro property.
      * 
      */
     public void setDocNro(long value) {
@@ -76,7 +76,7 @@ public class Comprador {
     }
 
     /**
-     * Obtiene el valor de la propiedad porcentaje.
+     * Gets the value of the porcentaje property.
      * 
      */
     public double getPorcentaje() {
@@ -84,7 +84,7 @@ public class Comprador {
     }
 
     /**
-     * Define el valor de la propiedad porcentaje.
+     * Sets the value of the porcentaje property.
      * 
      */
     public void setPorcentaje(double value) {

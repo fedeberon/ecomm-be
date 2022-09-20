@@ -1,11 +1,19 @@
 package com.ideaas.ecomm.ecomm.domain;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @Getter
 @Setter
 @Entity
@@ -39,13 +47,8 @@ public class Product {
     @JoinColumn(name = "PROD_CAT_ID")
     private Category category;
 
-    @ManyToMany
-    @JoinTable(name = "PROD_SIZE",
-                joinColumns = @JoinColumn(name="PRO_ID"),
-                inverseJoinColumns =@JoinColumn(name = "SIZE_ID"))
-    @Column
-    private List<Talle> talle;
-
+    @OneToMany(mappedBy = "product", cascade = CascadeType.PERSIST, orphanRemoval = true)
+    private List<SizesByProduct> sizesByProducts;
 
     @OneToOne
     @JoinColumn(name = "PROD_BRAND_ID")
@@ -56,5 +59,25 @@ public class Product {
 
     @Column(name = "PRO_PROMO")    
     private Boolean promo = false;
+
+    @Column(name = "PRO_DELETED")    
+    private Boolean deleted = false;
+
+    @Transient
+    private List<Size> sizes;
+
+    public void setSizesByProducts() {
+        List<SizesByProduct> sizesByProducts = new ArrayList<>();
+        sizes.forEach(size -> {
+            SizesByProduct sizesByProduct = new SizesByProduct();
+            sizesByProduct.setSize(size);
+            sizesByProducts.add(sizesByProduct);
+        });
+        sizesByProducts.forEach(size -> {
+            size.setProduct(this);
+        });
+
+        this.sizesByProducts = sizesByProducts;
+    }
 
 }

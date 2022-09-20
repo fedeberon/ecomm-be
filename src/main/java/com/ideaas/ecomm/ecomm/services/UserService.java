@@ -47,6 +47,11 @@ public class UserService implements IUserService {
     }
 
     @Override
+    public User update(final User user) { 
+        return dao.save(user);
+    }
+
+    @Override
     public User get(String username) {
         return dao.findById(username).get();
     }

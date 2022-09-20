@@ -1,7 +1,9 @@
 package com.ideaas.ecomm.ecomm.controller;
 
+import com.ideaas.ecomm.ecomm.converts.ProductConvert;
 import com.ideaas.ecomm.ecomm.domain.Product;
 import com.ideaas.ecomm.ecomm.exception.NotFoundException;
+import com.ideaas.ecomm.ecomm.payload.ProductPayload;
 import com.ideaas.ecomm.ecomm.payload.SearchRequest;
 import com.ideaas.ecomm.ecomm.services.interfaces.IProductService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +39,13 @@ public class ProductController {
         return products;
     }
 
+    @GetMapping("/all")
+    private ResponseEntity<List<Product>> All(){
+        List<Product> products = productService.All();
+
+        return ResponseEntity.ok(products);
+    }
+
     @GetMapping("{id}")
     public ResponseEntity<Product> get(@PathVariable final Long id) {
         try {
@@ -49,6 +58,7 @@ public class ProductController {
 
     @PostMapping
     public ResponseEntity<Product> save(@RequestBody Product product) {
+        product.setSizesByProducts();
         Product productSaved = productService.save(product);
 
         return ResponseEntity.accepted().body(productSaved);
