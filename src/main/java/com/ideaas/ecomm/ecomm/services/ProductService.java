@@ -151,4 +151,13 @@ public class ProductService implements IProductService {
         });
     }
 
+    @Override
+    public Product deleteProduct(long id) {
+        Product product = this.get(id);
+        product.setDeleted(true);
+        this.save(product);
+        
+        return product;
+    }
+
 }

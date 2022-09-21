@@ -28,4 +28,6 @@ public interface IProductService {
     List<Product> searchByCategories(List<SearchRequest.CategoriesRequest> categories);
 
     List<Product> All();
+
+    Product deleteProduct(long id);
 }

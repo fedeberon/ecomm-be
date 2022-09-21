@@ -61,7 +61,7 @@ public class Product {
     private Boolean promo = false;
 
     @Column(name = "PRO_DELETED")    
-    private Boolean deleted = false;
+    private Boolean deleted;
 
     @Transient
     private List<Size> sizes;
@@ -78,6 +78,10 @@ public class Product {
         });
 
         this.sizesByProducts = sizesByProducts;
+    }
+
+    public static Product findById(long id2) {
+        return null;
     }
 
 }
