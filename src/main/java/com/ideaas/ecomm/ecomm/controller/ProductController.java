@@ -65,9 +65,9 @@ public class ProductController {
         }
     }
 
-    @GetMapping("/all")
+    @GetMapping("/list")
     public List<Product> list() {
-        List<Product> products = productService.findAll();
+        List<Product> products = productService.All();
         return products;
     }
 

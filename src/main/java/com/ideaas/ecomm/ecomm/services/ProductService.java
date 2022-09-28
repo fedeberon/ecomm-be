@@ -38,11 +38,6 @@ public class ProductService implements IProductService {
         this.categoryService = categoryService;
     }
 
-    @Override
-    public List<Product> findAll() {
-        List<Product> products = (List<Product>) dao.findAll();
-        return (List<Product>) dao.findAll();
-    }
 
     @Override
     public Page<Product> findAll(int page, int size) {
@@ -54,7 +49,7 @@ public class ProductService implements IProductService {
 
     @Override
     public List<Product> All() {
-        List<Product> products = dao.findByDeleted(false);
+        List<Product> products = (List<Product>) dao.findAll();
         products.forEach(product -> addImagesOnProduct(product));
         
         return products;
@@ -167,6 +162,13 @@ public class ProductService implements IProductService {
         this.save(product);
         
         return product;
+    }
+
+
+    @Override
+    public List<Product> findAll() {
+        // TODO Auto-generated method stub
+        return null;
     }
 
 }
