@@ -23,4 +23,6 @@ public interface ProductDao extends PagingAndSortingRepository<Product, Long> {
     List<Product> searchAllByCategoryIn(Collection<Category> categories);
 
     List<Product> findAllByNameContainingIgnoreCase(String value, Pageable pageable);
+    
+    List<Product> findByDeleted(Boolean deleted);
 }

@@ -41,7 +41,8 @@ public class WalletService implements IWalletService {
 	}
 
 	public List<Wallet> findAllByUser(final User user) {
-		return dao.findByUser(user);
+		LocalDateTime actives = LocalDateTime.now().minusMonths(3);
+		return dao.findByUserAndAndDateAfter(user, actives);
 	}
 
 	/**

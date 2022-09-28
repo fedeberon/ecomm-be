@@ -53,6 +53,14 @@ public class ProductService implements IProductService {
     }
 
     @Override
+    public List<Product> All() {
+        List<Product> products = dao.findByDeleted(false);
+        products.forEach(product -> addImagesOnProduct(product));
+        
+        return products;
+    }
+    
+    @Override
     public Product save(final Product product) {
         return dao.save(product);
     }
@@ -150,6 +158,15 @@ public class ProductService implements IProductService {
             product.setStock(stock);
             save(product);
         });
+    }
+
+    @Override
+    public Product deleteProduct(long id) {
+        Product product = this.get(id);
+        product.setDeleted(true);
+        this.save(product);
+        
+        return product;
     }
 
 }

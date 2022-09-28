@@ -8,9 +8,9 @@ import javax.xml.bind.annotation.XmlType;
 
 
 /**
- * <p>Clase Java para Moneda complex type.
+ * <p>Java class for Moneda complex type.
  * 
- * <p>El siguiente fragmento de esquema especifica el contenido que se espera que haya en esta clase.
+ * <p>The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType name="Moneda"&gt;
@@ -48,7 +48,7 @@ public class Moneda {
     protected String fchHasta;
 
     /**
-     * Obtiene el valor de la propiedad id.
+     * Gets the value of the id property.
      * 
      * @return
      *     possible object is
@@ -60,7 +60,7 @@ public class Moneda {
     }
 
     /**
-     * Define el valor de la propiedad id.
+     * Sets the value of the id property.
      * 
      * @param value
      *     allowed object is
@@ -72,7 +72,7 @@ public class Moneda {
     }
 
     /**
-     * Obtiene el valor de la propiedad desc.
+     * Gets the value of the desc property.
      * 
      * @return
      *     possible object is
@@ -84,7 +84,7 @@ public class Moneda {
     }
 
     /**
-     * Define el valor de la propiedad desc.
+     * Sets the value of the desc property.
      * 
      * @param value
      *     allowed object is
@@ -96,7 +96,7 @@ public class Moneda {
     }
 
     /**
-     * Obtiene el valor de la propiedad fchDesde.
+     * Gets the value of the fchDesde property.
      * 
      * @return
      *     possible object is
@@ -108,7 +108,7 @@ public class Moneda {
     }
 
     /**
-     * Define el valor de la propiedad fchDesde.
+     * Sets the value of the fchDesde property.
      * 
      * @param value
      *     allowed object is
@@ -120,7 +120,7 @@ public class Moneda {
     }
 
     /**
-     * Obtiene el valor de la propiedad fchHasta.
+     * Gets the value of the fchHasta property.
      * 
      * @return
      *     possible object is
@@ -132,7 +132,7 @@ public class Moneda {
     }
 
     /**
-     * Define el valor de la propiedad fchHasta.
+     * Sets the value of the fchHasta property.
      * 
      * @param value
      *     allowed object is

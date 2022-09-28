@@ -290,7 +290,7 @@ public class BillService implements IBillService {
         LoginTicketResponse ticketResponse = afipService.get("ws_sr_padron_a5");
         ResponsePerson personRequest = createPersonRequest(ticketResponse.getToken(), ticketResponse.getSign(), "20285640661", response.getCUIT());
         Person person = null;
-        if (Objects.nonNull(personRequest)) {
+        if (Objects.nonNull(personRequest) && personRequest.getFault() == null) {
              person = personService.save(personRequest.getPersonPayload().getPerson());
         }
 

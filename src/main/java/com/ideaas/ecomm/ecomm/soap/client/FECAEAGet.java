@@ -8,9 +8,9 @@ import javax.xml.bind.annotation.XmlType;
 
 
 /**
- * <p>Clase Java para FECAEAGet complex type.
+ * <p>Java class for FECAEAGet complex type.
  * 
- * <p>El siguiente fragmento de esquema especifica el contenido que se espera que haya en esta clase.
+ * <p>The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType name="FECAEAGet"&gt;
@@ -64,7 +64,7 @@ public class FECAEAGet {
     protected ArrayOfObs observaciones;
 
     /**
-     * Obtiene el valor de la propiedad caea.
+     * Gets the value of the caea property.
      * 
      * @return
      *     possible object is
@@ -76,7 +76,7 @@ public class FECAEAGet {
     }
 
     /**
-     * Define el valor de la propiedad caea.
+     * Sets the value of the caea property.
      * 
      * @param value
      *     allowed object is
@@ -88,7 +88,7 @@ public class FECAEAGet {
     }
 
     /**
-     * Obtiene el valor de la propiedad periodo.
+     * Gets the value of the periodo property.
      * 
      */
     public int getPeriodo() {
@@ -96,7 +96,7 @@ public class FECAEAGet {
     }
 
     /**
-     * Define el valor de la propiedad periodo.
+     * Sets the value of the periodo property.
      * 
      */
     public void setPeriodo(int value) {
@@ -104,7 +104,7 @@ public class FECAEAGet {
     }
 
     /**
-     * Obtiene el valor de la propiedad orden.
+     * Gets the value of the orden property.
      * 
      */
     public short getOrden() {
@@ -112,7 +112,7 @@ public class FECAEAGet {
     }
 
     /**
-     * Define el valor de la propiedad orden.
+     * Sets the value of the orden property.
      * 
      */
     public void setOrden(short value) {
@@ -120,7 +120,7 @@ public class FECAEAGet {
     }
 
     /**
-     * Obtiene el valor de la propiedad fchVigDesde.
+     * Gets the value of the fchVigDesde property.
      * 
      * @return
      *     possible object is
@@ -132,7 +132,7 @@ public class FECAEAGet {
     }
 
     /**
-     * Define el valor de la propiedad fchVigDesde.
+     * Sets the value of the fchVigDesde property.
      * 
      * @param value
      *     allowed object is
@@ -144,7 +144,7 @@ public class FECAEAGet {
     }
 
     /**
-     * Obtiene el valor de la propiedad fchVigHasta.
+     * Gets the value of the fchVigHasta property.
      * 
      * @return
      *     possible object is
@@ -156,7 +156,7 @@ public class FECAEAGet {
     }
 
     /**
-     * Define el valor de la propiedad fchVigHasta.
+     * Sets the value of the fchVigHasta property.
      * 
      * @param value
      *     allowed object is
@@ -168,7 +168,7 @@ public class FECAEAGet {
     }
 
     /**
-     * Obtiene el valor de la propiedad fchTopeInf.
+     * Gets the value of the fchTopeInf property.
      * 
      * @return
      *     possible object is
@@ -180,7 +180,7 @@ public class FECAEAGet {
     }
 
     /**
-     * Define el valor de la propiedad fchTopeInf.
+     * Sets the value of the fchTopeInf property.
      * 
      * @param value
      *     allowed object is
@@ -192,7 +192,7 @@ public class FECAEAGet {
     }
 
     /**
-     * Obtiene el valor de la propiedad fchProceso.
+     * Gets the value of the fchProceso property.
      * 
      * @return
      *     possible object is
@@ -204,7 +204,7 @@ public class FECAEAGet {
     }
 
     /**
-     * Define el valor de la propiedad fchProceso.
+     * Sets the value of the fchProceso property.
      * 
      * @param value
      *     allowed object is
@@ -216,7 +216,7 @@ public class FECAEAGet {
     }
 
     /**
-     * Obtiene el valor de la propiedad observaciones.
+     * Gets the value of the observaciones property.
      * 
      * @return
      *     possible object is
@@ -228,7 +228,7 @@ public class FECAEAGet {
     }
 
     /**
-     * Define el valor de la propiedad observaciones.
+     * Sets the value of the observaciones property.
      * 
      * @param value
      *     allowed object is

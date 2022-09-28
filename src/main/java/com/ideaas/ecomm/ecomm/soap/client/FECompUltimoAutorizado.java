@@ -9,9 +9,9 @@ import javax.xml.bind.annotation.XmlType;
 
 
 /**
- * <p>Clase Java para anonymous complex type.
+ * <p>Java class for anonymous complex type.
  * 
- * <p>El siguiente fragmento de esquema especifica el contenido que se espera que haya en esta clase.
+ * <p>The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType&gt;
@@ -46,7 +46,7 @@ public class FECompUltimoAutorizado {
     protected int cbteTipo;
 
     /**
-     * Obtiene el valor de la propiedad auth.
+     * Gets the value of the auth property.
      * 
      * @return
      *     possible object is
@@ -58,7 +58,7 @@ public class FECompUltimoAutorizado {
     }
 
     /**
-     * Define el valor de la propiedad auth.
+     * Sets the value of the auth property.
      * 
      * @param value
      *     allowed object is
@@ -70,7 +70,7 @@ public class FECompUltimoAutorizado {
     }
 
     /**
-     * Obtiene el valor de la propiedad ptoVta.
+     * Gets the value of the ptoVta property.
      * 
      */
     public int getPtoVta() {
@@ -78,7 +78,7 @@ public class FECompUltimoAutorizado {
     }
 
     /**
-     * Define el valor de la propiedad ptoVta.
+     * Sets the value of the ptoVta property.
      * 
      */
     public void setPtoVta(int value) {
@@ -86,7 +86,7 @@ public class FECompUltimoAutorizado {
     }
 
     /**
-     * Obtiene el valor de la propiedad cbteTipo.
+     * Gets the value of the cbteTipo property.
      * 
      */
     public int getCbteTipo() {
@@ -94,7 +94,7 @@ public class FECompUltimoAutorizado {
     }
 
     /**
-     * Define el valor de la propiedad cbteTipo.
+     * Sets the value of the cbteTipo property.
      * 
      */
     public void setCbteTipo(int value) {

@@ -8,9 +8,9 @@ import javax.xml.bind.annotation.XmlType;
 
 
 /**
- * <p>Clase Java para CbteTipoResponse complex type.
+ * <p>Java class for CbteTipoResponse complex type.
  * 
- * <p>El siguiente fragmento de esquema especifica el contenido que se espera que haya en esta clase.
+ * <p>The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType name="CbteTipoResponse"&gt;
@@ -44,7 +44,7 @@ public class CbteTipoResponse {
     protected ArrayOfEvt events;
 
     /**
-     * Obtiene el valor de la propiedad resultGet.
+     * Gets the value of the resultGet property.
      * 
      * @return
      *     possible object is
@@ -56,7 +56,7 @@ public class CbteTipoResponse {
     }
 
     /**
-     * Define el valor de la propiedad resultGet.
+     * Sets the value of the resultGet property.
      * 
      * @param value
      *     allowed object is
@@ -68,7 +68,7 @@ public class CbteTipoResponse {
     }
 
     /**
-     * Obtiene el valor de la propiedad errors.
+     * Gets the value of the errors property.
      * 
      * @return
      *     possible object is
@@ -80,7 +80,7 @@ public class CbteTipoResponse {
     }
 
     /**
-     * Define el valor de la propiedad errors.
+     * Sets the value of the errors property.
      * 
      * @param value
      *     allowed object is
@@ -92,7 +92,7 @@ public class CbteTipoResponse {
     }
 
     /**
-     * Obtiene el valor de la propiedad events.
+     * Gets the value of the events property.
      * 
      * @return
      *     possible object is
@@ -104,7 +104,7 @@ public class CbteTipoResponse {
     }
 
     /**
-     * Define el valor de la propiedad events.
+     * Sets the value of the events property.
      * 
      * @param value
      *     allowed object is
