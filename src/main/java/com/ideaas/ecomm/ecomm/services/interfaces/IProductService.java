@@ -32,3 +32,4 @@ public interface IProductService {
     List<Product> All();
 
     Product deleteProduct(long id);
+}
