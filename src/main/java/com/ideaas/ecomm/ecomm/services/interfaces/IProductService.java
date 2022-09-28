@@ -9,6 +9,8 @@ import java.util.List;
 
 public interface IProductService {
 
+    List<Product> findAll();
+    
     Page<Product> findAll(int page, int size);
 
     Product save(Product product);
@@ -30,4 +32,3 @@ public interface IProductService {
     List<Product> All();
 
     Product deleteProduct(long id);
-}
