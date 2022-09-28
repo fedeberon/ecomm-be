@@ -48,7 +48,10 @@ public class ProductService implements IProductService {
 
     @Override
     public List<Product> All() {
-        return (List<Product>) dao.findAll();
+        List<Product> products = dao.findByDeleted(false);
+        products.forEach(product -> addImagesOnProduct(product));
+        
+        return products;
     }
     
     @Override
