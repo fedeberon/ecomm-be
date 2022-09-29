@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -40,11 +41,19 @@ public class ProductController {
     }
 
     @GetMapping("/all")
-    private ResponseEntity<List<Product>> All(){
+    public ResponseEntity<List<Product>> All(){
         List<Product> products = productService.All();
 
         return ResponseEntity.ok(products);
     }
+
+    @DeleteMapping("{id}")
+    public ResponseEntity<Product> deleteProduct(@PathVariable final long id) {
+        Product product =productService.deleteProduct(id);
+
+        return ResponseEntity.ok(product);
+    }
+    
 
     @GetMapping("{id}")
     public ResponseEntity<Product> get(@PathVariable final Long id) {
@@ -54,6 +63,12 @@ public class ProductController {
         } catch (NotFoundException ex) {
             return ResponseEntity.notFound().build();
         }
+    }
+
+    @GetMapping("/list")
+    public List<Product> list() {
+        List<Product> products = productService.All();
+        return products;
     }
 
     @PostMapping

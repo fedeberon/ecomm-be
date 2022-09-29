@@ -9,6 +9,8 @@ import java.util.List;
 
 public interface IProductService {
 
+    List<Product> findAll();
+    
     Page<Product> findAll(int page, int size);
 
     Product save(Product product);
@@ -28,4 +30,6 @@ public interface IProductService {
     List<Product> searchByCategories(List<SearchRequest.CategoriesRequest> categories);
 
     List<Product> All();
+
+    Product deleteProduct(long id);
 }
