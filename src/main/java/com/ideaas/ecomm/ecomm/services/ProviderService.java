@@ -26,8 +26,9 @@ public class ProviderService implements IProvidersService{
     }
 
     @Override
-    public Provider get(Long id) {
+    public Provider get(final Long id) {
         Optional<Provider> optionalProvider = dao.findById(id);
+
         return optionalProvider.get();
     }
 
