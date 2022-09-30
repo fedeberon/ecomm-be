@@ -62,6 +62,10 @@ public class BillResponse {
 
     private String CUIT;
 
+    private String start;
+
+    private String end;
+
     public boolean hasError(){
         return !resultado.equals("A");
     }

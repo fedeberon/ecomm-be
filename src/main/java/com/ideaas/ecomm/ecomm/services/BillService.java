@@ -333,4 +333,9 @@ public class BillService implements IBillService {
         return dao.findAllByUser(user, Sort.by(Sort.Direction.DESC, "id"));
     }
 
+    @Override
+    public List<Bill> search(final BillResponse response, final String start, final String end) {
+        return dao.findAllByCreditCardAndAndDateBetween(response.getCreditCard(), start, end);
+    }
+
 }
