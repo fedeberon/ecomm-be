@@ -41,4 +41,5 @@ public interface IBillService {
 
     void getBillTypes(LoginTicketResponse ticketResponse);
 
+    List<Bill> search(BillResponse response, String start, String end);
 }

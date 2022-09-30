@@ -11,4 +11,6 @@ public interface BillDao extends JpaRepository<Bill, Long> {
 
     List<Bill> findAllByUser(User user, Sort sort);
 
+    List<Bill> findAllByCreditCardAndAndDateBetween(String creditCard, String start, String end);
+
 }
