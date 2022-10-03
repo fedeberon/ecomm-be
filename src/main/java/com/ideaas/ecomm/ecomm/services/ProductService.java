@@ -49,7 +49,7 @@ public class ProductService implements IProductService {
 
     @Override
     public List<Product> All() {
-        List<Product> products = (List<Product>) dao.findAll();
+        List<Product> products = (List<Product>) dao.findByDeleted(false);
         products.forEach(product -> addImagesOnProduct(product));
         
         return products;
@@ -57,6 +57,7 @@ public class ProductService implements IProductService {
     
     @Override
     public Product save(final Product product) {
+        product.setDeleted(false);
         return dao.save(product);
     }
 
@@ -165,10 +166,5 @@ public class ProductService implements IProductService {
     }
 
 
-    @Override
-    public List<Product> findAll() {
-        // TODO Auto-generated method stub
-        return null;
-    }
 
 }

@@ -35,7 +35,7 @@ public class ProductController {
     }
 
     @GetMapping
-    public Page<Product> list(@RequestParam(defaultValue = "1") final Integer page, @RequestParam(defaultValue = "12") final Integer size) {
+    public Page<Product> find(@RequestParam(defaultValue = "1") final Integer page, @RequestParam(defaultValue = "12") final Integer size) {
         Page<Product> products = productService.findAll(page, size);
         return products;
     }
