@@ -8,8 +8,6 @@ import org.springframework.data.domain.Page;
 import java.util.List;
 
 public interface IProductService {
-
-    List<Product> findAll();
     
     Page<Product> findAll(int page, int size);
 
