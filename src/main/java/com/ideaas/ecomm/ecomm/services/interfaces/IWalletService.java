@@ -18,4 +18,6 @@ public interface IWalletService {
     Long getPointsWalletByUser(User user);
 
 	void productToCartInWallet(User user, List<ProductToCart> productToCarts, WalletTransactionType type);
+
+    Wallet addPoints(Wallet wallet);
 }

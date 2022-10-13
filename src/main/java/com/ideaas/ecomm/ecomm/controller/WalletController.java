@@ -2,6 +2,7 @@ package com.ideaas.ecomm.ecomm.controller;
 
 import com.ideaas.ecomm.ecomm.domain.Checkout;
 import com.ideaas.ecomm.ecomm.domain.User;
+import com.ideaas.ecomm.ecomm.domain.Wallet;
 import com.ideaas.ecomm.ecomm.enums.WalletTransactionType;
 import com.ideaas.ecomm.ecomm.payload.WalletDiscountRequest;
 import com.ideaas.ecomm.ecomm.services.interfaces.ICheckoutService;
@@ -17,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/wallet")
+@RequestMapping("wallet")
 @CrossOrigin
 public class WalletController {
 
@@ -45,6 +46,13 @@ public class WalletController {
         productService.discountAmountStock(checkout.getProducts());
 
         return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/add")
+    public ResponseEntity<Wallet> addPoints(@RequestBody final Wallet wallet){
+        final Wallet walletAdd = walletService.addPoints(wallet);
+
+        return ResponseEntity.status(202).body(walletAdd);
     }
 
 }

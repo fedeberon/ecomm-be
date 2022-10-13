@@ -100,4 +100,9 @@ public class WalletService implements IWalletService {
 			return points;
 		}
 	}
+
+	@Override
+	public Wallet addPoints(final Wallet wallet) {
+		return dao.save(wallet);
+	}
 }
