@@ -20,4 +20,6 @@ public interface IWalletService {
 	void productToCartInWallet(User user, List<ProductToCart> productToCarts, WalletTransactionType type);
 
     Wallet addPoints(Wallet wallet);
+
+	Wallet removePoints(Wallet wallet);
 }

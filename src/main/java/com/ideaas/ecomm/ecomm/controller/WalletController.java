@@ -55,4 +55,11 @@ public class WalletController {
         return ResponseEntity.status(202).body(walletAdd);
     }
 
+    @PostMapping("/remove")
+    public ResponseEntity<Wallet> removePoints(@RequestBody final Wallet wallet){
+        final Wallet walletRemove = walletService.addPoints(wallet);
+
+        return ResponseEntity.status(202).body(walletRemove);
+    }
+
 }
