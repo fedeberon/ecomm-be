@@ -22,4 +22,6 @@ public interface IWalletService {
     Wallet addPoints(Wallet wallet);
 
 	Wallet removePoints(Wallet wallet);
+
+    Boolean walletValidate(User user, List<ProductToCart> products, WalletTransactionType sale);
 }

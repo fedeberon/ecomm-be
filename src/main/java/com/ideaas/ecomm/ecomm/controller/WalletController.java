@@ -42,6 +42,7 @@ public class WalletController {
     public ResponseEntity<Void> buyWithPoints(final @RequestBody WalletDiscountRequest walletDiscountRequest) {
         Checkout checkout = checkoutService.get(walletDiscountRequest.getCheckoutId());
         User user = userService.get(walletDiscountRequest.getUsername());
+        walletService.walletValidate(user, checkout.getProducts(), WalletTransactionType.SALE);
         walletService.productToCartInWallet(user, checkout.getProducts(), WalletTransactionType.SALE);
         productService.discountAmountStock(checkout.getProducts());
 

@@ -48,11 +48,15 @@ public class Wallet {
 	@Column(name = "date")
 	private LocalDateTime date = LocalDateTime.now();
 
-    public Wallet(final Product product, final User user, final Integer quantity, final Long points) {
+    @Column(name = "isConsumed")
+	private Boolean isConsumed = false;
+
+    public Wallet(final Product product, final User user, final Integer quantity, final Long points, final Boolean isConsumed) {
         this.product = product;
         this.user = user;
         this.points = points;
         this.quantity = quantity;
+        this.isConsumed = isConsumed;
     }
 
 }

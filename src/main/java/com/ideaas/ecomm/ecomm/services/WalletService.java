@@ -110,4 +110,23 @@ public class WalletService implements IWalletService {
 	public Wallet removePoints(final Wallet wallet) {
 		return dao.save(wallet);
 	}
+
+	@Override
+	public Boolean walletValidate(final User user,final List<ProductToCart> productToCarts,final WalletTransactionType type) {
+		Long pointsOfUser = getPointsWalletByUser(user);
+		
+		final List<Wallet> wallets = new ArrayList<>();
+
+		productToCarts.forEach(productToCart -> {
+			Long pointsOfCart = null;
+			pointsOfCart = getPoint(productToCart.getProduct());
+			
+			wallets.add(pointsOfCart);
+		});
+
+		System.out.println(pointsOfCart);
+		
+	 return true;
+	}
+
 }
