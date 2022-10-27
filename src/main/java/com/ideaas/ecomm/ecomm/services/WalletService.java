@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 import com.ideaas.ecomm.ecomm.enums.WalletTransactionType;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -115,7 +116,7 @@ public class WalletService implements IWalletService {
 	public Boolean walletValidate(final User user,final List<ProductToCart> productToCarts,final WalletTransactionType type) {
 		Long pointsOfUser = getPointsWalletByUser(user);
 		
-		final List<Wallet> wallets = new ArrayList<>();
+		final List<Long> wallets = new ArrayList<>();
 
 		productToCarts.forEach(productToCart -> {
 			Long pointsOfCart = null;
@@ -124,7 +125,8 @@ public class WalletService implements IWalletService {
 			wallets.add(pointsOfCart);
 		});
 
-		System.out.println(pointsOfCart);
+		Optional<Long> sum = wallets.stream().reduce((a, b) -> a + b);
+		System.out.println(sum);
 		
 	 return true;
 	}

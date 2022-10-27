@@ -38,15 +38,15 @@ public class WalletController {
         this.productService = productService;
     }
 
-    @PostMapping
+    @PostMapping("/buyWithPoints")
     public ResponseEntity<Void> buyWithPoints(final @RequestBody WalletDiscountRequest walletDiscountRequest) {
         Checkout checkout = checkoutService.get(walletDiscountRequest.getCheckoutId());
         User user = userService.get(walletDiscountRequest.getUsername());
-        walletService.walletValidate(user, checkout.getProducts(), WalletTransactionType.SALE);
+        // walletService.walletValidate(user, checkout.getProducts(), WalletTransactionType.SALE);
         walletService.productToCartInWallet(user, checkout.getProducts(), WalletTransactionType.SALE);
         productService.discountAmountStock(checkout.getProducts());
-
         return ResponseEntity.ok().build();
+        
     }
 
     @PostMapping("/add")
