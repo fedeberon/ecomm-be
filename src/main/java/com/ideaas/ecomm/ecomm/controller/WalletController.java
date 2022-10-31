@@ -39,14 +39,17 @@ public class WalletController {
     }
 
     @PostMapping("/buyWithPoints")
-    public ResponseEntity<Void> buyWithPoints(final @RequestBody WalletDiscountRequest walletDiscountRequest) {
+    public ResponseEntity<String> buyWithPoints(final @RequestBody WalletDiscountRequest walletDiscountRequest) {
         Checkout checkout = checkoutService.get(walletDiscountRequest.getCheckoutId());
         User user = userService.get(walletDiscountRequest.getUsername());
-        // walletService.walletValidate(user, checkout.getProducts(), WalletTransactionType.SALE);
-        walletService.productToCartInWallet(user, checkout.getProducts(), WalletTransactionType.SALE);
-        productService.discountAmountStock(checkout.getProducts());
-        return ResponseEntity.ok().build();
-        
+        boolean validator = walletService.walletValidate(user, checkout.getProducts(), WalletTransactionType.SALE);
+        if(validator){
+            walletService.productToCartInWallet(user, checkout.getProducts(), WalletTransactionType.SALE);
+            productService.discountAmountStock(checkout.getProducts());
+            return ResponseEntity.ok().build();
+        } else {
+            return ResponseEntity.status(202).body("puntos insuficientes");
+        }
     }
 
     @PostMapping("/add")

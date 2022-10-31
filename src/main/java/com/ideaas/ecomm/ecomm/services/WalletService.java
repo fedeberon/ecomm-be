@@ -115,20 +115,22 @@ public class WalletService implements IWalletService {
 	@Override
 	public Boolean walletValidate(final User user,final List<ProductToCart> productToCarts,final WalletTransactionType type) {
 		Long pointsOfUser = getPointsWalletByUser(user);
+		Long pointsOfProducts = 0L;
 		
-		final List<Long> wallets = new ArrayList<>();
+		List<Long> pointList = new ArrayList<>();
 
 		productToCarts.forEach(productToCart -> {
-			Long pointsOfCart = null;
-			pointsOfCart = getPoint(productToCart.getProduct());
-			
-			wallets.add(pointsOfCart);
+			Product product = productToCart.getProduct();
+			long points = getPoint(product);
+			pointList.add(points);
 		});
-
-		Optional<Long> sum = wallets.stream().reduce((a, b) -> a + b);
-		System.out.println(sum);
 		
-	 return true;
+		for(long i: pointList){
+			pointsOfProducts += i;
+		}
+		
+		return pointsOfUser > pointsOfProducts;
+
 	}
 
 }
