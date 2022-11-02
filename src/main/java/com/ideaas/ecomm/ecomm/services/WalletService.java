@@ -42,8 +42,27 @@ public class WalletService implements IWalletService {
 	}
 
 	public List<Wallet> findAllByUser(final User user) {
+		return dao.findAllByUser(user);
+	}
+
+	public List<Wallet> findNoExpiredByUser(final User user) {
 		LocalDateTime actives = LocalDateTime.now().minusMonths(3);
 		return dao.findByUserAndAndDateAfter(user, actives);
+	}
+
+	public List<Wallet> findRegistersActiveByUser(final User user) {
+		List<Wallet> registers = findNoExpiredByUser(user);
+		// actives = registers.isConsumed !== false && registers.points > 0 && registers.date < ExpirationTime;
+
+		List<Wallet> actives= new ArrayList<>();
+
+		registers.forEach(register -> {
+			if(register.getIsConsumed() == false && register.getPoints() >= 0L){
+				actives.add(register);
+			}
+		});
+
+		return actives;
 	}
 
 	/**
@@ -51,6 +70,11 @@ public class WalletService implements IWalletService {
 	 */
 	public Long getPointsWalletByUser(final User user) {
 		final List<Wallet> walletOfUser = this.findAllByUser(user);
+		return walletOfUser.stream().mapToLong(Wallet::getPoints).sum();
+	}
+
+	public Long getActivePointsWalletByUser(final User user) {
+		final List<Wallet> walletOfUser = this.findRegistersActiveByUser(user);
 		return walletOfUser.stream().mapToLong(Wallet::getPoints).sum();
 	}
 
@@ -114,7 +138,7 @@ public class WalletService implements IWalletService {
 
 	@Override
 	public Boolean walletValidate(final User user,final List<ProductToCart> productToCarts,final WalletTransactionType type) {
-		Long pointsOfUser = getPointsWalletByUser(user);
+		Long pointsOfUser = getActivePointsWalletByUser(user);
 		Long pointsOfProducts = 0L;
 		
 		List<Long> pointList = new ArrayList<>();

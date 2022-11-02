@@ -75,7 +75,7 @@ public class UserController {
     @GetMapping("/wallet/points/{username}")
     public ResponseEntity<Long> getPointsWalletByUser(@PathVariable final String username) {
         final User user = userService.get(username);
-        Long points = walletService.getPointsWalletByUser(user);
+        Long points = walletService.getActivePointsWalletByUser(user);
 
         return ResponseEntity.ok(points);
     }

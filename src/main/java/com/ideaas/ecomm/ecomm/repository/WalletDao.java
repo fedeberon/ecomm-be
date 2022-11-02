@@ -12,7 +12,6 @@ public interface WalletDao extends JpaRepository<Wallet, Long>{
 
    List<Wallet> findByUserAndAndDateAfter(User user, LocalDateTime date);
 
-
-
+   List<Wallet> findAllByUser(User user);
 
 }
