@@ -104,12 +104,14 @@ public class WalletService implements IWalletService {
 					.quantity(productToCart.getQuantity())
 					.points(points * type.getValue())
 					.date(LocalDateTime.now())
+					.isConsumed(false)
 					.build();
 
 			wallets.add(wallet);
 
 		});
 
+		registersConsumer(user, productToCarts);
 		this.saveAll(wallets);
 	}
 
@@ -136,9 +138,8 @@ public class WalletService implements IWalletService {
 		return dao.save(wallet);
 	}
 
-	@Override
-	public Boolean walletValidate(final User user,final List<ProductToCart> productToCarts,final WalletTransactionType type) {
-		Long pointsOfUser = getActivePointsWalletByUser(user);
+
+	private Long pointsOfCart(final List<ProductToCart> productToCarts){
 		Long pointsOfProducts = 0L;
 		
 		List<Long> pointList = new ArrayList<>();
@@ -152,9 +153,43 @@ public class WalletService implements IWalletService {
 		for(long i: pointList){
 			pointsOfProducts += i;
 		}
-		
-		return pointsOfUser > pointsOfProducts;
 
+		return pointsOfProducts;
+	}
+
+	@Override
+	public Boolean walletValidate(final User user,final List<ProductToCart> productToCarts,final WalletTransactionType type) {
+		Long pointsOfUser = getActivePointsWalletByUser(user);
+		Long pointsOfProducts = pointsOfCart(productToCarts);
+		
+		return pointsOfUser >= pointsOfProducts;
+
+	}
+
+	long auxPointsOfUser = 0l;
+	public void registersConsumer(final User user, final List<ProductToCart> productToCarts){
+		Long pointsOfProducts = pointsOfCart(productToCarts);
+		List<Wallet> registersOfUser = findRegistersActiveByUser(user);
+		auxPointsOfUser = 0l;	
+			registersOfUser.forEach(register -> {
+				if(auxPointsOfUser < pointsOfProducts){
+					auxPointsOfUser += register.getPoints();
+					register.setIsConsumed(true);
+				}
+			});
+		
+			if(auxPointsOfUser > pointsOfProducts){
+				Wallet wallet =  Wallet.builder()
+				.product(null)
+				.user(user)
+				.quantity(1)
+				.points(auxPointsOfUser - pointsOfProducts)
+				.date(LocalDateTime.now())
+				.isConsumed(false)
+				.build();
+				
+				addPoints(wallet);
+			}
 	}
 
 }
