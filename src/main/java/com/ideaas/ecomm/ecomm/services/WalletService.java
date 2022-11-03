@@ -111,7 +111,7 @@ public class WalletService implements IWalletService {
 
 		});
 
-		registersConsumer(user, productToCarts);
+		registerConsumerInBuyWithPoints(user, productToCarts);
 		this.saveAll(wallets);
 	}
 
@@ -133,8 +133,23 @@ public class WalletService implements IWalletService {
 		return dao.save(wallet);
 	}
 
+	
 	@Override
-	public Wallet removePoints(final Wallet wallet) {
+	public Wallet removePoints(Wallet wallet) {
+		User user = wallet.getUser();
+		Long pointsToRemove = wallet.getPoints();
+		registersConsumer(user, pointsToRemove);
+
+		wallet = Wallet.builder()
+				.product(null)
+				.user(user)
+				.quantity(1)
+				.points(0 - pointsToRemove)
+				.date(LocalDateTime.now())
+				.isConsumed(false)
+				.build();
+				
+
 		return dao.save(wallet);
 	}
 
@@ -167,23 +182,22 @@ public class WalletService implements IWalletService {
 	}
 
 	long auxPointsOfUser = 0l;
-	public void registersConsumer(final User user, final List<ProductToCart> productToCarts){
-		Long pointsOfProducts = pointsOfCart(productToCarts);
+	public void registersConsumer(final User user, final long pointsToConsume){
 		List<Wallet> registersOfUser = findRegistersActiveByUser(user);
 		auxPointsOfUser = 0l;	
 			registersOfUser.forEach(register -> {
-				if(auxPointsOfUser < pointsOfProducts){
+				if(auxPointsOfUser < pointsToConsume){
 					auxPointsOfUser += register.getPoints();
 					register.setIsConsumed(true);
 				}
 			});
 		
-			if(auxPointsOfUser > pointsOfProducts){
+			if(auxPointsOfUser > pointsToConsume){
 				Wallet wallet =  Wallet.builder()
 				.product(null)
 				.user(user)
 				.quantity(1)
-				.points(auxPointsOfUser - pointsOfProducts)
+				.points(auxPointsOfUser - pointsToConsume)
 				.date(LocalDateTime.now())
 				.isConsumed(false)
 				.build();
@@ -191,5 +205,11 @@ public class WalletService implements IWalletService {
 				addPoints(wallet);
 			}
 	}
+
+	public void registerConsumerInBuyWithPoints(final User user, final List<ProductToCart> productToCarts){
+		Long pointsOfProducts = pointsOfCart(productToCarts);
+		registersConsumer(user, pointsOfProducts);
+	}
+
 
 }
