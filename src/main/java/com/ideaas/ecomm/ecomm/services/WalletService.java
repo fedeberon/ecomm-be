@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 import com.ideaas.ecomm.ecomm.enums.WalletTransactionType;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,8 +42,27 @@ public class WalletService implements IWalletService {
 	}
 
 	public List<Wallet> findAllByUser(final User user) {
+		return dao.findAllByUser(user);
+	}
+
+	public List<Wallet> findNoExpiredByUser(final User user) {
 		LocalDateTime actives = LocalDateTime.now().minusMonths(3);
 		return dao.findByUserAndAndDateAfter(user, actives);
+	}
+
+	public List<Wallet> findRegistersActiveByUser(final User user) {
+		List<Wallet> registers = findNoExpiredByUser(user);
+		// actives = registers.isConsumed !== false && registers.points > 0 && registers.date < ExpirationTime;
+
+		List<Wallet> actives= new ArrayList<>();
+
+		registers.forEach(register -> {
+			if(register.getIsConsumed() == false && register.getPoints() >= 0L){
+				actives.add(register);
+			}
+		});
+
+		return actives;
 	}
 
 	/**
@@ -50,6 +70,11 @@ public class WalletService implements IWalletService {
 	 */
 	public Long getPointsWalletByUser(final User user) {
 		final List<Wallet> walletOfUser = this.findAllByUser(user);
+		return walletOfUser.stream().mapToLong(Wallet::getPoints).sum();
+	}
+
+	public Long getActivePointsWalletByUser(final User user) {
+		final List<Wallet> walletOfUser = this.findRegistersActiveByUser(user);
 		return walletOfUser.stream().mapToLong(Wallet::getPoints).sum();
 	}
 
@@ -79,12 +104,14 @@ public class WalletService implements IWalletService {
 					.quantity(productToCart.getQuantity())
 					.points(points * type.getValue())
 					.date(LocalDateTime.now())
+					.isConsumed(false)
 					.build();
 
 			wallets.add(wallet);
 
 		});
 
+		registerConsumerInBuyWithPoints(user, productToCarts);
 		this.saveAll(wallets);
 	}
 
@@ -100,4 +127,89 @@ public class WalletService implements IWalletService {
 			return points;
 		}
 	}
+
+	@Override
+	public Wallet addPoints(final Wallet wallet) {
+		return dao.save(wallet);
+	}
+
+	
+	@Override
+	public Wallet removePoints(Wallet wallet) {
+		User user = wallet.getUser();
+		Long pointsToRemove = wallet.getPoints();
+		registersConsumer(user, pointsToRemove);
+
+		wallet = Wallet.builder()
+				.product(null)
+				.user(user)
+				.quantity(1)
+				.points(0 - pointsToRemove)
+				.date(LocalDateTime.now())
+				.isConsumed(false)
+				.build();
+				
+
+		return dao.save(wallet);
+	}
+
+
+	private Long pointsOfCart(final List<ProductToCart> productToCarts){
+		Long pointsOfProducts = 0L;
+		
+		List<Long> pointList = new ArrayList<>();
+
+		productToCarts.forEach(productToCart -> {
+			Product product = productToCart.getProduct();
+			long points = getPoint(product);
+			pointList.add(points);
+		});
+		
+		for(long i: pointList){
+			pointsOfProducts += i;
+		}
+
+		return pointsOfProducts;
+	}
+
+	@Override
+	public Boolean walletValidate(final User user,final List<ProductToCart> productToCarts,final WalletTransactionType type) {
+		Long pointsOfUser = getActivePointsWalletByUser(user);
+		Long pointsOfProducts = pointsOfCart(productToCarts);
+		
+		return pointsOfUser >= pointsOfProducts;
+
+	}
+
+	long auxPointsOfUser = 0l;
+	public void registersConsumer(final User user, final long pointsToConsume){
+		List<Wallet> registersOfUser = findRegistersActiveByUser(user);
+		auxPointsOfUser = 0l;	
+			registersOfUser.forEach(register -> {
+				if(auxPointsOfUser < pointsToConsume){
+					auxPointsOfUser += register.getPoints();
+					register.setIsConsumed(true);
+				}
+			});
+		
+			if(auxPointsOfUser > pointsToConsume){
+				Wallet wallet =  Wallet.builder()
+				.product(null)
+				.user(user)
+				.quantity(1)
+				.points(auxPointsOfUser - pointsToConsume)
+				.date(LocalDateTime.now())
+				.isConsumed(false)
+				.build();
+				
+				addPoints(wallet);
+			}
+	}
+
+	public void registerConsumerInBuyWithPoints(final User user, final List<ProductToCart> productToCarts){
+		Long pointsOfProducts = pointsOfCart(productToCarts);
+		registersConsumer(user, pointsOfProducts);
+	}
+
+
 }
