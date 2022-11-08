@@ -6,5 +6,8 @@ import com.ideaas.ecomm.ecomm.domain.Size;
 
 public interface ISizeService {
     List<Size> findAll();
-    
+
+    Size save(Size size);
+
+    Size get(Long id);
 }

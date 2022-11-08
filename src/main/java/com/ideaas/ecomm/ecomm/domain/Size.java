@@ -23,4 +23,8 @@ public class Size {
 
     @Column(name = "SIZE_NAME")
     private String name;
+
+    public Size update(Size size) {
+        return null;
+    }
 }
