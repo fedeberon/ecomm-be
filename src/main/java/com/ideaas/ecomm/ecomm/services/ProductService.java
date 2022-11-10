@@ -5,6 +5,7 @@ import com.ideaas.ecomm.ecomm.domain.Category;
 import com.ideaas.ecomm.ecomm.domain.Image;
 import com.ideaas.ecomm.ecomm.domain.Product;
 import com.ideaas.ecomm.ecomm.domain.ProductToCart;
+import com.ideaas.ecomm.ecomm.domain.Size;
 import com.ideaas.ecomm.ecomm.payload.SearchRequest;
 import com.ideaas.ecomm.ecomm.repository.ProductDao;
 import com.ideaas.ecomm.ecomm.services.interfaces.ICategoryService;
@@ -21,6 +22,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class ProductService implements IProductService {
@@ -163,6 +165,39 @@ public class ProductService implements IProductService {
         this.save(product);
         
         return product;
+    }
+
+
+    @Override
+    public Product update(Long id, Product product) {
+        Product productToUpdate = this.get(id);
+        String name = product.getName() != null ? product.getName() : productToUpdate.getName();
+        String description = product.getDescription() != null ? product.getDescription() : productToUpdate.getDescription();
+        String code = product.getCode() != null ? product.getCode() : productToUpdate.getCode();
+        Double price = product.getPrice() != null ? product.getPrice() : productToUpdate.getPrice();
+        Long stock = product.getStock() != null ? product.getStock() : productToUpdate.getStock();
+        Category category = product.getCategory() != null ? product.getCategory() : productToUpdate.getCategory();
+        Set<Size> sizes = product.getSizes() != null ? product.getSizes() : productToUpdate.getSizes();
+        Brand brand = product.getBrand() != null ? product.getBrand() : productToUpdate.getBrand();
+        Long points = product.getPoints() != null ? product.getPoints() : productToUpdate.getPoints();
+        Boolean promo = product.getPromo() != null ? product.getPromo() : productToUpdate.getPromo();
+        Boolean deleted = product.getDeleted() != null ? product.getDeleted() : productToUpdate.getDeleted();
+        
+        productToUpdate.setName(name);
+        productToUpdate.setDescription(description);
+        productToUpdate.setCode(code);
+        productToUpdate.setPrice(price);
+        productToUpdate.setStock(stock);
+        productToUpdate.setCategory(category);
+        productToUpdate.setSizes(sizes);
+        productToUpdate.setBrand(brand);
+        productToUpdate.setPoints(points);
+        productToUpdate.setPromo(promo);
+        productToUpdate.setDeleted(deleted);
+
+
+        this.save(productToUpdate);
+        return productToUpdate;
     }
 
 
