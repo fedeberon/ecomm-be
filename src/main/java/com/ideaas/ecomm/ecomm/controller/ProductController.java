@@ -73,17 +73,16 @@ public class ProductController {
 
     @PostMapping
     public ResponseEntity<Product> save(@RequestBody Product product) {
-        product.setSizesByProducts();
         Product productSaved = productService.save(product);
 
         return ResponseEntity.accepted().body(productSaved);
     }
 
-    @PutMapping
-    public ResponseEntity<Product> update(@RequestBody Product product) {
-        Product productSaved = productService.save(product);
+    @PutMapping("{id}")
+    public ResponseEntity<Product> update(@PathVariable final Long id, @RequestBody final Product product) {
+        Product productToUpdate = productService.update(id, product);
 
-        return ResponseEntity.accepted().body(productSaved);
+        return ResponseEntity.accepted().body(productToUpdate);
     }
 
     @GetMapping("/byType/{category}")
