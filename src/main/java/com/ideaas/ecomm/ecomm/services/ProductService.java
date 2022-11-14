@@ -20,6 +20,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -159,6 +160,16 @@ public class ProductService implements IProductService {
     }
 
     @Override
+    public void increaseAmountOfSales(final List<ProductToCart> productToCarts) {
+        productToCarts.forEach(productToCart -> {
+            Product product = productToCart.getProduct();
+            Long sales =  product.getSales() + productToCart.getQuantity();
+            product.setSales(sales);
+            save(product);
+        });
+    }
+
+    @Override
     public Product deleteProduct(long id) {
         Product product = this.get(id);
         product.setDeleted(true);
@@ -198,6 +209,18 @@ public class ProductService implements IProductService {
 
         this.save(productToUpdate);
         return productToUpdate;
+    }
+
+
+    @Override
+    public List<Product> sortedBySales(List<Product> products, String type) {
+        if(type.equals("Desc")){
+            Collections.sort(products, Comparator.comparing((Product product) -> product.getSales()).reversed());
+        }
+        if(type.equals("Asc")){
+            Collections.sort(products, Comparator.comparing((Product product) -> product.getSales()));
+        }
+        return products;
     }
 
 
