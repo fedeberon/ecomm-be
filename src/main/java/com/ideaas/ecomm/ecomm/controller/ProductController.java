@@ -47,6 +47,15 @@ public class ProductController {
         return ResponseEntity.ok(products);
     }
 
+    @GetMapping("/sales/{type}")
+    public ResponseEntity<List<Product>> salesOrdered(@PathVariable final String type){
+        List<Product> products = productService.All();
+
+        List<Product> sorteredProducts = productService.sortedBySales(products, type);
+
+        return ResponseEntity.ok(sorteredProducts);
+    } 
+
     @DeleteMapping("{id}")
     public ResponseEntity<Product> deleteProduct(@PathVariable final long id) {
         Product product =productService.deleteProduct(id);

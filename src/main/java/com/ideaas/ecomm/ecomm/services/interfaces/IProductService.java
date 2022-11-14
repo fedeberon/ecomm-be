@@ -25,6 +25,8 @@ public interface IProductService {
 
     void discountAmountStock(List<ProductToCart> productToCarts);
 
+    void increaseAmountOfSales(List<ProductToCart> productToCarts);
+
     List<Product> searchByCategories(List<SearchRequest.CategoriesRequest> categories);
 
     List<Product> All();
@@ -32,4 +34,6 @@ public interface IProductService {
     Product deleteProduct(long id);
 
     Product update(Long id, Product product);
+
+    List<Product> sortedBySales(List<Product> products, String type);
 }
