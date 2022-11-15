@@ -35,8 +35,8 @@ public class ProductController {
     }
 
     @GetMapping
-    public Page<Product> find(@RequestParam(defaultValue = "1") final Integer page, @RequestParam(defaultValue = "12") final Integer size) {
-        Page<Product> products = productService.findAll(page, size);
+    public Page<Product> find(@RequestParam(defaultValue = "1") final Integer page, @RequestParam(defaultValue = "12") final Integer size, @RequestParam(defaultValue = "12") final String sortBy) {
+        Page<Product> products = productService.findAll(page, size, sortBy);
         return products;
     }
 
@@ -46,15 +46,6 @@ public class ProductController {
 
         return ResponseEntity.ok(products);
     }
-
-    @GetMapping("/sales/{type}")
-    public ResponseEntity<List<Product>> salesOrdered(@PathVariable final String type){
-        List<Product> products = productService.All();
-
-        List<Product> sorteredProducts = productService.sortedBySales(products, type);
-
-        return ResponseEntity.ok(sorteredProducts);
-    } 
 
     @DeleteMapping("{id}")
     public ResponseEntity<Product> deleteProduct(@PathVariable final long id) {
