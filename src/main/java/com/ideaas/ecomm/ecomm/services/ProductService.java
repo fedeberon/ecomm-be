@@ -13,6 +13,7 @@ import com.ideaas.ecomm.ecomm.services.interfaces.IProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -20,7 +21,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -43,8 +43,8 @@ public class ProductService implements IProductService {
 
 
     @Override
-    public Page<Product> findAll(int page, int size) {
-        Page<Product> products = dao.findAll(PageRequest.of(page, size));
+    public Page<Product> findAll(int page, int size, String sortBy) {
+        Page<Product> products = dao.findAll(PageRequest.of(page, size, Sort.Direction.DESC, sortBy));
         products.forEach(product -> addImagesOnProduct(product));
 
         return products;
@@ -210,19 +210,5 @@ public class ProductService implements IProductService {
         this.save(productToUpdate);
         return productToUpdate;
     }
-
-
-    @Override
-    public List<Product> sortedBySales(List<Product> products, String type) {
-        if(type.equals("Desc")){
-            Collections.sort(products, Comparator.comparing((Product product) -> product.getSales()).reversed());
-        }
-        if(type.equals("Asc")){
-            Collections.sort(products, Comparator.comparing((Product product) -> product.getSales()));
-        }
-        return products;
-    }
-
-
 
 }

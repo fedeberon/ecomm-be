@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface IProductService {
     
-    Page<Product> findAll(int page, int size);
+    Page<Product> findAll(int page, int size, String sortBy);
 
     Product save(Product product);
 
@@ -34,6 +34,4 @@ public interface IProductService {
     Product deleteProduct(long id);
 
     Product update(Long id, Product product);
-
-    List<Product> sortedBySales(List<Product> products, String type);
 }
