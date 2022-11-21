@@ -23,6 +23,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.Properties;
 import java.util.Set;
 
 @Service
@@ -44,7 +45,9 @@ public class ProductService implements IProductService {
 
     @Override
     public Page<Product> findAll(int page, int size, String sortBy) {
-        Page<Product> products = dao.findAll(PageRequest.of(page, size, Sort.Direction.DESC, sortBy));
+        Sort sort = Sort.by(sortBy).descending();
+        Page<Product> products = dao.findByDeleted(false, PageRequest.of(page, size, sort));
+        
         products.forEach(product -> addImagesOnProduct(product));
 
         return products;
