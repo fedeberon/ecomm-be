@@ -3,6 +3,8 @@ package com.ideaas.ecomm.ecomm.repository;
 import com.ideaas.ecomm.ecomm.domain.Brand;
 import com.ideaas.ecomm.ecomm.domain.Category;
 import com.ideaas.ecomm.ecomm.domain.Product;
+
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
@@ -25,4 +27,6 @@ public interface ProductDao extends PagingAndSortingRepository<Product, Long> {
     List<Product> findAllByNameContainingIgnoreCase(String value, Pageable pageable);
     
     List<Product> findByDeleted(Boolean deleted);
+
+    Page<Product> findByDeleted(Boolean deleted, Pageable pageable);
 }
