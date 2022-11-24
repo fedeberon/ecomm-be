@@ -8,10 +8,8 @@ import org.springframework.data.domain.Page;
 import java.util.List;
 
 public interface IProductService {
-
-    List<Product> findAll();
     
-    Page<Product> findAll(int page, int size);
+    Page<Product> findAll(int page, int size, String sortBy);
 
     Product save(Product product);
 
@@ -27,9 +25,13 @@ public interface IProductService {
 
     void discountAmountStock(List<ProductToCart> productToCarts);
 
+    void increaseAmountOfSales(List<ProductToCart> productToCarts);
+
     List<Product> searchByCategories(List<SearchRequest.CategoriesRequest> categories);
 
     List<Product> All();
 
     Product deleteProduct(long id);
+
+    Product update(Long id, Product product);
 }

@@ -5,6 +5,7 @@ import com.ideaas.ecomm.ecomm.domain.Category;
 import com.ideaas.ecomm.ecomm.domain.Image;
 import com.ideaas.ecomm.ecomm.domain.Product;
 import com.ideaas.ecomm.ecomm.domain.ProductToCart;
+import com.ideaas.ecomm.ecomm.domain.Size;
 import com.ideaas.ecomm.ecomm.payload.SearchRequest;
 import com.ideaas.ecomm.ecomm.repository.ProductDao;
 import com.ideaas.ecomm.ecomm.services.interfaces.ICategoryService;
@@ -12,6 +13,7 @@ import com.ideaas.ecomm.ecomm.services.interfaces.IProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -21,6 +23,8 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.Properties;
+import java.util.Set;
 
 @Service
 public class ProductService implements IProductService {
@@ -40,8 +44,10 @@ public class ProductService implements IProductService {
 
 
     @Override
-    public Page<Product> findAll(int page, int size) {
-        Page<Product> products = dao.findAll(PageRequest.of(page, size));
+    public Page<Product> findAll(int page, int size, String sortBy) {
+        Sort sort = Sort.by(sortBy).descending();
+        Page<Product> products = dao.findByDeleted(false, PageRequest.of(page, size, sort));
+        
         products.forEach(product -> addImagesOnProduct(product));
 
         return products;
@@ -49,7 +55,7 @@ public class ProductService implements IProductService {
 
     @Override
     public List<Product> All() {
-        List<Product> products = (List<Product>) dao.findAll();
+        List<Product> products = (List<Product>) dao.findByDeleted(false);
         products.forEach(product -> addImagesOnProduct(product));
         
         return products;
@@ -57,6 +63,7 @@ public class ProductService implements IProductService {
     
     @Override
     public Product save(final Product product) {
+        product.setDeleted(false);
         return dao.save(product);
     }
 
@@ -156,6 +163,16 @@ public class ProductService implements IProductService {
     }
 
     @Override
+    public void increaseAmountOfSales(final List<ProductToCart> productToCarts) {
+        productToCarts.forEach(productToCart -> {
+            Product product = productToCart.getProduct();
+            Long sales =  product.getSales() + productToCart.getQuantity();
+            product.setSales(sales);
+            save(product);
+        });
+    }
+
+    @Override
     public Product deleteProduct(long id) {
         Product product = this.get(id);
         product.setDeleted(true);
@@ -166,9 +183,35 @@ public class ProductService implements IProductService {
 
 
     @Override
-    public List<Product> findAll() {
-        // TODO Auto-generated method stub
-        return null;
+    public Product update(Long id, Product product) {
+        Product productToUpdate = this.get(id);
+        String name = product.getName() != null ? product.getName() : productToUpdate.getName();
+        String description = product.getDescription() != null ? product.getDescription() : productToUpdate.getDescription();
+        String code = product.getCode() != null ? product.getCode() : productToUpdate.getCode();
+        Double price = product.getPrice() != null ? product.getPrice() : productToUpdate.getPrice();
+        Long stock = product.getStock() != null ? product.getStock() : productToUpdate.getStock();
+        Category category = product.getCategory() != null ? product.getCategory() : productToUpdate.getCategory();
+        Set<Size> sizes = product.getSizes() != null ? product.getSizes() : productToUpdate.getSizes();
+        Brand brand = product.getBrand() != null ? product.getBrand() : productToUpdate.getBrand();
+        Long points = product.getPoints() != null ? product.getPoints() : productToUpdate.getPoints();
+        Boolean promo = product.getPromo() != null ? product.getPromo() : productToUpdate.getPromo();
+        Boolean deleted = product.getDeleted() != null ? product.getDeleted() : productToUpdate.getDeleted();
+        
+        productToUpdate.setName(name);
+        productToUpdate.setDescription(description);
+        productToUpdate.setCode(code);
+        productToUpdate.setPrice(price);
+        productToUpdate.setStock(stock);
+        productToUpdate.setCategory(category);
+        productToUpdate.setSizes(sizes);
+        productToUpdate.setBrand(brand);
+        productToUpdate.setPoints(points);
+        productToUpdate.setPromo(promo);
+        productToUpdate.setDeleted(deleted);
+
+
+        this.save(productToUpdate);
+        return productToUpdate;
     }
 
 }

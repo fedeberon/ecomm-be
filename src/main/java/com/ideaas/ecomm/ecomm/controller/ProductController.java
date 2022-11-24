@@ -35,8 +35,8 @@ public class ProductController {
     }
 
     @GetMapping
-    public Page<Product> list(@RequestParam(defaultValue = "1") final Integer page, @RequestParam(defaultValue = "12") final Integer size) {
-        Page<Product> products = productService.findAll(page, size);
+    public Page<Product> find(@RequestParam(defaultValue = "1") final Integer page, @RequestParam(defaultValue = "12") final Integer size, @RequestParam(defaultValue = "12") final String sortBy) {
+        Page<Product> products = productService.findAll(page, size, sortBy);
         return products;
     }
 
@@ -73,17 +73,16 @@ public class ProductController {
 
     @PostMapping
     public ResponseEntity<Product> save(@RequestBody Product product) {
-        product.setSizesByProducts();
         Product productSaved = productService.save(product);
 
         return ResponseEntity.accepted().body(productSaved);
     }
 
-    @PutMapping
-    public ResponseEntity<Product> update(@RequestBody Product product) {
-        Product productSaved = productService.save(product);
+    @PutMapping("{id}")
+    public ResponseEntity<Product> update(@PathVariable final Long id, @RequestBody final Product product) {
+        Product productToUpdate = productService.update(id, product);
 
-        return ResponseEntity.accepted().body(productSaved);
+        return ResponseEntity.accepted().body(productToUpdate);
     }
 
     @GetMapping("/byType/{category}")

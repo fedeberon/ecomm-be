@@ -23,5 +23,15 @@ public class SizeService implements ISizeService {
     public List<Size> findAll() {
         return dao.findAll();
     }
+
+    @Override
+    public Size save(Size size) {
+        return dao.save(size);
+    }
+
+    @Override
+    public Size get(Long id) {
+        return dao.findById(id).get();
+    }
     
 }

@@ -311,6 +311,7 @@ public class BillService implements IBillService {
         
                 walletService.productToCartInWallet(user, bill.getCheckout().getProducts(), WalletTransactionType.BUY);
                 productService.discountAmountStock(bill.getCheckout().getProducts());
+                productService.increaseAmountOfSales(bill.getCheckout().getProducts());
 
 
         return dao.save(bill);
