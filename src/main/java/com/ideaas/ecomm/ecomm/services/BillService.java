@@ -311,6 +311,7 @@ public class BillService implements IBillService {
         
                 walletService.productToCartInWallet(user, bill.getCheckout().getProducts(), WalletTransactionType.BUY);
                 productService.discountAmountStock(bill.getCheckout().getProducts());
+                productService.increaseAmountOfSales(bill.getCheckout().getProducts());
 
 
         return dao.save(bill);
@@ -331,6 +332,11 @@ public class BillService implements IBillService {
     @Override
     public List<Bill> findAllByUser(final User user){
         return dao.findAllByUser(user, Sort.by(Sort.Direction.DESC, "id"));
+    }
+
+    @Override
+    public List<Bill> search(final BillResponse response, final String start, final String end) {
+        return dao.findAllByCreditCardAndAndDateBetween(response.getCreditCard(), start, end);
     }
 
 }

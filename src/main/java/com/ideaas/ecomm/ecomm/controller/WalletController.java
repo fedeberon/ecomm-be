@@ -46,6 +46,7 @@ public class WalletController {
         if(validator){
             walletService.productToCartInWallet(user, checkout.getProducts(), WalletTransactionType.SALE);
             productService.discountAmountStock(checkout.getProducts());
+            productService.increaseAmountOfSales(checkout.getProducts());
             return ResponseEntity.ok().build();
         } else {
             return ResponseEntity.status(202).body("puntos insuficientes");

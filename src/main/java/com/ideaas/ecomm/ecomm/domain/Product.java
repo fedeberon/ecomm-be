@@ -7,7 +7,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -47,9 +46,6 @@ public class Product {
     @JoinColumn(name = "PROD_CAT_ID")
     private Category category;
 
-    @OneToMany(mappedBy = "product", cascade = CascadeType.PERSIST, orphanRemoval = true)
-    private List<SizesByProduct> sizesByProducts;
-
     @OneToOne
     @JoinColumn(name = "PROD_BRAND_ID")
     private Brand brand;
@@ -57,28 +53,25 @@ public class Product {
     @Column(name = "PRO_POINT")    
     private Long points = 0L;
 
+    @Column(name = "PRO_AMOUNT_SALES")    
+    private Long sales = 0L;
+
     @Column(name = "PRO_PROMO")    
     private Boolean promo = false;
 
     @Column(name = "PRO_DELETED")    
     private Boolean deleted;
 
-    @Transient
-    private List<Size> sizes;
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.DETACH)
+    @JoinTable(name = "SIZES_BY_PRODUCT_TBL",
+        joinColumns =  {
+            @JoinColumn(name = "SBP_PRO_ID", referencedColumnName = "PRO_ID")
+        },
+        inverseJoinColumns = {
+            @JoinColumn(name = "SBP_SIZE_ID", referencedColumnName = "SIZE_ID")
+        })
 
-    public void setSizesByProducts() {
-        List<SizesByProduct> sizesByProducts = new ArrayList<>();
-        sizes.forEach(size -> {
-            SizesByProduct sizesByProduct = new SizesByProduct();
-            sizesByProduct.setSize(size);
-            sizesByProducts.add(sizesByProduct);
-        });
-        sizesByProducts.forEach(size -> {
-            size.setProduct(this);
-        });
-
-        this.sizesByProducts = sizesByProducts;
-    }
+    private Set<Size> sizes;
 
     public static Product findById(long id2) {
         return null;

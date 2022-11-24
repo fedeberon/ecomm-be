@@ -37,7 +37,7 @@ public class ProvidersController {
         }
     }
 
-    @GetMapping("/all")
+    @GetMapping
     public List<Provider> list() {
         List<Provider> providers = providerService.findAll();
         return providers;

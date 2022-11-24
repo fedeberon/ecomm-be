@@ -144,5 +144,10 @@ public class BillingController {
         return ResponseEntity.ok(billsTypes);
     }
 
+    @PostMapping("search")
+    public ResponseEntity<List<Bill>> search(@RequestBody BillResponse response) {
+        List<Bill> bills =  billService.search(response, response.getStart(), response.getEnd());
 
+        return ResponseEntity.ok(bills);
+    }
 }

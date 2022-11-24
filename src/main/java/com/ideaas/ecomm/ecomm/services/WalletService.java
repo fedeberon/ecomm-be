@@ -52,7 +52,6 @@ public class WalletService implements IWalletService {
 
 	public List<Wallet> findRegistersActiveByUser(final User user) {
 		List<Wallet> registers = findNoExpiredByUser(user);
-		// actives = registers.isConsumed !== false && registers.points > 0 && registers.date < ExpirationTime;
 
 		List<Wallet> actives= new ArrayList<>();
 
