@@ -60,7 +60,7 @@ public class Product {
     private Boolean promo = false;
 
     @Column(name = "PRO_DELETED")    
-    private Boolean deleted;
+    private Boolean deleted = false;
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.DETACH)
     @JoinTable(name = "SIZES_BY_PRODUCT_TBL",

@@ -63,7 +63,6 @@ public class ProductService implements IProductService {
     
     @Override
     public Product save(final Product product) {
-        product.setDeleted(false);
         return dao.save(product);
     }
 
