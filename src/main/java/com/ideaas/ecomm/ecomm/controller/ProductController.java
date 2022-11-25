@@ -85,6 +85,13 @@ public class ProductController {
         return ResponseEntity.accepted().body(productToUpdate);
     }
 
+    @PutMapping("delete/{id}")
+    public ResponseEntity<Product> UpdateDeleteProduct(@PathVariable final long id) {
+        Product productToUpdate = productService.deleteProduct(id);
+
+        return ResponseEntity.ok(productToUpdate);
+    }
+
     @GetMapping("/byType/{category}")
     public ResponseEntity<List<Product>> byType(final @PathVariable String category) {
         List<Product> products = productService.byCategory(category);
