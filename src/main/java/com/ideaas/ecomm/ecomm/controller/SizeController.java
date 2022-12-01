@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -57,5 +58,13 @@ public class SizeController {
 
         sizeService.save(sizeToUpdate);
         return ResponseEntity.ok(sizeToUpdate);
+    }
+
+    @DeleteMapping("{id}")
+    public ResponseEntity<String> delete(@PathVariable final Long id){
+        final Size sizeToDelete = sizeService.get(id);
+        sizeService.delete(sizeToDelete);
+
+        return ResponseEntity.accepted().body("Size deleted succesfully");
     }
 }

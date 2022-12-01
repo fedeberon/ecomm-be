@@ -10,4 +10,6 @@ public interface ISizeService {
     Size save(Size size);
 
     Size get(Long id);
+
+    void delete(Size sizeToDelete);
 }
