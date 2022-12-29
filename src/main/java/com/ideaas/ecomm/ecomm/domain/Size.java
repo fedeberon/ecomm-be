@@ -24,7 +24,7 @@ public class Size {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "SIZE_ID")
-    private Long id;
+    public Long id;
 
     @Column(name = "SIZE_NAME")
     private String name;
