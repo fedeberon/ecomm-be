@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class StockService implements IStockService {
@@ -37,7 +38,7 @@ public class StockService implements IStockService {
             Stock newStock = dao.save(stock);
             Long quantityToAdd = newStock.getQuantity();
             Product product = newStock.getProduct();
-            Long newQuantity = quantityToAdd + product.getStock();
+            Long newQuantity = Objects.nonNull(product.getStock()) ? quantityToAdd + product.getStock() : quantityToAdd;
             product.setStock(newQuantity);
             productService.save(product);
         });
