@@ -71,7 +71,7 @@ public class Bill {
 
 
     public Double getTotalAmount() {
-        return checkout.getProducts().stream().mapToDouble(i -> i.getPrice() * i.getQuantity()).sum();
+        return checkout.getProducts().stream().mapToDouble(i -> i.getPrice()).sum();
     }
 
     public Bill(final BillBuilder builder) {
