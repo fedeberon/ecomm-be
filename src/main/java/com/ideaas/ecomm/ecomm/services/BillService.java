@@ -335,8 +335,8 @@ public class BillService implements IBillService {
     }
 
     @Override
-    public List<Bill> search(final BillResponse response, final String start, final String end) {
-        return dao.findAllByCreditCardAndAndDateBetween(response.getCreditCard(), start, end);
+    public List<Bill> search(final BillResponse response) {
+        return dao.findAllByDateBetween(response.getStart(), response.getEnd());
     }
 
 }

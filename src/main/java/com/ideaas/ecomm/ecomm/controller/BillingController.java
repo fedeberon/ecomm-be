@@ -146,7 +146,7 @@ public class BillingController {
 
     @PostMapping("search")
     public ResponseEntity<List<Bill>> search(@RequestBody BillResponse response) {
-        List<Bill> bills =  billService.search(response, response.getStart(), response.getEnd());
+        List<Bill> bills =  billService.search(response);
 
         return ResponseEntity.ok(bills);
     }
