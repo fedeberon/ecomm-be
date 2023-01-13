@@ -37,4 +37,9 @@ public class Stock {
     @Column(name = "ST_DATE")
     private LocalDateTime date = LocalDateTime.now();
 
+    @ManyToOne
+    @JoinColumn(name = "ST_PROV_ID", nullable = false)
+    private Provider provider;
+
+
 }
