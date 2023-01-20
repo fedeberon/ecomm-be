@@ -9,9 +9,7 @@ public interface IStockService {
     
     List<Stock> findAll();
 
-    Stock save(Stock stock);
+    void save(Stock stock);
 
-    List<Stock> saveAll(List<Stock> stock);
-
-    List<Stock> getBy(Product product);
+    Stock getBy(Product product);
 }
