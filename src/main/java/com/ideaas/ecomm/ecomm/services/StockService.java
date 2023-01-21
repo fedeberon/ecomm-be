@@ -28,6 +28,7 @@ public class StockService implements IStockService {
 
     @Override
     public void save(final Stock stock){
+        stock.getItems().forEach(itemStock -> itemStock.setStock(stock));
         dao.save(stock);
     }
 
@@ -36,5 +37,12 @@ public class StockService implements IStockService {
     public Stock getBy(final Product product){
         return dao.findAllByItemsProduct(product);
     }
+
+
+    @Override
+    public Stock getBy(final Long id){
+        return dao.findById(id).get();
+    }
+
 
 }

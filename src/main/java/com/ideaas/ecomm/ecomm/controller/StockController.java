@@ -38,7 +38,7 @@ public class StockController {
         return ResponseEntity.ok(stock);
     }
 
-    @GetMapping("{id}")
+    @GetMapping("/product/{id}")
     private ResponseEntity<Stock> findAllByProduct(final @PathVariable Long id) {
         final Product product = productService.get(id);
         Stock stock = stockService.getBy(product);
@@ -53,4 +53,11 @@ public class StockController {
         return ResponseEntity.ok(stock);
     }
 
+
+    @GetMapping("{id}")
+    private ResponseEntity<Stock> findAllBy(final @PathVariable Long id) {
+        Stock stock = stockService.getBy(id);
+
+        return ResponseEntity.ok(stock);
+    }
 }

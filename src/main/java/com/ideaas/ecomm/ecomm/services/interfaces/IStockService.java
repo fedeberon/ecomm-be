@@ -12,4 +12,6 @@ public interface IStockService {
     void save(Stock stock);
 
     Stock getBy(Product product);
+
+    Stock getBy(Long id);
 }
