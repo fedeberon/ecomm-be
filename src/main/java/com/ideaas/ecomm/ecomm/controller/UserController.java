@@ -58,7 +58,7 @@ public class UserController {
 
     @GetMapping("{username}")
     public ResponseEntity<User> findByUsername(@PathVariable final String username){
-        final User user = userService.get(username);
+        final User user = userService.get(username).get();
 
         return ResponseEntity.ok(user);
     }
@@ -66,7 +66,7 @@ public class UserController {
 
     @GetMapping("/wallet/{username}")
     public ResponseEntity<List<Wallet>> getWalletByUser(@PathVariable final String username) {
-        final User user = userService.get(username);
+        final User user = userService.get(username).get();
         final List<Wallet> walletOfUser = walletService.findAllByUser(user);     
 
         return ResponseEntity.ok(walletOfUser);
@@ -74,7 +74,7 @@ public class UserController {
 
     @GetMapping("/wallet/points/{username}")
     public ResponseEntity<Long> getPointsWalletByUser(@PathVariable final String username) {
-        final User user = userService.get(username);
+        final User user = userService.get(username).get();
         Long points = walletService.getActivePointsWalletByUser(user);
 
         return ResponseEntity.ok(points);
@@ -82,7 +82,7 @@ public class UserController {
 
     @PostMapping("twins")
     public ResponseEntity<User> updateTwins(@RequestBody final User user) {
-        User userToUpdate = userService.get(user.getCardId());
+        User userToUpdate = userService.get(user.getCardId()).get();
         userToUpdate.setTwins(user.getTwins());
         userService.update(userToUpdate);
 

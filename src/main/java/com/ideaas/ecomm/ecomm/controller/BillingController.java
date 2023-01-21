@@ -129,7 +129,7 @@ public class BillingController {
 
     @GetMapping("/user/{username}")
     public ResponseEntity<List<Bill>> getByCheckoutId(final @PathVariable String username) {
-        final User user = userService.get(username);
+        final User user = userService.get(username).get();
         List<Bill> bills = billService.findAllByUser(user);
 
         return ResponseEntity.ok(bills);
