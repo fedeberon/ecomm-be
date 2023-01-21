@@ -30,7 +30,7 @@ public class BillRequest {
 
     private LocalDate date = LocalDate.now();
 
-    private String cuit;
+    private String cuit = "0";
 
     private String comments;
 

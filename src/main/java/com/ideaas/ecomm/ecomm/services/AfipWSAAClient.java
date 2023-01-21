@@ -613,12 +613,12 @@ public class AfipWSAAClient {
                 } else {
                     docTipo.addTextNode("80");
                     SOAPElement docNro = feDetReqArray.addChildElement("DocNro", "ar");
-                    docNro.addTextNode(billRequest.getCuit());
+                    docNro.addTextNode(billRequest.getCuit().isEmpty() ? "1" : billRequest.getCuit());
                 }
             } else {
                 docTipo.addTextNode("96");
                 SOAPElement docNro = feDetReqArray.addChildElement("DocNro", "ar");
-                docNro.addTextNode(billRequest.getCuit());
+                docNro.addTextNode(billRequest.getCuit().isEmpty() ? "1" : billRequest.getCuit());
             }
 
             SOAPElement cbteDesde = feDetReqArray.addChildElement("CbteDesde", "ar");
