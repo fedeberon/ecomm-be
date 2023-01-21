@@ -36,7 +36,7 @@ public class ShoppingController {
 
     @GetMapping("mine/{username}")
     public ResponseEntity<List<Bill>> myShopping(@PathVariable String username) {
-        User user = userService.get(username);
+        User user = userService.get(username).get();
         List<Bill> bills = billService.findAllByUser(user);
 
         return ResponseEntity.ok(bills);

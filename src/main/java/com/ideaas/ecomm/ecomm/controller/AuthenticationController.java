@@ -47,7 +47,7 @@ public class AuthenticationController {
                         
             final UserDetails userDetails = userService.loadUserByUsername(authenticationRequest.getUsername());
             final String token = jwtService.createToken(userDetails);
-            User user = userService.get(userDetails.getUsername());
+            User user = userService.get(userDetails.getUsername()).get();
             AuthenticationResponse tokenResponse = new AuthenticationResponse(token,
                                                                               user.getUsername(),
                                                                               user.getName(),

@@ -4,13 +4,14 @@ import com.ideaas.ecomm.ecomm.domain.User;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface IUserService extends UserDetailsService {
     User save(User user);
 
     User update(User user);
 
-    User get(String username);
+    Optional<User> get(String username);
 
     List<User> findAll();
 
