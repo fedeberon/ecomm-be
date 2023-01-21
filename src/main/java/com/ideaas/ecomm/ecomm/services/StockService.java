@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Objects;
 
 @Service
 public class StockService implements IStockService {
@@ -28,27 +27,22 @@ public class StockService implements IStockService {
     }
 
     @Override
-    public Stock save(final Stock stock){
-        return dao.save(stock);
-    }
-
-    @Override
-    public List<Stock> saveAll(final List<Stock> stocks){
-        stocks.forEach(stock ->{
-            Stock newStock = dao.save(stock);
-            Long quantityToAdd = newStock.getQuantity();
-            Product product = newStock.getProduct();
-            Long newQuantity = Objects.nonNull(product.getStock()) ? quantityToAdd + product.getStock() : quantityToAdd;
-            product.setStock(newQuantity);
-            productService.save(product);
-        });
-        return dao.saveAll(stocks);
+    public void save(final Stock stock){
+        stock.getItems().forEach(itemStock -> itemStock.setStock(stock));
+        dao.save(stock);
     }
 
 
     @Override
-    public List<Stock> getBy(final Product product){
-        return dao.findAllByProduct(product);
+    public Stock getBy(final Product product){
+        return dao.findAllByItemsProduct(product);
     }
+
+
+    @Override
+    public Stock getBy(final Long id){
+        return dao.findById(id).get();
+    }
+
 
 }
