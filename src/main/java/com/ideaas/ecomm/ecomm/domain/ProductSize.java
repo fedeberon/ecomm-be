@@ -19,5 +19,9 @@ public class ProductSize {
     @OneToMany(mappedBy = "Size")
     @Column(name = "SIZE_Id")
     private Long sizeID;
-    
+
+    @Column(name = "SIZE_STOCK")
+    private Long stock;
+
+
 }

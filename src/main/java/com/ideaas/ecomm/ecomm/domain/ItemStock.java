@@ -36,4 +36,8 @@ public class ItemStock {
     @JoinColumn(name = "IT_ST_ID")
     private Stock stock;
 
+    @ManyToOne
+    @JoinColumn(name = "ST_SIZE_ID", nullable = false)
+    private Size size;
+
 }
