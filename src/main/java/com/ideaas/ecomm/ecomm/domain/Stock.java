@@ -41,5 +41,9 @@ public class Stock {
     @JoinColumn(name = "ST_PROV_ID", nullable = false)
     private Provider provider;
 
+    @ManyToOne
+    @JoinColumn(name = "ST_SIZE_ID", nullable = false)
+    private Size size;
+
 
 }
