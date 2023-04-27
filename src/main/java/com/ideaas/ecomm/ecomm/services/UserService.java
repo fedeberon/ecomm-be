@@ -13,12 +13,14 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserService implements IUserService {
 
     private UserDao dao;
     private IAuthenticationFacade authenticationFacade;
+
     @Autowired
     public UserService(final UserDao dao,
                        final IAuthenticationFacade authenticationFacade) {
@@ -52,8 +54,8 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public User get(String username) {
-        return dao.findById(username).get();
+    public Optional<User> get(String username) {
+        return dao.findById(username);
     }
 
     @Override
@@ -65,7 +67,12 @@ public class UserService implements IUserService {
     @Override
     public User getCurrent(){
         String username = authenticationFacade.getAuthentication().getName();
-        return get(username);
+        Optional<User> user = get(username);
+        if (user.isPresent()) {
+            return user.get();
+        } else {
+            return null;
+        }
     }
 
 }

@@ -5,7 +5,6 @@ import com.ideaas.ecomm.ecomm.domain.Stock;
 import com.ideaas.ecomm.ecomm.services.ProductService;
 import com.ideaas.ecomm.ecomm.services.StockService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -39,19 +38,26 @@ public class StockController {
         return ResponseEntity.ok(stock);
     }
 
-    @GetMapping("{id}")
-    private ResponseEntity<List<Stock>> findAllByProduct(final @PathVariable Long id) {
+    @GetMapping("/product/{id}")
+    private ResponseEntity<Stock> findAllByProduct(final @PathVariable Long id) {
         final Product product = productService.get(id);
-        List<Stock> stock = stockService.getBy(product);
+        Stock stock = stockService.getBy(product);
 
         return ResponseEntity.ok(stock);
     }
 
     @PostMapping("list")
-    private ResponseEntity<List<Stock>> saveAll(final @RequestBody List<Stock> stocks) {
-        final List<Stock> stocksRe = stockService.saveAll(stocks);
+    private ResponseEntity<Stock> saveAll(final @RequestBody Stock stock) {
+        stockService.save(stock);
 
-        return ResponseEntity.ok(stocksRe);
+        return ResponseEntity.ok(stock);
     }
 
+
+    @GetMapping("{id}")
+    private ResponseEntity<Stock> findAllBy(final @PathVariable Long id) {
+        Stock stock = stockService.getBy(id);
+
+        return ResponseEntity.ok(stock);
+    }
 }

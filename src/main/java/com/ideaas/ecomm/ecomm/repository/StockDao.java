@@ -11,5 +11,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface StockDao extends JpaRepository<Stock, Long> {
 
-    List<Stock> findAllByProduct(final Product product);
+    Stock findAllByItemsProduct(final Product product);
 }

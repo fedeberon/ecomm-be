@@ -161,7 +161,7 @@ public class WalletService implements IWalletService {
 		productToCarts.forEach(productToCart -> {
 			Product product = productToCart.getProduct();
 			long points = getPoint(product);
-			pointList.add(points);
+			pointList.add(points  * productToCart.getQuantity());
 		});
 		
 		for(long i: pointList){
