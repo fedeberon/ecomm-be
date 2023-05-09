@@ -9,7 +9,7 @@ import java.util.List;
 public interface ICheckoutService {
     Checkout get(Long id);
 
-    Checkout save(Cart cart);
+    Checkout save(Cart cart, CheckoutState state);
 
     Checkout changeStateTo(CheckoutState state, Long checkoutId);
 

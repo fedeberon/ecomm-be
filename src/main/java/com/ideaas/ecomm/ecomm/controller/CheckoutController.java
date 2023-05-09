@@ -4,6 +4,7 @@ import com.ideaas.ecomm.ecomm.converts.exceptions.DetailNotFoundException;
 import com.ideaas.ecomm.ecomm.domain.Cart;
 import com.ideaas.ecomm.ecomm.domain.Checkout;
 import com.ideaas.ecomm.ecomm.domain.Detail;
+import com.ideaas.ecomm.ecomm.enums.CheckoutState;
 import com.ideaas.ecomm.ecomm.payload.CheckoutResponse;
 import com.ideaas.ecomm.ecomm.services.interfaces.ICheckoutService;
 import javassist.tools.web.BadHttpRequest;
@@ -38,10 +39,23 @@ public class CheckoutController {
             throw new DetailNotFoundException("Details should not be null or empty");
         }
         final Cart cart = new Cart.CartBuilder().withDetails(details).build();
-        final Checkout checkout = checkoutService.save(cart);
+        final Checkout checkout = checkoutService.save(cart, CheckoutState.IN_PROCESS);
 
         return ResponseEntity.ok(checkout);
     }
+
+    @PostMapping("/budget")
+    public ResponseEntity<Checkout> budget(@RequestBody List<Detail> details) throws DetailNotFoundException {
+        if (details.isEmpty()) {
+            throw new DetailNotFoundException("Details should not be null or empty");
+        }
+        final Cart cart = new Cart.CartBuilder().withDetails(details).build();
+        final Checkout checkout = checkoutService.save(cart, CheckoutState.BUDGET);
+
+        return ResponseEntity.ok(checkout);
+    }
+
+
 
 
     @GetMapping(value = "{id}", produces = MediaType.APPLICATION_JSON_VALUE)
