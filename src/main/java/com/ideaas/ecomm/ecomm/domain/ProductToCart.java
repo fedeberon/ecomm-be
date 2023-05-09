@@ -45,6 +45,11 @@ public class ProductToCart {
     @Column(name = "PTC_PRICE", precision=10, scale=2)
     private Double price;
 
+    @ManyToOne
+    @JoinColumn(name = "PTC_SIZE_ID")
+    private Size size;
+
+
     public Double getPrice() {
         try {
             return price * quantity;
