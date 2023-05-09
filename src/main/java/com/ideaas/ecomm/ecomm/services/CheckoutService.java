@@ -4,10 +4,12 @@ import com.ideaas.ecomm.ecomm.domain.Cart;
 import com.ideaas.ecomm.ecomm.domain.Checkout;
 import com.ideaas.ecomm.ecomm.domain.Product;
 import com.ideaas.ecomm.ecomm.domain.ProductToCart;
+import com.ideaas.ecomm.ecomm.domain.Size;
 import com.ideaas.ecomm.ecomm.enums.CheckoutState;
 import com.ideaas.ecomm.ecomm.repository.CheckoutDao;
 import com.ideaas.ecomm.ecomm.services.interfaces.ICheckoutService;
 import com.ideaas.ecomm.ecomm.services.interfaces.IProductService;
+import com.ideaas.ecomm.ecomm.services.interfaces.ISizeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -21,10 +23,15 @@ public class CheckoutService implements ICheckoutService {
     private CheckoutDao dao;
     private IProductService productService;
 
+    private ISizeService sizeService;
+
     @Autowired
-    public CheckoutService(final CheckoutDao dao, final IProductService productService) {
+    public CheckoutService(final CheckoutDao dao,
+                           final IProductService productService,
+                           final ISizeService sizeService) {
         this.dao = dao;
         this.productService = productService;
+        this.sizeService = sizeService;
     }
 
     @Override
@@ -42,8 +49,9 @@ public class CheckoutService implements ICheckoutService {
         final Checkout checkout = new Checkout();
         cart.getDetails().forEach(detail -> {
            Product product = productService.get(Long.valueOf(detail.getProductId()));
-           products.add(product);
-            final ProductToCart productToCart = prepareProductToCart(product, checkout, detail.getQuantity());
+           Size size = sizeService.get(Long.valueOf(detail.getSize()));
+            products.add(product);
+            final ProductToCart productToCart = prepareProductToCart(product, checkout, detail.getQuantity(), size);
             productsToCart.add(productToCart);
         });
         checkout.setProducts(productsToCart);
@@ -67,12 +75,16 @@ public class CheckoutService implements ICheckoutService {
         return checkout;
     }
 
-    public ProductToCart prepareProductToCart(final Product product, final Checkout checkout, final Integer quantity) {
+    public static ProductToCart prepareProductToCart(final Product product,
+                                              final Checkout checkout,
+                                              final Integer quantity,
+                                              final Size size) {
         return  ProductToCart.builder()
                             .product(product)
                             .checkout(checkout)
                             .quantity(quantity)
                             .price(product.getPrice())
+                            .size(size)
                             .build();
     }
 }

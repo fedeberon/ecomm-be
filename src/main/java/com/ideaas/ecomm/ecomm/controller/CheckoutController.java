@@ -1,10 +1,12 @@
 package com.ideaas.ecomm.ecomm.controller;
 
+import com.ideaas.ecomm.ecomm.converts.exceptions.DetailNotFoundException;
 import com.ideaas.ecomm.ecomm.domain.Cart;
 import com.ideaas.ecomm.ecomm.domain.Checkout;
 import com.ideaas.ecomm.ecomm.domain.Detail;
 import com.ideaas.ecomm.ecomm.payload.CheckoutResponse;
 import com.ideaas.ecomm.ecomm.services.interfaces.ICheckoutService;
+import javassist.tools.web.BadHttpRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -31,7 +33,10 @@ public class CheckoutController {
     }
 
     @PostMapping
-    public ResponseEntity<Checkout> checkout(@RequestBody List<Detail> details) {
+    public ResponseEntity<Checkout> checkout(@RequestBody List<Detail> details) throws DetailNotFoundException {
+        if (details.isEmpty()) {
+            throw new DetailNotFoundException("Details should not be null or empty");
+        }
         final Cart cart = new Cart.CartBuilder().withDetails(details).build();
         final Checkout checkout = checkoutService.save(cart);
 
