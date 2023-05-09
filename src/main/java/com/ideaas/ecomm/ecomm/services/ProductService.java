@@ -102,7 +102,7 @@ public class ProductService implements IProductService {
 
     @Override
     public List<Product> search(final String value) {
-        List<Product> optionalProducts = dao.findAllByNameContainingIgnoreCase(value);
+        List<Product> optionalProducts = dao.findAllByNameContainingIgnoreCaseAndDeleted(value,false);
         optionalProducts.forEach(oneProduct -> addImagesOnProduct(oneProduct));
 
         return optionalProducts;
@@ -111,7 +111,7 @@ public class ProductService implements IProductService {
     @Override
     public List<Product> searchByBrand(List<SearchRequest.BrandRequest> brands) {
         Collection brandsList = convertToCollection(brands);
-        List<Product> products = dao.searchAllByBrandIn(brandsList);
+        List<Product> products = dao.searchAllByBrandInAndDeleted(brandsList, false);
         products.forEach(oneProduct -> addImagesOnProduct(oneProduct));
         
         return products;
@@ -120,7 +120,7 @@ public class ProductService implements IProductService {
     @Override
     public List<Product> searchByCategories(List<SearchRequest.CategoriesRequest> categories) {
         Collection categoriesList = convertToCategoriesCollection(categories);
-        List<Product> products =  dao.searchAllByCategoryIn(categoriesList);
+        List<Product> products =  dao.searchAllByCategoryInAndDeleted(categoriesList, false);
         products.forEach(oneProduct -> addImagesOnProduct(oneProduct));
         
         return products;
