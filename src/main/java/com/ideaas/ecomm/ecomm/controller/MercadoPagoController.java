@@ -44,7 +44,7 @@ public class MercadoPagoController {
     @PostMapping("checkout")
     public ResponseEntity<String> mercadoPagoCheckout(@RequestBody List<Detail> details) {
         final Cart cart = new Cart.CartBuilder().withDetails(details).build();
-        final Checkout checkout = checkoutService.save(cart);
+        final Checkout checkout = checkoutService.save(cart, CheckoutState.PAID_OUT);
         final Preference preference = mercadoPagoService.createPreference(checkout);
 
         return ResponseEntity.ok(preference.getInitPoint());

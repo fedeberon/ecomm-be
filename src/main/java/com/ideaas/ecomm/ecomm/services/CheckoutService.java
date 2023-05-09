@@ -43,10 +43,13 @@ public class CheckoutService implements ICheckoutService {
     }
 
     @Override
-    public Checkout save(final Cart cart) {
+    public Checkout save(final Cart cart, CheckoutState state) {
         final List<Product> products = new ArrayList<>();
         final List<ProductToCart> productsToCart = new ArrayList<>();
-        final Checkout checkout = new Checkout();
+        Checkout checkout = Checkout.builder()
+                .checkoutState(state)
+                .products(productsToCart)
+                .build();
         cart.getDetails().forEach(detail -> {
            Product product = productService.get(Long.valueOf(detail.getProductId()));
            Size size = sizeService.get(Long.valueOf(detail.getSize()));
@@ -54,8 +57,7 @@ public class CheckoutService implements ICheckoutService {
             final ProductToCart productToCart = prepareProductToCart(product, checkout, detail.getQuantity(), size);
             productsToCart.add(productToCart);
         });
-        checkout.setProducts(productsToCart);
-        checkout.setCheckoutState(CheckoutState.IN_PROCESS);
+
         dao.save(checkout);
 
         return checkout;

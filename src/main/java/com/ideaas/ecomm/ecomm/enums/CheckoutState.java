@@ -4,11 +4,12 @@ import java.util.Arrays;
 
 public enum CheckoutState {
 
-    ACTIVE("approved"),
-    INACTIVE("inactive"),
-    PAID_OUT("Paid Out"),
-    IN_PROCESS("in_process"),
-    REJECTED("rejected");
+    ACTIVE("Activo"),
+    INACTIVE("Inactivo"),
+    PAID_OUT("Pagado"),
+    IN_PROCESS("En Proceso"),
+    REJECTED("Rechazado"),
+    BUDGET("Presupuesto");
 
 
     private String value;
