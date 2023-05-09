@@ -13,4 +13,7 @@ public class Detail {
 
     @JsonProperty("quantity")
     private Integer quantity;
+
+    @JsonProperty("size")
+    private String size;
 }
