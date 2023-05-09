@@ -20,13 +20,15 @@ public interface ProductDao extends PagingAndSortingRepository<Product, Long> {
 
     List<Product> findAllByNameContainingIgnoreCase(String value);
 
-    List<Product> searchAllByBrandIn(Collection<Brand> brandId);
+    List<Product> searchAllByBrandInAndDeleted(Collection<Brand> brandId, Boolean deleted);
 
-    List<Product> searchAllByCategoryIn(Collection<Category> categories);
+    List<Product> searchAllByCategoryInAndDeleted(Collection<Category> categories, Boolean deleted);
 
     List<Product> findAllByNameContainingIgnoreCase(String value, Pageable pageable);
     
     List<Product> findByDeleted(Boolean deleted);
 
     Page<Product> findByDeleted(Boolean deleted, Pageable pageable);
+
+    List<Product> findAllByNameContainingIgnoreCaseAndDeleted(String value, boolean b);
 }
