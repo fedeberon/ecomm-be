@@ -24,6 +24,8 @@ public class Checkout {
     @Column(name = "CHE_ID")
     private Long id;
 
+
+
     @OneToMany(mappedBy = "checkout", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ProductToCart> products;
 
@@ -32,6 +34,10 @@ public class Checkout {
 
     @Column(name = "USU_CHE_ID")
     private String username;
+
+    public String getStatus() {
+        return checkoutState.getValue();
+    }
 
     public Double getTotalAmount() {
         return products.stream().mapToDouble(i -> i.getPrice() * i.getQuantity()).sum();

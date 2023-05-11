@@ -1,5 +1,7 @@
 package com.ideaas.ecomm.ecomm.enums;
 
+import lombok.Getter;
+
 import java.util.Arrays;
 
 public enum CheckoutState {
@@ -11,8 +13,11 @@ public enum CheckoutState {
     REJECTED("Rechazado"),
     BUDGET("Presupuesto");
 
-
     private String value;
+
+    public String getValue() {
+        return value;
+    }
 
     CheckoutState(final String value) {
         this.value = value;
@@ -22,4 +27,7 @@ public enum CheckoutState {
         return Arrays.stream(values())
                 .filter(checkoutState -> checkoutState.value.equals(abbr)).findFirst().orElse(null);
     }
+
+
+
 }
