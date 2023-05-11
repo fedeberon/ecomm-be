@@ -11,11 +11,14 @@ import com.ideaas.ecomm.ecomm.services.interfaces.ICheckoutService;
 import com.ideaas.ecomm.ecomm.services.interfaces.IProductService;
 import com.ideaas.ecomm.ecomm.services.interfaces.ISizeService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class CheckoutService implements ICheckoutService {
@@ -52,10 +55,10 @@ public class CheckoutService implements ICheckoutService {
                 .build();
         cart.getDetails().forEach(detail -> {
            Product product = productService.get(Long.valueOf(detail.getProductId()));
-           Size size = sizeService.get(Long.valueOf(detail.getSize()));
-            products.add(product);
-            final ProductToCart productToCart = prepareProductToCart(product, checkout, detail.getQuantity(), size);
-            productsToCart.add(productToCart);
+           Size size = sizeService.get(Objects.nonNull(detail.getSize()) ? Long.valueOf(detail.getSize()) : 0);
+           products.add(product);
+           final ProductToCart productToCart = prepareProductToCart(product, checkout, detail.getQuantity(), size);
+           productsToCart.add(productToCart);
         });
 
         dao.save(checkout);
@@ -64,8 +67,8 @@ public class CheckoutService implements ICheckoutService {
     }
 
     @Override
-    public List<Checkout> findAll() {
-        return dao.findAll(Sort.by(Sort.Direction.DESC, "id"));
+    public Page<Checkout> findAll(Pageable pageable) {
+        return dao.findAll(pageable);
     }
 
     @Override

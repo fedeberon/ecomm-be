@@ -5,10 +5,12 @@ import com.ideaas.ecomm.ecomm.domain.Cart;
 import com.ideaas.ecomm.ecomm.domain.Checkout;
 import com.ideaas.ecomm.ecomm.domain.Detail;
 import com.ideaas.ecomm.ecomm.enums.CheckoutState;
-import com.ideaas.ecomm.ecomm.payload.CheckoutResponse;
 import com.ideaas.ecomm.ecomm.services.interfaces.ICheckoutService;
-import javassist.tools.web.BadHttpRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -55,9 +57,6 @@ public class CheckoutController {
         return ResponseEntity.ok(checkout);
     }
 
-
-
-
     @GetMapping(value = "{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Checkout> get(@PathVariable final Long id) {
         final Checkout checkout = checkoutService.get(id);
@@ -65,11 +64,12 @@ public class CheckoutController {
         return ResponseEntity.ok(checkout);
     }
 
-    @GetMapping
-    public ResponseEntity<List<Checkout>> findAll() {
-        List<Checkout> checkouts = checkoutService.findAll();
+    @GetMapping("search")
+    public ResponseEntity<Page<Checkout>> findAll(Pageable pageable) {
+        final Sort sort = Sort.by("id").descending();
+        final Pageable sortedPageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sort);
+        final Page<Checkout> checkouts = checkoutService.findAll(sortedPageable);
 
         return ResponseEntity.ok().body(checkouts);
     }
-
 }
