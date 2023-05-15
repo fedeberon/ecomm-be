@@ -91,6 +91,11 @@ public class ProductService implements IProductService {
         product.setImages(images);
     }
 
+
+    public void deleteImageOfProduct(final Product product, final String imageName) {
+        fileService.deleteImage(product, imageName);
+    }
+
     @Override
     public List<Product> byCategory(final String nameOfCategory) {
         Category category = categoryService.findAllByNameEquals(nameOfCategory);
