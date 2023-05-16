@@ -64,6 +64,14 @@ public class CheckoutController {
         return ResponseEntity.ok(checkout);
     }
 
+    @GetMapping(value = "/search/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<Checkout>> search(@PathVariable final Long id) {
+        final List<Checkout> checkout = checkoutService.search(id);
+
+        return ResponseEntity.ok(checkout);
+    }
+
+
     @GetMapping("search")
     public ResponseEntity<Page<Checkout>> findAll(Pageable pageable) {
         final Sort sort = Sort.by("id").descending();

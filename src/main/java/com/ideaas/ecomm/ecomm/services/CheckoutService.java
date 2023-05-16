@@ -71,6 +71,12 @@ public class CheckoutService implements ICheckoutService {
         return dao.findAll(pageable);
     }
 
+
+    public List<Checkout> search(final Long id) {
+        return dao.findAllById(id);
+    }
+
+
     @Override
     public Checkout changeStateTo(final CheckoutState state, final Long checkoutId) {
         Checkout checkout = get(checkoutId);
