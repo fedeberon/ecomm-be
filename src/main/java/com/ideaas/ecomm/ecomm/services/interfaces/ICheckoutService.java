@@ -17,4 +17,6 @@ public interface ICheckoutService {
 
     Page<Checkout> findAll(Pageable pageable);
 
+    List<Checkout> search(final Long data);
+
 }

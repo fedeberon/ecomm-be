@@ -131,4 +131,12 @@ public class ProductController {
         return ResponseEntity.ok(productToUpdate);
     }
 
+    @DeleteMapping("/delete/{productId}/{image}")
+    public ResponseEntity deleteImage(@PathVariable Long productId, @PathVariable String image) {
+        Product productToUpdate = productService.get(productId);
+        productService.deleteImageOfProduct(productToUpdate, image);
+
+        return ResponseEntity.accepted().build();
+    }
+
 }

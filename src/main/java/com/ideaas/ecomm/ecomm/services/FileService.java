@@ -1,6 +1,7 @@
 package com.ideaas.ecomm.ecomm.services;
 
 import com.ideaas.ecomm.ecomm.domain.Image;
+import com.ideaas.ecomm.ecomm.domain.Product;
 import com.ideaas.ecomm.ecomm.exception.FileStorageException;
 import com.ideaas.ecomm.ecomm.exception.MyFileNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -88,6 +89,35 @@ public class FileService {
         return images;
     }
 
+    public void deleteImage(Product product, String image){
+       String path = fileStorageLocation.toString() + File.separator + product.getId() +  File.separator + image;
+       eliminarImagenes(path);
+    }
+
+    public static void eliminarImagenes(String rutaCarpeta) {
+        File carpeta = new File(rutaCarpeta);
+        if (carpeta.isDirectory()) {
+            File[] archivos = carpeta.listFiles();
+            for (File archivo : archivos) {
+                if (archivo.isFile() && esImagen(archivo.getName())) {
+                    archivo.delete();
+                    System.out.println("Se ha eliminado " + archivo.getName());
+                }
+            }
+        } else {
+            System.out.println("La ruta especificada no corresponde a una carpeta.");
+        }
+    }
+
+    public static boolean esImagen(String nombreArchivo) {
+        String[] extensiones = {"png", "jpg", "jpeg", "gif", "bmp"};
+        for (String extension : extensiones) {
+            if (nombreArchivo.toLowerCase().endsWith("." + extension)) {
+                return true;
+            }
+        }
+        return false;
+    }
 
     public Resource loadFileAsResource(String folder, String fileName) {
         try {
