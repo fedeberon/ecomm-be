@@ -20,10 +20,14 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 @Service
 public class FileService {
 
+    private static final Logger logger = LoggerFactory.getLogger(FileService.class);
 
     private final Path fileStorageLocation;
 
@@ -91,21 +95,27 @@ public class FileService {
 
     public void deleteImage(Product product, String image){
        String path = fileStorageLocation.toString() + File.separator + product.getId() +  File.separator + image;
+    //    System.out.println(path);
        eliminarImagenes(path);
     }
 
     public static void eliminarImagenes(String rutaCarpeta) {
-        File carpeta = new File(rutaCarpeta);
-        if (carpeta.isDirectory()) {
-            File[] archivos = carpeta.listFiles();
-            for (File archivo : archivos) {
-                if (archivo.isFile() && esImagen(archivo.getName())) {
-                    archivo.delete();
-                    System.out.println("Se ha eliminado " + archivo.getName());
-                }
-            }
+        File archivo = new File(rutaCarpeta);
+        if(archivo.isFile() && esImagen(archivo.getName())){
+            archivo.delete();
+            logger.info("Se ha eliminado "+ archivo.getName());
+
+        
+        // if (carpeta.isDirectory()) {
+        //     File[] archivos = carpeta.listFiles();
+        //     for (File archivo : archivos) {
+        //         if (archivo.isFile() && esImagen(archivo.getName())) {
+        //             archivo.delete();
+        //             System.out.println("Se ha eliminado " + archivo.getName());
+        //         }
+        //     }
         } else {
-            System.out.println("La ruta especificada no corresponde a una carpeta.");
+            logger.error("La ruta especificada no corresponde a un Archivo.");
         }
     }
 
