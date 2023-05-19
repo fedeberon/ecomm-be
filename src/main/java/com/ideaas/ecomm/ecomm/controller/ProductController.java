@@ -92,6 +92,13 @@ public class ProductController {
         return ResponseEntity.ok(productToUpdate);
     }
 
+    @PutMapping("activate/{id}")
+    public ResponseEntity<Product> activateProduct(@PathVariable final long id) {
+        Product productToUpdate = productService.activateProduct(id);
+
+        return ResponseEntity.ok(productToUpdate);
+    }
+
     @GetMapping("/byType/{category}")
     public ResponseEntity<List<Product>> byType(final @PathVariable String category) {
         List<Product> products = productService.byCategory(category);
