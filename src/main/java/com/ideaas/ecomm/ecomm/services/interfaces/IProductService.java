@@ -33,6 +33,8 @@ public interface IProductService {
 
     Product deleteProduct(long id);
 
+    Product activateProduct(long id);
+
     Product update(Long id, Product product);
 
     void deleteImageOfProduct(final Product product, final String imageName);

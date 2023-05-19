@@ -23,7 +23,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import java.util.Properties;
 import java.util.Set;
 
 @Service
@@ -185,6 +184,14 @@ public class ProductService implements IProductService {
         return product;
     }
 
+    @Override
+    public Product activateProduct(long id) {
+        Product product = this.get(id);
+        product.setDeleted(false);
+        this.save(product);
+
+        return product;
+    }
 
     @Override
     public Product update(Long id, Product product) {
