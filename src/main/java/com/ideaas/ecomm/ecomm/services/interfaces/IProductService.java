@@ -29,7 +29,7 @@ public interface IProductService {
 
     List<Product> searchByCategories(List<SearchRequest.CategoriesRequest> categories);
 
-    List<Product> All();
+    List<Product> findAll();
 
     Product deleteProduct(long id);
 
@@ -38,4 +38,6 @@ public interface IProductService {
     Product update(Long id, Product product);
 
     void deleteImageOfProduct(final Product product, final String imageName);
+
+    List<Product> relationship(Long id);
 }

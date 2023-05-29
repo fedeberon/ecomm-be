@@ -52,7 +52,7 @@ public class CategoryService implements ICategoryService {
     
     @Override
     public void delete(Category categoryToDelete) {
-        List<Product> products = productService.All();
+        List<Product> products = productService.findAll();
         for (Product product: products){
             Long categoryId = categoryToDelete.getId();
             if(product.getCategory() != null && product.getCategory().getId() == categoryId){

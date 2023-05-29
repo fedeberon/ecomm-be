@@ -53,9 +53,9 @@ public class ProductService implements IProductService {
     }
 
     @Override
-    public List<Product> All() {
-        List<Product> products = (List<Product>) dao.findByDeleted(false);
-        products.forEach(product -> addImagesOnProduct(product));
+    public List<Product> findAll() {
+        List<Product> products =  dao.findByDeleted(false);
+        products.forEach(this::addImagesOnProduct);
         
         return products;
     }
@@ -93,6 +93,12 @@ public class ProductService implements IProductService {
 
     public void deleteImageOfProduct(final Product product, final String imageName) {
         fileService.deleteImage(product, imageName);
+    }
+
+    @Override
+    public List<Product> relationship(Long id) {
+        final Product product = get(id);
+        return dao.getRelationship(product.getName(), product.getCategory());
     }
 
     @Override

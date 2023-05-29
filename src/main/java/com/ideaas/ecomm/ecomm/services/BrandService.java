@@ -52,7 +52,7 @@ public class BrandService implements IBrandService {
 
 	@Override
 	public void delete(Brand brandToDelete) {
-        List<Product> products = productService.All();
+        List<Product> products = productService.findAll();
         for (Product product: products){
             Long brandId = brandToDelete.getId();
             if(product.getBrand() != null && product.getBrand().getId() == brandId){
@@ -66,7 +66,7 @@ public class BrandService implements IBrandService {
     @Override
     public List<Product> findProductsInBrand(Long id) {
         Brand brand = this.findById(id);
-        List<Product> products = productService.All();
+        List<Product> products = productService.findAll();
         List<Product> productsOfBrand = new ArrayList<>();
         for (Product product: products){
             Long brandId = brand.getId();
