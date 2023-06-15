@@ -6,6 +6,7 @@ import com.ideaas.ecomm.ecomm.domain.Product;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 
@@ -31,4 +32,7 @@ public interface ProductDao extends PagingAndSortingRepository<Product, Long> {
     Page<Product> findByDeleted(Boolean deleted, Pageable pageable);
 
     List<Product> findAllByNameContainingIgnoreCaseAndDeleted(String value, boolean b);
+
+    @Query("SELECT p FROM Product p WHERE p.name like %:name% and p.category = :category")
+    List<Product> getRelationship(String name, Category category);
 }

@@ -27,7 +27,7 @@ import java.util.List;
 @RequestMapping("/product")
 public class ProductController {
 
-    private IProductService productService;
+    private final IProductService productService;
 
     @Autowired
     public ProductController(final IProductService productService) {
@@ -36,13 +36,19 @@ public class ProductController {
 
     @GetMapping
     public Page<Product> find(@RequestParam(defaultValue = "1") final Integer page, @RequestParam(defaultValue = "12") final Integer size, @RequestParam(defaultValue = "12") final String sortBy) {
-        Page<Product> products = productService.findAll(page, size, sortBy);
-        return products;
+        return productService.findAll(page, size, sortBy);
     }
 
     @GetMapping("/all")
-    public ResponseEntity<List<Product>> All(){
-        List<Product> products = productService.All();
+    public ResponseEntity<List<Product>> findAll(){
+        List<Product> products = productService.findAll();
+
+        return ResponseEntity.ok(products);
+    }
+
+    @GetMapping("/relationship/{id}")
+    public ResponseEntity<List<Product>> findAllRelationship(@PathVariable Long id){
+        List<Product> products = productService.relationship(id);
 
         return ResponseEntity.ok(products);
     }
@@ -67,8 +73,7 @@ public class ProductController {
 
     @GetMapping("/list")
     public List<Product> list() {
-        List<Product> products = productService.All();
-        return products;
+        return productService.findAll();
     }
 
     @PostMapping
