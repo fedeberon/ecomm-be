@@ -105,7 +105,7 @@ public class ProductController {
     }
 
     @GetMapping("/byType/{category}")
-    public ResponseEntity<List<Product>> byType(final @PathVariable String category) {
+    public ResponseEntity<List<Product>> byType(final @PathVariable Long category) {
         List<Product> products = productService.byCategory(category);
 
         return ResponseEntity.ok(products);
