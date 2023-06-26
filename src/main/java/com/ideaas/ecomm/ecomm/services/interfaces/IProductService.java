@@ -17,7 +17,7 @@ public interface IProductService {
 
     void addImagesOnProduct(Product product);
 
-    List<Product> byCategory(String category);
+    List<Product> byCategory(Long id);
 
     List<Product> search(String value);
 

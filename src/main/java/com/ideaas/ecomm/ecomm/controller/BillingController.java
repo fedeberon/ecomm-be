@@ -33,7 +33,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("billing")
-@CrossOrigin
+@CrossOrigin(origins = "http://localhost:3000")
 public class BillingController {
 
 

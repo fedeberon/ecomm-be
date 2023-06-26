@@ -102,18 +102,17 @@ public class ProductService implements IProductService {
     }
 
     @Override
-    public List<Product> byCategory(final String nameOfCategory) {
-        Category category = categoryService.findAllByNameEquals(nameOfCategory);
+    public List<Product> byCategory(final Long id) {
+        Category category = categoryService.findById(id);
         List<Product> optionalProducts = dao.findAllByCategory(category);
-        optionalProducts.forEach(oneProduct -> addImagesOnProduct(oneProduct));
+        optionalProducts.forEach(this::addImagesOnProduct);
         return optionalProducts;
     }
-
 
     @Override
     public List<Product> search(final String value) {
         List<Product> optionalProducts = dao.findAllByNameContainingIgnoreCaseAndDeleted(value,false);
-        optionalProducts.forEach(oneProduct -> addImagesOnProduct(oneProduct));
+        optionalProducts.forEach(this::addImagesOnProduct);
 
         return optionalProducts;
     }
