@@ -35,7 +35,9 @@ public class ProductController {
     }
 
     @GetMapping
-    public Page<Product> find(@RequestParam(defaultValue = "1") final Integer page, @RequestParam(defaultValue = "12") final Integer size, @RequestParam(defaultValue = "12") final String sortBy) {
+    public Page<Product> find(@RequestParam(defaultValue = "1") final Integer page,
+                              @RequestParam(defaultValue = "12") final Integer size,
+                              @RequestParam(defaultValue = "name") final String sortBy) {
         return productService.findAll(page, size, sortBy);
     }
 
