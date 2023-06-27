@@ -81,7 +81,7 @@ public class ProductController {
     @PostMapping
     public ResponseEntity<Product> save(@RequestBody Product product) {
         Product productSaved = productService.save(product);
-
+        productService.addImagesOnProduct(product);
         return ResponseEntity.accepted().body(productSaved);
     }
 
