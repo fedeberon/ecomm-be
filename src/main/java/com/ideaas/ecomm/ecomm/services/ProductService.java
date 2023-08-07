@@ -24,6 +24,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class ProductService implements IProductService {
@@ -104,7 +105,7 @@ public class ProductService implements IProductService {
     @Override
     public List<Product> byCategory(final Long id) {
         Category category = categoryService.findById(id);
-        List<Product> optionalProducts = dao.findAllByCategory(category);
+        List<Product> optionalProducts = dao.findByCategoryAndDeleted(category,false);
         optionalProducts.forEach(this::addImagesOnProduct);
         return optionalProducts;
     }
@@ -228,6 +229,16 @@ public class ProductService implements IProductService {
 
         this.save(productToUpdate);
         return productToUpdate;
+    }
+
+
+    @Override
+    public List<Product> obtenerProductosFiltradosYOrdenados(
+            List<String> categorias,
+            List<String> marcas,
+            String ordenarPor
+    ) {
+        return dao.findByCategoryInAndBrandInAndDeletedFalse(categorias, marcas);
     }
 
 }

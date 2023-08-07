@@ -40,4 +40,6 @@ public interface IProductService {
     void deleteImageOfProduct(final Product product, final String imageName);
 
     List<Product> relationship(Long id);
+
+    List<Product> obtenerProductosFiltradosYOrdenados(List<String> categorias, List<String> marcas, String ordenarPor);
 }

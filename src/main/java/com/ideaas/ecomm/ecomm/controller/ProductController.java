@@ -153,4 +153,13 @@ public class ProductController {
         return ResponseEntity.accepted().build();
     }
 
+    @GetMapping("/searchlist")
+    public List<Product> obtenerProductosFiltradosYOrdenados(
+            @RequestParam(required = false) List<String> categorias,
+            @RequestParam(required = false) List<String> marcas,
+            @RequestParam(required = false) String ordenarPor
+    ) {
+        return productService.obtenerProductosFiltradosYOrdenados(categorias, marcas, ordenarPor);
+    }
+
 }
