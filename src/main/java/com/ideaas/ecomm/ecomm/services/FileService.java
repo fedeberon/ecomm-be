@@ -20,6 +20,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.UUID;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -46,7 +48,11 @@ public class FileService {
 
     public String storeFile(MultipartFile file, String folder) {
         // Normalize file name
-        String fileName = StringUtils.cleanPath(file.getOriginalFilename());
+        // String fileName = StringUtils.cleanPath(file.getOriginalFilename());
+        String originalFilename = file.getOriginalFilename();
+        String fileExtension = originalFilename.substring(originalFilename.lastIndexOf("."));
+        String fileName = UUID.randomUUID().toString() + fileExtension;
+
 
         try {
             // Check if the file's name contains invalid characters
@@ -99,35 +105,56 @@ public class FileService {
        eliminarImagenes(path);
     }
 
-    public static void eliminarImagenes(String rutaCarpeta) {
-        File archivo = new File(rutaCarpeta);
-        if(archivo.isFile() && esImagen(archivo.getName())){
-            archivo.delete();
-            logger.info("Se ha eliminado "+ archivo.getName());
+    // public static void eliminarImagenes(String rutaCarpeta) {
+    //     File archivo = new File(rutaCarpeta);
+    //     if(archivo.isFile() && esImagen(archivo.getName())){
+    //         archivo.delete();
+    //         logger.info("Se ha eliminado "+ archivo.getName());
+    //     } else {
+    //         logger.error("La ruta especificada no corresponde a un Archivo.");
+    //     }
+    // }
 
-        
-        // if (carpeta.isDirectory()) {
-        //     File[] archivos = carpeta.listFiles();
-        //     for (File archivo : archivos) {
-        //         if (archivo.isFile() && esImagen(archivo.getName())) {
-        //             archivo.delete();
-        //             System.out.println("Se ha eliminado " + archivo.getName());
-        //         }
-        //     }
-        } else {
-            logger.error("La ruta especificada no corresponde a un Archivo.");
-        }
-    }
+    // public static boolean esImagen(String nombreArchivo) {
+    //     String[] extensiones = {"png", "jpg", "jpeg", "gif", "bmp"};
+    //     for (String extension : extensiones) {
+    //         if (nombreArchivo.toLowerCase().endsWith("." + extension)) {
+    //             return true;
+    //         }
+    //     }
+    //     return false;
+    // }
 
-    public static boolean esImagen(String nombreArchivo) {
-        String[] extensiones = {"png", "jpg", "jpeg", "gif", "bmp"};
-        for (String extension : extensiones) {
-            if (nombreArchivo.toLowerCase().endsWith("." + extension)) {
-                return true;
+        public static void eliminarImagenes(String rutaCarpeta) {
+            File carpeta = new File(rutaCarpeta);
+            if (carpeta.isDirectory()) {
+                File[] archivos = carpeta.listFiles();
+                if (archivos != null) {
+                    for (File archivo : archivos) {
+                        if (archivo.isFile() && esImagen(archivo.getName())) {
+                            if (archivo.delete()) {
+                                logger.info("Se ha eliminado " + archivo.getName());
+                            } else {
+                                logger.error("No se pudo eliminar " + archivo.getName());
+                            }
+                        }
+                    }
+                }
+            } else {
+                logger.error("La ruta especificada no corresponde a una Carpeta.");
             }
         }
-        return false;
-    }
+
+        public static boolean esImagen(String nombreArchivo) {
+            String[] extensiones = {"png", "jpg", "jpeg", "gif", "bmp"};
+            for (String extension : extensiones) {
+                if (nombreArchivo.toLowerCase().endsWith("." + extension)) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
 
     public Resource loadFileAsResource(String folder, String fileName) {
         try {
