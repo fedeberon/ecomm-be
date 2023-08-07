@@ -19,6 +19,8 @@ public interface ProductDao extends PagingAndSortingRepository<Product, Long> {
 
     List<Product> findAllByCategory(Category category);
 
+    List<Product> findByCategoryAndDeleted(Category category, Boolean deleted);
+
     List<Product> findAllByNameContainingIgnoreCase(String value);
 
     List<Product> searchAllByBrandInAndDeleted(Collection<Brand> brandId, Boolean deleted);
@@ -35,4 +37,6 @@ public interface ProductDao extends PagingAndSortingRepository<Product, Long> {
 
     @Query("SELECT p FROM Product p WHERE p.name like %:name% and p.category = :category")
     List<Product> getRelationship(String name, Category category);
+
+    List<Product> findByCategoryInAndBrandInAndDeletedFalse(List<String> categorias, List<String> marcas);
 }
