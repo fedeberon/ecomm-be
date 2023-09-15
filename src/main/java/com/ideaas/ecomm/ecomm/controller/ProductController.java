@@ -1,9 +1,9 @@
 package com.ideaas.ecomm.ecomm.controller;
 
-import com.ideaas.ecomm.ecomm.converts.ProductConvert;
+import com.ideaas.ecomm.ecomm.domain.Brand;
+import com.ideaas.ecomm.ecomm.domain.Category;
 import com.ideaas.ecomm.ecomm.domain.Product;
 import com.ideaas.ecomm.ecomm.exception.NotFoundException;
-import com.ideaas.ecomm.ecomm.payload.ProductPayload;
 import com.ideaas.ecomm.ecomm.payload.SearchRequest;
 import com.ideaas.ecomm.ecomm.services.interfaces.IProductService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @CrossOrigin
@@ -42,14 +43,14 @@ public class ProductController {
     }
 
     @GetMapping("/all")
-    public ResponseEntity<List<Product>> findAll(){
+    public ResponseEntity<List<Product>> findAll() {
         List<Product> products = productService.findAll();
 
         return ResponseEntity.ok(products);
     }
 
     @GetMapping("/relationship/{id}")
-    public ResponseEntity<List<Product>> findAllRelationship(@PathVariable Long id){
+    public ResponseEntity<List<Product>> findAllRelationship(@PathVariable Long id) {
         List<Product> products = productService.relationship(id);
 
         return ResponseEntity.ok(products);
@@ -57,11 +58,11 @@ public class ProductController {
 
     @DeleteMapping("{id}")
     public ResponseEntity<Product> deleteProduct(@PathVariable final long id) {
-        Product product =productService.deleteProduct(id);
+        Product product = productService.deleteProduct(id);
 
         return ResponseEntity.ok(product);
     }
-    
+
 
     @GetMapping("{id}")
     public ResponseEntity<Product> get(@PathVariable final Long id) {
@@ -123,7 +124,6 @@ public class ProductController {
     @PostMapping("/search/brands")
     public ResponseEntity<List<Product>> searchByBrand(final @RequestBody List<SearchRequest.BrandRequest> brandRequests) {
         List<Product> products = productService.searchByBrand(brandRequests);
-
         return ResponseEntity.ok(products);
     }
 
@@ -131,10 +131,22 @@ public class ProductController {
     @PostMapping("/search/categories")
     public ResponseEntity<List<Product>> searchByCategory(final @RequestBody List<SearchRequest.CategoriesRequest> categoryRequests) {
         List<Product> products = productService.searchByCategories(categoryRequests);
-
         return ResponseEntity.ok(products);
     }
 
+    @GetMapping("/searchlist")
+    public ResponseEntity<List<Product>> searchProducts(
+            @RequestParam(required = true) String name,
+            @RequestParam(required = false) List<String> categories,
+            @RequestParam(required = false) List<String> brands,
+            @RequestParam(required = false, defaultValue = "sales") String orderBy
+    ) {
+        List<Category> categoryList = categories != null ? categories.stream().map(Long::valueOf).map(Category::new).collect(Collectors.toList()) : null;
+        List<Brand> brandList = brands != null ? brands.stream().map(Long::valueOf).map(Brand::new).collect(Collectors.toList()) : null;
+
+        List<Product> products = productService.searchProducts(name, categoryList, brandList, orderBy);
+        return ResponseEntity.ok(products);
+    }
 
     @PostMapping("/promotion")
     public ResponseEntity<Product> setPromotion(final @RequestBody Product product) {
@@ -151,15 +163,6 @@ public class ProductController {
         productService.deleteImageOfProduct(productToUpdate, image);
 
         return ResponseEntity.accepted().build();
-    }
-
-    @GetMapping("/searchlist")
-    public List<Product> obtenerProductosFiltradosYOrdenados(
-            @RequestParam(required = false) List<String> categorias,
-            @RequestParam(required = false) List<String> marcas,
-            @RequestParam(required = false) String ordenarPor
-    ) {
-        return productService.obtenerProductosFiltradosYOrdenados(categorias, marcas, ordenarPor);
     }
 
 }
