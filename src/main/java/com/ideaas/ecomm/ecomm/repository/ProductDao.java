@@ -4,12 +4,14 @@ import com.ideaas.ecomm.ecomm.domain.Brand;
 import com.ideaas.ecomm.ecomm.domain.Category;
 import com.ideaas.ecomm.ecomm.domain.Product;
 
+import org.hibernate.annotations.OrderBy;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 
+import javax.persistence.OrderColumn;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
@@ -39,4 +41,11 @@ public interface ProductDao extends PagingAndSortingRepository<Product, Long> {
     List<Product> getRelationship(String name, Category category);
 
     List<Product> findByCategoryInAndBrandInAndDeletedFalse(List<String> categorias, List<String> marcas);
+
+    //NUEVOS METODOS CON FILTROS
+    List<Product> findAllByNameContainingIgnoreCaseAndDeletedFalseAndCategoryInAndBrandIn(String name,Collection<Category> categories,Collection<Brand> brands);
+    List<Product> findAllByNameContainingIgnoreCaseAndDeletedFalseAndBrandIn(String name, Collection<Brand> brands);
+    List<Product> findAllByNameContainingIgnoreCaseAndDeletedFalseAndCategoryIn(String name,Collection<Category> categories);
+    List<Product> findAllByNameContainingIgnoreCaseAndDeletedFalse(String name);
+
 }
