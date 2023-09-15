@@ -1,13 +1,10 @@
 package com.ideaas.ecomm.ecomm.services.interfaces;
 
-import com.ideaas.ecomm.ecomm.domain.Brand;
-import com.ideaas.ecomm.ecomm.domain.Category;
 import com.ideaas.ecomm.ecomm.domain.Product;
 import com.ideaas.ecomm.ecomm.domain.ProductToCart;
 import com.ideaas.ecomm.ecomm.payload.SearchRequest;
 import org.springframework.data.domain.Page;
 
-import java.util.Collection;
 import java.util.List;
 
 public interface IProductService {
@@ -44,5 +41,5 @@ public interface IProductService {
 
     List<Product> relationship(Long id);
 
-    public List<Product> searchProducts(String name, Collection<Category> categories, Collection<Brand> brands, String orderBy);
+    List<Product> obtenerProductosFiltradosYOrdenados(List<String> categorias, List<String> marcas, String ordenarPor);
 }

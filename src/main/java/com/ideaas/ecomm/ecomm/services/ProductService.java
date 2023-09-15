@@ -18,7 +18,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.io.File;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class ProductService implements IProductService {
@@ -141,6 +147,8 @@ public class ProductService implements IProductService {
         return collection;
     }
 
+
+
     private Collection<Category> convertToCategoriesCollection(final List<SearchRequest.CategoriesRequest> categoryRequests) {
         if (categoryRequests == null || categoryRequests.isEmpty()) {
             return Collections.emptyList();
@@ -151,37 +159,7 @@ public class ProductService implements IProductService {
         }
         return collection;
     }
-    @Override
-    public List<Product> searchProducts(String name, Collection<Category> categories, Collection<Brand> brands, String orderBy) {
-        List<Product> productList;
-        if (categories != null && !categories.isEmpty() && brands != null && !brands.isEmpty()) {
-            // Both categories and brands are provided
-            productList =  dao.findAllByNameContainingIgnoreCaseAndDeletedFalseAndCategoryInAndBrandIn(name, categories, brands);
-        } else if (categories != null && !categories.isEmpty()) {
-            // Only categories are provided
-            productList = dao.findAllByNameContainingIgnoreCaseAndDeletedFalseAndCategoryIn(name, categories);
-        } else if (brands != null && !brands.isEmpty()) {
-            // Only brands are provided
-            productList = dao.findAllByNameContainingIgnoreCaseAndDeletedFalseAndBrandIn(name, brands);
-        } else {
-            // Neither categories nor brands are provided
-            productList = dao.findAllByNameContainingIgnoreCaseAndDeletedFalse(name);
-        }
 
-        //The list is arranged after it's obtained from the DAO
-        switch (orderBy) {
-            case "name":
-                productList.sort(Comparator.comparing(Product::getName));
-                break;
-            case "price":
-                productList.sort(Comparator.comparing(Product::getPrice));
-                break;
-            default:
-                productList.sort(Comparator.comparing(Product::getSales).reversed());
-        }
-
-        return productList;
-    }
 
     @Override
     public void discountAmountStock(final List<ProductToCart> productToCarts) {
@@ -248,7 +226,19 @@ public class ProductService implements IProductService {
         productToUpdate.setPromo(promo);
         productToUpdate.setDeleted(deleted);
 
+
         this.save(productToUpdate);
         return productToUpdate;
     }
+
+
+    @Override
+    public List<Product> obtenerProductosFiltradosYOrdenados(
+            List<String> categorias,
+            List<String> marcas,
+            String ordenarPor
+    ) {
+        return dao.findByCategoryInAndBrandInAndDeletedFalse(categorias, marcas);
+    }
+
 }
