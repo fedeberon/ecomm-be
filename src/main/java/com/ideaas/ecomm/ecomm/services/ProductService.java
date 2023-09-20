@@ -173,6 +173,8 @@ public class ProductService implements IProductService {
             productPage = dao.findAllByNameContainingIgnoreCaseAndDeletedFalse(name, pageable);
         }
 
+        productPage.forEach(oneProduct -> addImagesOnProduct(oneProduct));
+
         return productPage;
     }
 
