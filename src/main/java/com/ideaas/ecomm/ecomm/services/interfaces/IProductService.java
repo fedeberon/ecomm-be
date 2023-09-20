@@ -44,5 +44,5 @@ public interface IProductService {
 
     List<Product> relationship(Long id);
 
-    public List<Product> searchProducts(String name, Collection<Category> categories, Collection<Brand> brands, String orderBy);
+    public List<Product> searchProducts(String name, Collection<Category> categories, Collection<Brand> brands, String orderBy, Boolean asc);
 }

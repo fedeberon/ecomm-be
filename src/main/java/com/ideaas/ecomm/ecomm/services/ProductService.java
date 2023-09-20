@@ -152,32 +152,31 @@ public class ProductService implements IProductService {
         return collection;
     }
     @Override
-    public List<Product> searchProducts(String name, Collection<Category> categories, Collection<Brand> brands, String orderBy) {
+    public List<Product> searchProducts(String name, Collection<Category> categories, Collection<Brand> brands, String orderBy, Boolean asc) {
         List<Product> productList;
         if (categories != null && !categories.isEmpty() && brands != null && !brands.isEmpty()) {
-            // Both categories and brands are provided
             productList =  dao.findAllByNameContainingIgnoreCaseAndDeletedFalseAndCategoryInAndBrandIn(name, categories, brands);
         } else if (categories != null && !categories.isEmpty()) {
-            // Only categories are provided
             productList = dao.findAllByNameContainingIgnoreCaseAndDeletedFalseAndCategoryIn(name, categories);
         } else if (brands != null && !brands.isEmpty()) {
-            // Only brands are provided
             productList = dao.findAllByNameContainingIgnoreCaseAndDeletedFalseAndBrandIn(name, brands);
         } else {
-            // Neither categories nor brands are provided
             productList = dao.findAllByNameContainingIgnoreCaseAndDeletedFalse(name);
         }
 
-        //The list is arranged after it's obtained from the DAO
+
         switch (orderBy) {
             case "name":
-                productList.sort(Comparator.comparing(Product::getName));
+                productList.sort(asc ? Comparator.comparing(Product::getName).reversed() : Comparator.comparing(Product::getName));
                 break;
             case "price":
-                productList.sort(Comparator.comparing(Product::getPrice));
+                productList.sort(asc ? Comparator.comparing(Product::getPrice).reversed() : Comparator.comparing(Product::getPrice));
+                break;
+            case "stock":
+                productList.sort(asc ? Comparator.comparing(Product::getStock).reversed() : Comparator.comparing(Product::getStock));
                 break;
             default:
-                productList.sort(Comparator.comparing(Product::getSales).reversed());
+                productList.sort(asc ? Comparator.comparing(Product::getSales).reversed() : Comparator.comparing(Product::getSales));
         }
 
         return productList;
