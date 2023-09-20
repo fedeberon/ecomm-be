@@ -135,17 +135,19 @@ public class ProductController {
     }
 
     @GetMapping("/searchlist")
-    public ResponseEntity<List<Product>> searchProducts(
+    public ResponseEntity<Page<Product>> searchProducts(
             @RequestParam(defaultValue = "") String name,
             @RequestParam(required = false) List<String> categories,
             @RequestParam(required = false) List<String> brands,
             @RequestParam(defaultValue = "sales") String orderBy,
-            @RequestParam(defaultValue = "true") String asc
+            @RequestParam(defaultValue = "true") String asc,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "12") int size
     ) {
         List<Category> categoryList = categories != null ? categories.stream().map(Long::valueOf).map(Category::new).collect(Collectors.toList()) : null;
         List<Brand> brandList = brands != null ? brands.stream().map(Long::valueOf).map(Brand::new).collect(Collectors.toList()) : null;
 
-        List<Product> products = productService.searchProducts(name, categoryList, brandList, orderBy, Boolean.parseBoolean(asc));
+        Page<Product> products = productService.searchProducts(name, categoryList, brandList, orderBy, Boolean.parseBoolean(asc), page, size);
         return ResponseEntity.ok(products);
     }
 

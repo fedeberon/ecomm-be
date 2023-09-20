@@ -43,9 +43,9 @@ public interface ProductDao extends PagingAndSortingRepository<Product, Long> {
     List<Product> findByCategoryInAndBrandInAndDeletedFalse(List<String> categorias, List<String> marcas);
 
     //NUEVOS METODOS CON FILTROS
-    List<Product> findAllByNameContainingIgnoreCaseAndDeletedFalseAndCategoryInAndBrandIn(String name,Collection<Category> categories,Collection<Brand> brands);
-    List<Product> findAllByNameContainingIgnoreCaseAndDeletedFalseAndBrandIn(String name, Collection<Brand> brands);
-    List<Product> findAllByNameContainingIgnoreCaseAndDeletedFalseAndCategoryIn(String name,Collection<Category> categories);
-    List<Product> findAllByNameContainingIgnoreCaseAndDeletedFalse(String name);
+    Page<Product> findAllByNameContainingIgnoreCaseAndDeletedFalseAndCategoryInAndBrandIn(String name,Collection<Category> categories,Collection<Brand> brands, Pageable pageable);
+    Page<Product> findAllByNameContainingIgnoreCaseAndDeletedFalseAndBrandIn(String name, Collection<Brand> brands, Pageable pageable);
+    Page<Product> findAllByNameContainingIgnoreCaseAndDeletedFalseAndCategoryIn(String name,Collection<Category> categories, Pageable pageable);
+    Page<Product> findAllByNameContainingIgnoreCaseAndDeletedFalse(String name, Pageable pageable);
 
 }

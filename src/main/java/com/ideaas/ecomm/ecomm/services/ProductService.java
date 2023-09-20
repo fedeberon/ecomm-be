@@ -13,6 +13,7 @@ import com.ideaas.ecomm.ecomm.services.interfaces.IProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -152,34 +153,27 @@ public class ProductService implements IProductService {
         return collection;
     }
     @Override
-    public List<Product> searchProducts(String name, Collection<Category> categories, Collection<Brand> brands, String orderBy, Boolean asc) {
-        List<Product> productList;
+    public Page<Product> searchProducts(String name,
+                                        Collection<Category> categories,
+                                        Collection<Brand> brands,
+                                        String orderBy,
+                                        Boolean asc,
+                                        int page,
+                                        int size){
+        Pageable pageable = PageRequest.of(page, size, Sort.by(asc ? Sort.Direction.ASC : Sort.Direction.DESC, orderBy));
+        Page<Product> productPage;
+
         if (categories != null && !categories.isEmpty() && brands != null && !brands.isEmpty()) {
-            productList =  dao.findAllByNameContainingIgnoreCaseAndDeletedFalseAndCategoryInAndBrandIn(name, categories, brands);
+            productPage =  dao.findAllByNameContainingIgnoreCaseAndDeletedFalseAndCategoryInAndBrandIn(name, categories, brands, pageable);
         } else if (categories != null && !categories.isEmpty()) {
-            productList = dao.findAllByNameContainingIgnoreCaseAndDeletedFalseAndCategoryIn(name, categories);
+            productPage = dao.findAllByNameContainingIgnoreCaseAndDeletedFalseAndCategoryIn(name, categories, pageable);
         } else if (brands != null && !brands.isEmpty()) {
-            productList = dao.findAllByNameContainingIgnoreCaseAndDeletedFalseAndBrandIn(name, brands);
+            productPage = dao.findAllByNameContainingIgnoreCaseAndDeletedFalseAndBrandIn(name, brands, pageable);
         } else {
-            productList = dao.findAllByNameContainingIgnoreCaseAndDeletedFalse(name);
+            productPage = dao.findAllByNameContainingIgnoreCaseAndDeletedFalse(name, pageable);
         }
 
-
-        switch (orderBy) {
-            case "name":
-                productList.sort(asc ? Comparator.comparing(Product::getName).reversed() : Comparator.comparing(Product::getName));
-                break;
-            case "price":
-                productList.sort(asc ? Comparator.comparing(Product::getPrice).reversed() : Comparator.comparing(Product::getPrice));
-                break;
-            case "stock":
-                productList.sort(asc ? Comparator.comparing(Product::getStock).reversed() : Comparator.comparing(Product::getStock));
-                break;
-            default:
-                productList.sort(asc ? Comparator.comparing(Product::getSales).reversed() : Comparator.comparing(Product::getSales));
-        }
-
-        return productList;
+        return productPage;
     }
 
     @Override
