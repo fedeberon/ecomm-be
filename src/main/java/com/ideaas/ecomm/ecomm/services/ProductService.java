@@ -13,18 +13,13 @@ import com.ideaas.ecomm.ecomm.services.interfaces.IProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
+import java.util.*;
 
 @Service
 public class ProductService implements IProductService {
@@ -47,7 +42,7 @@ public class ProductService implements IProductService {
     public Page<Product> findAll(int page, int size, String sortBy) {
         Sort sort = Sort.by(sortBy).descending();
         Page<Product> products = dao.findByDeleted(false, PageRequest.of(page, size, sort));
-        
+
         products.forEach(product -> addImagesOnProduct(product));
 
         return products;
@@ -57,10 +52,10 @@ public class ProductService implements IProductService {
     public List<Product> findAll() {
         List<Product> products =  dao.findByDeleted(false);
         products.forEach(this::addImagesOnProduct);
-        
+
         return products;
     }
-    
+
     @Override
     public Product save(final Product product) {
         return dao.save(product);
@@ -123,7 +118,7 @@ public class ProductService implements IProductService {
         Collection brandsList = convertToCollection(brands);
         List<Product> products = dao.searchAllByBrandInAndDeleted(brandsList, false);
         products.forEach(oneProduct -> addImagesOnProduct(oneProduct));
-        
+
         return products;
     }
 
@@ -132,7 +127,7 @@ public class ProductService implements IProductService {
         Collection categoriesList = convertToCategoriesCollection(categories);
         List<Product> products =  dao.searchAllByCategoryInAndDeleted(categoriesList, false);
         products.forEach(oneProduct -> addImagesOnProduct(oneProduct));
-        
+
         return products;
     }
 
@@ -147,8 +142,6 @@ public class ProductService implements IProductService {
         return collection;
     }
 
-
-
     private Collection<Category> convertToCategoriesCollection(final List<SearchRequest.CategoriesRequest> categoryRequests) {
         if (categoryRequests == null || categoryRequests.isEmpty()) {
             return Collections.emptyList();
@@ -159,7 +152,31 @@ public class ProductService implements IProductService {
         }
         return collection;
     }
+    @Override
+    public Page<Product> searchProducts(String name,
+                                        Collection<Category> categories,
+                                        Collection<Brand> brands,
+                                        String orderBy,
+                                        Boolean asc,
+                                        int page,
+                                        int size){
+        Pageable pageable = PageRequest.of(page, size, Sort.by(asc ? Sort.Direction.ASC : Sort.Direction.DESC, orderBy));
+        Page<Product> productPage;
 
+        if (categories != null && !categories.isEmpty() && brands != null && !brands.isEmpty()) {
+            productPage =  dao.findAllByNameContainingIgnoreCaseAndDeletedFalseAndCategoryInAndBrandIn(name, categories, brands, pageable);
+        } else if (categories != null && !categories.isEmpty()) {
+            productPage = dao.findAllByNameContainingIgnoreCaseAndDeletedFalseAndCategoryIn(name, categories, pageable);
+        } else if (brands != null && !brands.isEmpty()) {
+            productPage = dao.findAllByNameContainingIgnoreCaseAndDeletedFalseAndBrandIn(name, brands, pageable);
+        } else {
+            productPage = dao.findAllByNameContainingIgnoreCaseAndDeletedFalse(name, pageable);
+        }
+
+        productPage.forEach(oneProduct -> addImagesOnProduct(oneProduct));
+
+        return productPage;
+    }
 
     @Override
     public void discountAmountStock(final List<ProductToCart> productToCarts) {
@@ -186,7 +203,7 @@ public class ProductService implements IProductService {
         Product product = this.get(id);
         product.setDeleted(true);
         this.save(product);
-        
+
         return product;
     }
 
@@ -213,7 +230,7 @@ public class ProductService implements IProductService {
         Long points = product.getPoints() != null ? product.getPoints() : productToUpdate.getPoints();
         Boolean promo = product.getPromo() != null ? product.getPromo() : productToUpdate.getPromo();
         Boolean deleted = product.getDeleted() != null ? product.getDeleted() : productToUpdate.getDeleted();
-        
+
         productToUpdate.setName(name);
         productToUpdate.setDescription(description);
         productToUpdate.setCode(code);
@@ -226,19 +243,7 @@ public class ProductService implements IProductService {
         productToUpdate.setPromo(promo);
         productToUpdate.setDeleted(deleted);
 
-
         this.save(productToUpdate);
         return productToUpdate;
     }
-
-
-    @Override
-    public List<Product> obtenerProductosFiltradosYOrdenados(
-            List<String> categorias,
-            List<String> marcas,
-            String ordenarPor
-    ) {
-        return dao.findByCategoryInAndBrandInAndDeletedFalse(categorias, marcas);
-    }
-
 }
