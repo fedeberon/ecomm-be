@@ -1,0 +1,14 @@
+version: "3.8"
+
+services:
+  ecomm-be:
+    container_name: "ecomm-backend"
+    restart: always
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8888:8888"
+    volumes:
+      - ../ecomm-be:/usr/src/app
+    command: mvn spring-boot:run
