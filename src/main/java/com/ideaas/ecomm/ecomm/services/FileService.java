@@ -101,19 +101,19 @@ public class FileService {
 
     public void deleteImage(Product product, String image){
        String path = fileStorageLocation.toString() + File.separator + product.getId() +  File.separator + image;
-    //    System.out.println(path);
+       System.out.println(path);
        eliminarImagenes(path);
     }
 
-    // public static void eliminarImagenes(String rutaCarpeta) {
-    //     File archivo = new File(rutaCarpeta);
-    //     if(archivo.isFile() && esImagen(archivo.getName())){
-    //         archivo.delete();
-    //         logger.info("Se ha eliminado "+ archivo.getName());
-    //     } else {
-    //         logger.error("La ruta especificada no corresponde a un Archivo.");
-    //     }
-    // }
+    public static void eliminarImagenes(String rutaCarpeta) {
+        File archivo = new File(rutaCarpeta);
+        if(archivo.isFile() && esImagen(archivo.getName())){
+            archivo.delete();
+            logger.info("Se ha eliminado "+ archivo.getName());
+        } else {
+            logger.error("La ruta especificada no corresponde a un Archivo.");
+        }
+    }
 
     // public static boolean esImagen(String nombreArchivo) {
     //     String[] extensiones = {"png", "jpg", "jpeg", "gif", "bmp"};
@@ -125,35 +125,35 @@ public class FileService {
     //     return false;
     // }
 
-        public static void eliminarImagenes(String rutaCarpeta) {
-            File carpeta = new File(rutaCarpeta);
-            if (carpeta.isDirectory()) {
-                File[] archivos = carpeta.listFiles();
-                if (archivos != null) {
-                    for (File archivo : archivos) {
-                        if (archivo.isFile() && esImagen(archivo.getName())) {
-                            if (archivo.delete()) {
-                                logger.info("Se ha eliminado " + archivo.getName());
-                            } else {
-                                logger.error("No se pudo eliminar " + archivo.getName());
-                            }
-                        }
-                    }
-                }
-            } else {
-                logger.error("La ruta especificada no corresponde a una Carpeta.");
-            }
-        }
+    // public static void eliminarImagenes(String rutaCarpeta) {
+    //     File carpeta = new File(rutaCarpeta);
+    //     if (carpeta.isDirectory()) {
+    //         File[] archivos = carpeta.listFiles();
+    //         if (archivos != null) {
+    //             for (File archivo : archivos) {
+    //                 if (archivo.isFile() && esImagen(archivo.getName())) {
+    //                     if (archivo.delete()) {
+    //                         logger.info("Se ha eliminado " + archivo.getName());
+    //                     } else {
+    //                         logger.error("No se pudo eliminar " + archivo.getName());
+    //                     }
+    //                 }
+    //             }
+    //         }
+    //     } else {
+    //         logger.error("La ruta especificada no corresponde a una Carpeta.");
+    //     }
+    // }
 
-        public static boolean esImagen(String nombreArchivo) {
-            String[] extensiones = {"png", "jpg", "jpeg", "gif", "bmp"};
-            for (String extension : extensiones) {
-                if (nombreArchivo.toLowerCase().endsWith("." + extension)) {
-                    return true;
-                }
+    public static boolean esImagen(String nombreArchivo) {
+        String[] extensiones = {"png", "jpg", "jpeg", "gif", "bmp"};
+        for (String extension : extensiones) {
+            if (nombreArchivo.toLowerCase().endsWith("." + extension)) {
+                return true;
             }
-            return false;
         }
+        return false;
+    }
 
 
     public Resource loadFileAsResource(String folder, String fileName) {
