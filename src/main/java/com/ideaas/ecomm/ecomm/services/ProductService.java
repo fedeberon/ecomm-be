@@ -160,7 +160,7 @@ public class ProductService implements IProductService {
                                         Boolean asc,
                                         int page,
                                         int size){
-        Pageable pageable = PageRequest.of(page, size, Sort.by(asc ? Sort.Direction.ASC : Sort.Direction.DESC, orderBy));
+        Pageable pageable = PageRequest.of(page - 1, size, Sort.by(asc ? Sort.Direction.ASC : Sort.Direction.DESC, orderBy));
         Page<Product> productPage;
 
         if (categories != null && !categories.isEmpty() && brands != null && !brands.isEmpty()) {
