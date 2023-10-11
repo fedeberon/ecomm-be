@@ -141,7 +141,7 @@ public class ProductController {
             @RequestParam(required = false) List<String> brands,
             @RequestParam(defaultValue = "sales") String orderBy,
             @RequestParam(defaultValue = "false") String asc,
-            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "12") int size
     ) {
         List<Category> categoryList = categories != null ? categories.stream().map(Long::valueOf).map(Category::new).collect(Collectors.toList()) : null;
