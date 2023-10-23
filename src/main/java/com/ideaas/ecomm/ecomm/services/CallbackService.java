@@ -23,7 +23,7 @@ public class CallbackService implements ICallbackService {
     @Override
     public Callback save(final Callback callback) {
         //Modificacion para evitar la duplicacion innecesaria de los callbacks.
-        Callback potentialDuplicate = dao.findByCollectionId(callback.getCollectionId());
+        Callback potentialDuplicate = dao.findByPreferenceId(callback.getCollectionId());
         return (potentialDuplicate == null) ? dao.save(callback) : null;
     }
 

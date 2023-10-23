@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface CallbackDao extends JpaRepository<Callback, Long> {
-    Callback findByCollectionId(String callCollectionId);
+    Callback findByPreferenceId(String callCollectionId);
 }
