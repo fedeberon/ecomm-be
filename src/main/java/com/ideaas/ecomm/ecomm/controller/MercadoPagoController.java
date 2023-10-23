@@ -69,6 +69,10 @@ public class MercadoPagoController {
         callback.setCheckout(checkout);
         callbackService.save(callback);
 
+        return generateAnswer(callback, checkout);
+    }
+
+    private static ResponseEntity generateAnswer(Callback callback, Checkout checkout){
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .header(HttpHeaders.CONTENT_TYPE, "application/json")
@@ -79,6 +83,5 @@ public class MercadoPagoController {
                         .append("\"message\": \"Success! Payment callback received.\"")
                         .append("}")
                         .toString());
-
     }
 }
