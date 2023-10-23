@@ -44,7 +44,8 @@ public class MercadoPagoController {
     @PostMapping("checkout")
     public ResponseEntity<String> mercadoPagoCheckout(@RequestBody List<Detail> details) {
         final Cart cart = new Cart.CartBuilder().withDetails(details).build();
-        final Checkout checkout = checkoutService.save(cart, CheckoutState.PAID_OUT);
+        //Se indica que la nueva compra, obviamente, esta en proceso
+        final Checkout checkout = checkoutService.save(cart, CheckoutState.IN_PROCESS);
         final Preference preference = mercadoPagoService.createPreference(checkout);
 
         return ResponseEntity.ok(preference.getInitPoint());
@@ -52,20 +53,32 @@ public class MercadoPagoController {
 
     @PostMapping("callback")
     private ResponseEntity callback(@RequestBody Callback callback) {
-        final Checkout checkout = checkoutService.get(Long.parseLong(callback.getExternalReference()));
-        final CheckoutState state = CheckoutState.findByStatus(callback.getStatus());
-        checkout.setCheckoutState(state);
+        //Obtengo de nuevo el checkout de la compra en proceso.
+        Checkout checkout = checkoutService.get(Long.parseLong(callback.getExternalReference()));
+        //Obtiene el estatus del callback (approved, pending, null, rejected, cancelled)...
+        final String state = callback.getStatus() != null ? callback.getStatus() : "REJECTED";
+        //Determinan las acciones a realizar en base al estado.
+        if (state.equals("approved")) {
+            checkout.setCheckoutState(CheckoutState.PAID_OUT);
+        }else if (state.equals("pending")){
+            checkout.setCheckoutState(CheckoutState.IN_PROCESS);
+        }else{
+            checkout.setCheckoutState(CheckoutState.REJECTED);
+        }
+
         callback.setCheckout(checkout);
         callbackService.save(callback);
 
-        final String redirectUrl = ServletUriComponentsBuilder.fromCurrentContextPath()
-                .path("/callback/")
-                .path(String.valueOf(callback.getId()))
-                .toUriString();
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .header(HttpHeaders.CONTENT_TYPE, "application/json")
+                .body(new StringBuilder()
+                        .append("{")
+                        .append("\"checkoutId\": \"").append(callback.getCheckout().getId()).append("\",")
+                        .append("\"checkoutState\": \"").append(checkout.getCheckoutState()).append("\",")
+                        .append("\"message\": \"Success! Payment callback received.\"")
+                        .append("}")
+                        .toString());
 
-        return ResponseEntity.
-                status(HttpStatus.MOVED_PERMANENTLY)
-                .header(HttpHeaders.LOCATION, redirectUrl)
-                .build();
     }
 }
