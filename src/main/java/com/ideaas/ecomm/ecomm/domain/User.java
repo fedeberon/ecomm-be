@@ -1,6 +1,8 @@
 package com.ideaas.ecomm.ecomm.domain;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
@@ -74,6 +76,10 @@ public class User  {
 
         return authorities;
 
+    }
+
+    public User(String username) {
+        this.username = username;
     }
 
 }

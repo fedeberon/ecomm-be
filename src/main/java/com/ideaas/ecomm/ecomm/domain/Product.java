@@ -50,6 +50,10 @@ public class Product {
     @JoinColumn(name = "PROD_BRAND_ID")
     private Brand brand;
 
+    @OneToOne
+    @JoinColumn(name = "PROD_STO_ID")
+    private Store store;
+
     @Column(name = "PRO_POINT")    
     private Long points = 0L;
 
