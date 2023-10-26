@@ -9,10 +9,10 @@ import com.ideaas.ecomm.ecomm.services.interfaces.IProductService;
 import com.ideaas.ecomm.ecomm.services.interfaces.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class StoreService implements IStoreService {
@@ -43,8 +43,13 @@ public class StoreService implements IStoreService {
     }
 
     @Override
-    public Store update(Store Store) {
-        return dao.save(Store);
+    @Transactional
+    public Store update(Long id, Store updatedStore) {
+        Store existingStore = dao.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid Store Id: " + id));
+        existingStore.setName(updatedStore.getName());
+        existingStore.setOwner(updatedStore.getOwner());
+
+        return dao.save(existingStore);
     }
 
 	@Override
@@ -78,10 +83,5 @@ public class StoreService implements IStoreService {
         }
 
         return productsOfStore;
-    }
-
-    @Override
-    public Optional<User> getOwner(Store store) {
-        return userService.get(store.getOwner().getUsername());
     }
 }

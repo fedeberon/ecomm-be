@@ -14,7 +14,7 @@ public interface IStoreService {
 
     Store save(Store Store);
 
-    Store update(Store Store);
+    Store update(Long id, Store updatedStore);
 
     Store get(Long id);
 
@@ -22,5 +22,4 @@ public interface IStoreService {
 
     List<Product> findProductsInStore(Long id);
 
-    Optional<User> getOwner(Store store);
 }

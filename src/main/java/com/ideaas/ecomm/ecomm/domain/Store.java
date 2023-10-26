@@ -4,9 +4,11 @@ import lombok.*;
 
 import javax.persistence.*;
 
-@Builder
-@Setter
 @Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @Entity
 @Table(name = "STORES")
 public class Store {

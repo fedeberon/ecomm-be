@@ -4,6 +4,7 @@ import com.ideaas.ecomm.ecomm.domain.Store;
 import com.ideaas.ecomm.ecomm.domain.Product;
 import com.ideaas.ecomm.ecomm.domain.User;
 import com.ideaas.ecomm.ecomm.services.interfaces.IStoreService;
+import com.ideaas.ecomm.ecomm.services.interfaces.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/store")
@@ -24,10 +26,12 @@ import java.util.List;
 public class StoreController {
 
     private IStoreService storeService;
+    private IUserService userService;
 
     @Autowired
-    public StoreController(final IStoreService storeService) {
+    public StoreController(final IStoreService storeService, final IUserService userService) {
         this.storeService = storeService;
+        this.userService = userService;
     }
 
     @GetMapping
@@ -53,7 +57,7 @@ public class StoreController {
 
     @PutMapping
     private ResponseEntity<Store> update(@RequestBody Store store) {
-        final Store updatedStore = storeService.update(store);
+        final Store updatedStore = storeService.update(store.getId(),store);
 
         return ResponseEntity.ok(updatedStore);
     }
@@ -63,7 +67,7 @@ public class StoreController {
         final Store storeToDelete = storeService.get(id);
         storeService.delete(storeToDelete);
 
-        return ResponseEntity.accepted().body("Size deleted succesfully");
+        return ResponseEntity.accepted().body("Store deleted succesfully");
     }
 
     @GetMapping("{id}/products")
@@ -74,10 +78,10 @@ public class StoreController {
     }
 
     @GetMapping("{id}/owner")
-    private ResponseEntity<User> getowner(@RequestBody Store store) {
-        User owner = store.getOwner();
-
-        return ResponseEntity.ok(owner);
+    private ResponseEntity<User> getOwner(@PathVariable final Long id) {
+        String storeId = storeService.get(id).getOwner().getUsername();
+        System.out.println(storeId);
+        Optional<User> owner = userService.get(storeId);
+        return ResponseEntity.ok(owner.get());
     }
-
 }
