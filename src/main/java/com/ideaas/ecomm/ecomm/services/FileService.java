@@ -2,6 +2,7 @@ package com.ideaas.ecomm.ecomm.services;
 
 import com.ideaas.ecomm.ecomm.domain.Image;
 import com.ideaas.ecomm.ecomm.domain.Product;
+import com.ideaas.ecomm.ecomm.domain.Store;
 import com.ideaas.ecomm.ecomm.exception.FileStorageException;
 import com.ideaas.ecomm.ecomm.exception.MyFileNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -103,6 +104,12 @@ public class FileService {
        String path = fileStorageLocation.toString() + File.separator + product.getId() +  File.separator + image;
        System.out.println(path);
        eliminarImagenes(path);
+    }
+
+    public void deleteLogo(Store store, String image){
+        String path = fileStorageLocation.toString() + File.separator + store.getId() +  File.separator + image;
+        System.out.println(path);
+        eliminarImagenes(path);
     }
 
     public static void eliminarImagenes(String rutaCarpeta) {

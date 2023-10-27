@@ -24,4 +24,7 @@ public class Store {
     @JoinColumn(name = "STO_USU_USERNAME")
     private User owner;
 
+    @Transient
+    private Image logo;
+
 }

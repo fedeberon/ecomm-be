@@ -22,4 +22,5 @@ public interface IStoreService {
 
     List<Product> findProductsInStore(Long id);
 
+    void addLogoOnStore(Store store);
 }

@@ -51,7 +51,7 @@ public class StoreController {
     @PostMapping
     private ResponseEntity<Store> save(@RequestBody Store store) {
         Store savedStore = storeService.save(store);
-
+        storeService.addLogoOnStore(store);
         return ResponseEntity.accepted().body(savedStore);
     }
 
