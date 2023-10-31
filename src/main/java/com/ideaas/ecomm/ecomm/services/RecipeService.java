@@ -18,14 +18,15 @@ import com.ideaas.ecomm.ecomm.repository.RecipeDao;
 import com.ideaas.ecomm.ecomm.services.interfaces.IRecipeService;
 
 @Service
-public class RecipeService  implements IRecipeService{
+public class RecipeService implements IRecipeService {
 
     private FileService fileService;
     private RecipeDao dao;
-    
 
-    public RecipeService(final RecipeDao dao){
-        this.dao= dao;
+    public RecipeService(final RecipeDao dao,
+                         final FileService fileService) {
+        this.dao = dao;
+        this.fileService = fileService;
     }
 
     @Override
@@ -37,14 +38,18 @@ public class RecipeService  implements IRecipeService{
     }
 
     @Override
-    public Recipe save( Recipe recipe) {
+    public Recipe save(Recipe recipe) {
         Recipe recipeSave = dao.save(recipe);
         return recipeSave;
     }
 
     @Override
     public Recipe findById(Long id) {
-        return dao.findById(id).orElse(null);
+        Recipe optionalRecipe = dao.findById(id).orElse(null);
+        addImagesOnRecipe(optionalRecipe);
+
+        return optionalRecipe;
+        // return dao.findById(id).orElse(null);
     }
 
     @Override
@@ -58,7 +63,7 @@ public class RecipeService  implements IRecipeService{
     }
 
     public void addImagesOnRecipe(final Recipe recipe) {
-        List<Image> images  = fileService.readFiles(recipe.getId().toString());
+        List<Image> images = fileService.readFiles(recipe.getId().toString());
         images.forEach(image -> {
             String path = ServletUriComponentsBuilder.fromCurrentContextPath()
                     .path("/file/download/")
@@ -70,5 +75,4 @@ public class RecipeService  implements IRecipeService{
         });
         recipe.setImages(images);
     }
-    
 }

@@ -44,10 +44,9 @@ public class RecipeController {
     }
 
     @PostMapping
-    public ResponseEntity<Recipe> createRecipe(@RequestBody final MultipartFile file, @RequestBody Recipe recipe) {
+    public ResponseEntity<Recipe> createRecipe(@RequestBody Recipe recipe) {
         try{
         Recipe recipeSave = recipeRepository.save(recipe);
-        fileService.storeFile(file,recipeSave.getId().toString());
         return ResponseEntity.ok(recipeSave);
         }catch (NotFoundException ex) {
             return ResponseEntity.notFound().build();

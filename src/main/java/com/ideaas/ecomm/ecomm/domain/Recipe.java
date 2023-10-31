@@ -6,12 +6,14 @@ import javax.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @AllArgsConstructor
 @Builder
 @Getter
 @Setter
+@NoArgsConstructor
 @Entity
 @Table(name = "RECIPE")
 public class Recipe {
