@@ -20,6 +20,9 @@ public class Store {
     @Column(name = "STO_NAME")
     private String name;
 
+    @Column(name = "STO_DESCR")
+    private String description;
+
     @OneToOne
     @JoinColumn(name = "STO_USU_USERNAME")
     private User owner;
