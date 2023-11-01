@@ -23,11 +23,23 @@ public class Store {
     @Column(name = "STO_DESCR")
     private String description;
 
+    @Column(name = "STO_EMAIL")
+    private String email;
+
+    @Column(name = "STO_TEL")
+    private String telephone;
+
+    @Column(name = "STO_ADDRESS")
+    private String address;
+
     @OneToOne
+    @JoinColumn(name = "STO_SCH_ID")
+    private Schedule schedule;
+
+    @ManyToOne
     @JoinColumn(name = "STO_USU_USERNAME")
     private User owner;
 
     @Transient
     private Image logo;
-
 }
