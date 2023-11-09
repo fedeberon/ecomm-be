@@ -2,6 +2,7 @@ package com.ideaas.ecomm.ecomm.services;
 
 import com.ideaas.ecomm.ecomm.domain.Image;
 import com.ideaas.ecomm.ecomm.domain.Store;
+import com.ideaas.ecomm.ecomm.domain.User;
 import com.ideaas.ecomm.ecomm.domain.Product;
 import com.ideaas.ecomm.ecomm.repository.StoreDao;
 import com.ideaas.ecomm.ecomm.services.interfaces.IStoreService;
@@ -21,13 +22,15 @@ public class StoreService implements IStoreService {
 
     private StoreDao dao;
     private IProductService productService;
+    private IUserService userService;
     private FileService fileService;
 
     @Autowired
-    public StoreService(final StoreDao dao, final IProductService productService, final FileService fileService) {
+    public StoreService(final StoreDao dao, final IProductService productService,final IUserService userService, final FileService fileService) {
         this.dao = dao;
         this.productService = productService;
         this.fileService = fileService;
+        this.userService= userService;
     }
 
     @Override
@@ -50,7 +53,7 @@ public class StoreService implements IStoreService {
     public Store update(Long id, Store updatedStore) {
         Store existingStore = dao.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid Store Id: " + id));
         existingStore.setName(updatedStore.getName());
-        existingStore.setOwner(updatedStore.getOwner());
+        existingStore.setOwners(updatedStore.getOwners());
 
         return dao.save(existingStore);
     }
@@ -59,6 +62,10 @@ public class StoreService implements IStoreService {
 	public Store get(Long id) {
 		return dao.findById(id).get();
 	}
+
+    public List<Store> getStoresByUser(User user) {
+        return dao.findByOwnersContaining(user);
+    }
 
 	@Override
 	public void delete(Store storeToDelete) {
@@ -87,7 +94,7 @@ public class StoreService implements IStoreService {
 
         return productsOfStore;
     }
-
+    
     @Override
     public void addLogoOnStore(final Store store) {
         Image logo  = fileService.readFiles(store.getId().toString()).get(0);
@@ -103,5 +110,17 @@ public class StoreService implements IStoreService {
 
     public void deleteLogoFromStore(final Store store, final String imageName) {
         fileService.deleteLogo(store, imageName);
+    }
+
+    @Override
+    public void addUserToStore(Long storeId, String username) {
+        // Buscar la tienda y el usuario por sus respectivos IDs
+        Store store = findById(storeId);
+        User user = userService.get(username).get();
+
+        if (store != null && user != null) {
+            store.getOwners().add(user);
+            dao.save(store);
+        }
     }
 }

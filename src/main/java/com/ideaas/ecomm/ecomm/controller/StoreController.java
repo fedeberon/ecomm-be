@@ -5,7 +5,9 @@ import com.ideaas.ecomm.ecomm.domain.Product;
 import com.ideaas.ecomm.ecomm.domain.User;
 import com.ideaas.ecomm.ecomm.services.interfaces.IStoreService;
 import com.ideaas.ecomm.ecomm.services.interfaces.IUserService;
+import com.ideaas.ecomm.ecomm.utils.Onlyusernameobject;
 import org.springframework.beans.factory.annotation.Autowired;
+import com.ideaas.ecomm.ecomm.exception.NotFoundException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Set;
 import java.util.Optional;
 
 @RestController
@@ -75,11 +78,16 @@ public class StoreController {
         return ResponseEntity.ok(products);
     }
 
-    @GetMapping("{id}/owner")
-    private ResponseEntity<User> getOwner(@PathVariable final Long id) {
-        String storeId = storeService.get(id).getOwner().getUsername();
-        System.out.println(storeId);
-        Optional<User> owner = userService.get(storeId);
-        return ResponseEntity.ok(owner.get());
+    @PostMapping("/{storeId}/addUser")
+    public ResponseEntity<String> addUserToStore(
+            @PathVariable Long storeId,
+            @RequestBody Onlyusernameobject username
+    ) {
+        try {
+            storeService.addUserToStore(storeId, username.getUsername());
+            return ResponseEntity.ok("Usuario agregado a la tienda exitosamente.");
+        } catch (NotFoundException ex) {
+            return ResponseEntity.notFound().build();
+        }
     }
 }

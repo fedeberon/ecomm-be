@@ -1,6 +1,7 @@
 package com.ideaas.ecomm.ecomm.services;
 
 import com.ideaas.ecomm.ecomm.domain.User;
+import com.ideaas.ecomm.ecomm.domain.Store;
 import com.ideaas.ecomm.ecomm.repository.UserDao;
 import com.ideaas.ecomm.ecomm.services.interfaces.IAuthenticationFacade;
 import com.ideaas.ecomm.ecomm.services.interfaces.IUserService;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class UserService implements IUserService {
@@ -73,6 +75,14 @@ public class UserService implements IUserService {
         } else {
             return null;
         }
+    }
+
+    public Set<Store> getStoresByUser(String username) {
+        User user = dao.findById(username).orElse(null);
+        if (user != null) {
+            return user.getStores();
+        }
+        return null;
     }
 
 }

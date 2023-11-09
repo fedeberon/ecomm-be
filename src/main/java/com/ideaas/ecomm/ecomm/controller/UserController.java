@@ -2,7 +2,9 @@ package com.ideaas.ecomm.ecomm.controller;
 
 import com.ideaas.ecomm.ecomm.domain.User;
 import com.ideaas.ecomm.ecomm.domain.Wallet;
+import com.ideaas.ecomm.ecomm.domain.Store;
 import com.ideaas.ecomm.ecomm.services.UserService;
+import com.ideaas.ecomm.ecomm.services.StoreService;
 import com.ideaas.ecomm.ecomm.services.interfaces.IWalletService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @CrossOrigin
@@ -25,6 +28,7 @@ public class UserController {
 
     private UserService userService;
     private IWalletService walletService;
+    private StoreService storeService;
 
 
     @Autowired
@@ -89,4 +93,9 @@ public class UserController {
         return ResponseEntity.status(202).body(userToUpdate);
     }
 
+    @GetMapping("/{username}/stores")
+    public ResponseEntity<Set<Store>> getUserStores(@PathVariable String username) {
+        Set<Store> userStores = userService.getStoresByUser(username);
+        return ResponseEntity.ok(userStores);
+    }
 }
