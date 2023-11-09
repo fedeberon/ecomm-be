@@ -33,12 +33,25 @@ public class Store {
     @Column(name = "STO_DESCR")
     private String description;
 
+
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.DETACH)
     @JoinTable(name = "user_store", joinColumns = @JoinColumn(name = "store_id"), inverseJoinColumns = @JoinColumn(name = "user_id"))
     @JsonIgnore
     private Set<User> owners = new HashSet<>();
 
+    @Column(name = "STO_EMAIL")
+    private String email;
+
+    @Column(name = "STO_TEL")
+    private String telephone;
+
+    @Column(name = "STO_ADDRESS")
+    private String address;
+
+    @OneToOne
+    @JoinColumn(name = "STO_SCH_ID")
+    private Schedule schedule;
+
     @Transient
     private Image logo;
-
 }

@@ -1,9 +1,11 @@
 package com.ideaas.ecomm.ecomm.services;
 
+
 import com.ideaas.ecomm.ecomm.domain.Image;
 import com.ideaas.ecomm.ecomm.domain.Store;
 import com.ideaas.ecomm.ecomm.domain.User;
 import com.ideaas.ecomm.ecomm.domain.Product;
+import com.ideaas.ecomm.ecomm.repository.ScheduleDao;
 import com.ideaas.ecomm.ecomm.repository.StoreDao;
 import com.ideaas.ecomm.ecomm.services.interfaces.IStoreService;
 import com.ideaas.ecomm.ecomm.services.interfaces.IProductService;
@@ -16,18 +18,23 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class StoreService implements IStoreService {
 
     private StoreDao dao;
+    private ScheduleDao scheduleDao;
     private IProductService productService;
     private IUserService userService;
     private FileService fileService;
 
     @Autowired
-    public StoreService(final StoreDao dao, final IProductService productService,final IUserService userService, final FileService fileService) {
+    public StoreService(final StoreDao dao, final ScheduleDao scheduleDao, final IUserService userService, final IProductService productService, final FileService fileService) {
+
         this.dao = dao;
+        this.scheduleDao = scheduleDao;
+        this.userService = userService;
         this.productService = productService;
         this.fileService = fileService;
         this.userService= userService;
@@ -44,8 +51,19 @@ public class StoreService implements IStoreService {
     }
 
     @Override
-    public Store save(final Store Store) {
-        return dao.save(Store);
+    public Store save(final Store store) {
+        Schedule schedule = store.getSchedule();
+        if(schedule.getId() == null) {
+            schedule = scheduleDao.save(schedule);
+        }
+        store.setSchedule(schedule);
+
+        Optional<User> owner = userService.get(store.getOwner().getUsername());
+        if (owner.isPresent()){
+            store.setOwner(owner.get());
+        }
+
+        return dao.save(store);
     }
 
     @Override
