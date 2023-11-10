@@ -48,9 +48,9 @@ public class Store {
     @Column(name = "STO_ADDRESS")
     private String address;
 
-    @OneToOne
-    @JoinColumn(name = "STO_SCH_ID")
-    private Schedule schedule;
+    // @OneToOne
+    // @JoinColumn(name = "STO_SCH_ID")
+    // private Schedule schedule;
 
     @Transient
     private Image logo;

@@ -53,11 +53,11 @@ public class StoreService implements IStoreService {
 
     @Override
     public Store save(final Store store) {
-        Schedule schedule = store.getSchedule();
-        if(schedule.getId() == null) {
-            schedule = scheduleDao.save(schedule);
-        }
-        store.setSchedule(schedule);
+        // Schedule schedule = store.getSchedule();
+        // if(schedule.getId() == null) {
+        //     schedule = scheduleDao.save(schedule);
+        // }
+        // store.setSchedule(schedule);
         return dao.save(store);
     }
 
