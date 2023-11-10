@@ -5,6 +5,7 @@ import com.ideaas.ecomm.ecomm.domain.Image;
 import com.ideaas.ecomm.ecomm.domain.Store;
 import com.ideaas.ecomm.ecomm.domain.User;
 import com.ideaas.ecomm.ecomm.domain.Product;
+import com.ideaas.ecomm.ecomm.domain.Schedule;
 import com.ideaas.ecomm.ecomm.repository.ScheduleDao;
 import com.ideaas.ecomm.ecomm.repository.StoreDao;
 import com.ideaas.ecomm.ecomm.services.interfaces.IStoreService;
@@ -57,12 +58,6 @@ public class StoreService implements IStoreService {
             schedule = scheduleDao.save(schedule);
         }
         store.setSchedule(schedule);
-
-        Optional<User> owner = userService.get(store.getOwner().getUsername());
-        if (owner.isPresent()){
-            store.setOwner(owner.get());
-        }
-
         return dao.save(store);
     }
 
