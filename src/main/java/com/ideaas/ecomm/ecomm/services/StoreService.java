@@ -43,12 +43,18 @@ public class StoreService implements IStoreService {
 
     @Override
     public List<Store> findAll() {
-        return dao.findAll();
+        List<Store> stores =  dao.findAll();
+        for(Store store: stores){
+            addLogoOnStore(store);
+        }
+        return stores;
     }
 
     @Override
     public Store findById(Long id) {
-        return dao.findById(id).orElse(null);
+        Store store = dao.findById(id).orElse(null);
+        addLogoOnStore(store);
+        return store;
     }
 
     @Override
@@ -73,7 +79,9 @@ public class StoreService implements IStoreService {
 
 	@Override
 	public Store get(Long id) {
-		return dao.findById(id).get();
+		Store store = dao.findById(id).get();
+        addLogoOnStore(store);
+        return store;
 	}
 
     public List<Store> getStoresByUser(User user) {
