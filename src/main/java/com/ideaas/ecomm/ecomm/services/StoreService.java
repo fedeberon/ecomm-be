@@ -118,16 +118,28 @@ public class StoreService implements IStoreService {
     
     @Override
     public void addLogoOnStore(final Store store) {
-        Image logo  = fileService.readFiles(store.getId().toString()).get(0);
-        String path = ServletUriComponentsBuilder.fromCurrentContextPath()
-                .path("/file/download/")
-                .path(store.getId().toString())
-                .path(File.separator)
-                .path(logo.getUrl())
-                .toUriString();
-        logo.setLink(path);
-        store.setLogo(logo);
+        List<Image> images = fileService.readFiles(store.getId().toString());
+
+        if (images != null && !images.isEmpty()) {
+            Image logo = images.get(0);
+
+            if (logo != null) {
+                String path = ServletUriComponentsBuilder.fromCurrentContextPath()
+                        .path("/file/download/")
+                        .path(store.getId().toString())
+                        .path(File.separator)
+                        .path(logo.getUrl())
+                        .toUriString();
+                logo.setLink(path);
+                store.setLogo(logo);
+            } else {
+                store.setLogo(null);
+            }
+        } else {
+            store.setLogo(null);
+        }
     }
+
 
     public void deleteLogoFromStore(final Store store, final String imageName) {
         fileService.deleteLogo(store, imageName);
