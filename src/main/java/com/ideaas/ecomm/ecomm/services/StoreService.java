@@ -5,9 +5,9 @@ import com.ideaas.ecomm.ecomm.domain.Image;
 import com.ideaas.ecomm.ecomm.domain.Store;
 import com.ideaas.ecomm.ecomm.domain.User;
 import com.ideaas.ecomm.ecomm.domain.Product;
-import com.ideaas.ecomm.ecomm.domain.Schedule;
 import com.ideaas.ecomm.ecomm.repository.ScheduleDao;
 import com.ideaas.ecomm.ecomm.repository.StoreDao;
+import com.ideaas.ecomm.ecomm.repository.UserDao;
 import com.ideaas.ecomm.ecomm.services.interfaces.IStoreService;
 import com.ideaas.ecomm.ecomm.services.interfaces.IProductService;
 import com.ideaas.ecomm.ecomm.services.interfaces.IUserService;
@@ -17,28 +17,26 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class StoreService implements IStoreService {
 
     private StoreDao dao;
+    private UserDao usrDao;
     private ScheduleDao scheduleDao;
     private IProductService productService;
-    private IUserService userService;
+    private UserService userService;
     private FileService fileService;
 
     @Autowired
-    public StoreService(final StoreDao dao, final ScheduleDao scheduleDao, final IUserService userService, final IProductService productService, final FileService fileService) {
+    public StoreService(final StoreDao dao, final ScheduleDao scheduleDao, final UserService userService, final IProductService productService, final FileService fileService) {
 
         this.dao = dao;
         this.scheduleDao = scheduleDao;
         this.userService = userService;
         this.productService = productService;
         this.fileService = fileService;
-        this.userService= userService;
     }
 
     @Override
@@ -58,12 +56,11 @@ public class StoreService implements IStoreService {
     }
 
     @Override
-    public Store save(final Store store) {
-        // Schedule schedule = store.getSchedule();
-        // if(schedule.getId() == null) {
-        //     schedule = scheduleDao.save(schedule);
-        // }
-        // store.setSchedule(schedule);
+    public Store save(final Store store, final String creatorId) {
+        Optional<User> creator = userService.get(creatorId);
+        Set<User> owners = new HashSet<User>();
+        owners.add(userService.get(creatorId).get());
+        store.setOwners(owners);
         return dao.save(store);
     }
 
