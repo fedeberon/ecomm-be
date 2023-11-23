@@ -1,7 +1,9 @@
 package com.ideaas.ecomm.ecomm.services;
 
+import com.ideaas.ecomm.ecomm.domain.Schedule;
 import com.ideaas.ecomm.ecomm.domain.User;
 import com.ideaas.ecomm.ecomm.domain.Store;
+import com.ideaas.ecomm.ecomm.repository.ScheduleDao;
 import com.ideaas.ecomm.ecomm.repository.UserDao;
 import com.ideaas.ecomm.ecomm.services.interfaces.IAuthenticationFacade;
 import com.ideaas.ecomm.ecomm.services.interfaces.IUserService;
@@ -21,6 +23,7 @@ import java.util.Set;
 public class UserService implements IUserService {
 
     private UserDao dao;
+    private ScheduleDao scheduleDao;
     private IAuthenticationFacade authenticationFacade;
 
     @Autowired
@@ -77,6 +80,7 @@ public class UserService implements IUserService {
         }
     }
 
+    @Override
     public Set<Store> getStoresByUser(String username) {
         User user = dao.findById(username).orElse(null);
         if (user != null) {
@@ -84,5 +88,4 @@ public class UserService implements IUserService {
         }
         return null;
     }
-
 }

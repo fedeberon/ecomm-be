@@ -23,7 +23,6 @@ import java.util.*;
 public class StoreService implements IStoreService {
 
     private StoreDao dao;
-    private UserDao usrDao;
     private ScheduleDao scheduleDao;
     private IProductService productService;
     private UserService userService;
@@ -124,7 +123,7 @@ public class StoreService implements IStoreService {
                 String path = ServletUriComponentsBuilder.fromCurrentContextPath()
                         .path("/file/download/")
                         .path(store.getId().toString())
-                        .path(File.separator)
+                        .path("/")
                         .path(logo.getUrl())
                         .toUriString();
                 logo.setLink(path);
