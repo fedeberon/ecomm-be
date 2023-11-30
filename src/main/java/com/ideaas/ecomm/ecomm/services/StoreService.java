@@ -57,10 +57,14 @@ public class StoreService implements IStoreService {
     @Override
     public Store save(final Store store, final String creatorId) {
         Optional<User> creator = userService.get(creatorId);
-        Set<User> owners = new HashSet<User>();
-        owners.add(userService.get(creatorId).get());
-        store.setOwners(owners);
-        return dao.save(store);
+        if (creator.isPresent()){
+            Set<User> owners = new HashSet<>();
+            owners.add(creator.get());
+            store.setOwners(owners);
+            return dao.save(store);
+        }else{
+            return null;
+        }
     }
 
     @Override
