@@ -23,4 +23,6 @@ public interface IStoreService {
     void addLogoOnStore(Store store);
 
     void addUserToStore(Long storeId, String username);
+
+    void deleteLogoOfStore(final Store store, final String imageName);
 }

@@ -83,4 +83,13 @@ public class StoreController {
             return ResponseEntity.notFound().build();
         }
     }
+
+    @DeleteMapping("/delete/{storeId}/{image}")
+    public ResponseEntity<Store> deleteImage(@PathVariable Long storeId, @PathVariable String image) {
+        System.out.println(storeId + "\n" + image);
+        Store storeToUpdate = storeService.get(storeId);
+        storeService.deleteLogoOfStore(storeToUpdate, image);
+
+        return ResponseEntity.accepted().build();
+    }
 }

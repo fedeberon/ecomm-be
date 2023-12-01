@@ -156,4 +156,9 @@ public class StoreService implements IStoreService {
             dao.save(store);
         }
     }
+
+    @Override
+    public void deleteLogoOfStore(final Store store, final String imageName){
+        fileService.deleteLogo(store, imageName);
+    }
 }
