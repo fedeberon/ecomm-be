@@ -4,6 +4,7 @@ import com.ideaas.ecomm.ecomm.domain.Store;
 import com.ideaas.ecomm.ecomm.domain.Product;
 
 import java.util.List;
+import java.util.Set;
 
 public interface IStoreService {
     List<Store> findAll();
@@ -25,4 +26,6 @@ public interface IStoreService {
     void addUserToStore(Long storeId, String username);
 
     void deleteLogoOfStore(final Store store, final String imageName);
+
+    Set<Store> getStoresByUser(String username);
 }

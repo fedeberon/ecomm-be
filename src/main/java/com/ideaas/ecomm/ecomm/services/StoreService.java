@@ -2,21 +2,18 @@ package com.ideaas.ecomm.ecomm.services;
 
 
 import com.ideaas.ecomm.ecomm.domain.Image;
+import com.ideaas.ecomm.ecomm.domain.Product;
 import com.ideaas.ecomm.ecomm.domain.Store;
 import com.ideaas.ecomm.ecomm.domain.User;
-import com.ideaas.ecomm.ecomm.domain.Product;
 import com.ideaas.ecomm.ecomm.repository.ScheduleDao;
 import com.ideaas.ecomm.ecomm.repository.StoreDao;
-import com.ideaas.ecomm.ecomm.repository.UserDao;
-import com.ideaas.ecomm.ecomm.services.interfaces.IStoreService;
 import com.ideaas.ecomm.ecomm.services.interfaces.IProductService;
-import com.ideaas.ecomm.ecomm.services.interfaces.IUserService;
+import com.ideaas.ecomm.ecomm.services.interfaces.IStoreService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import java.io.File;
 import java.util.*;
 
 @Service
@@ -119,10 +116,8 @@ public class StoreService implements IStoreService {
     @Override
     public void addLogoOnStore(final Store store) {
         List<Image> images = fileService.readFiles(store.getId().toString());
-
         if (images != null && !images.isEmpty()) {
             Image logo = images.get(0);
-
             if (logo != null) {
                 String path = ServletUriComponentsBuilder.fromCurrentContextPath()
                         .path("/file/download/")
@@ -160,5 +155,19 @@ public class StoreService implements IStoreService {
     @Override
     public void deleteLogoOfStore(final Store store, final String imageName){
         fileService.deleteLogo(store, imageName);
+    }
+
+
+    @Override
+    public Set<Store> getStoresByUser(String username) {
+        User user = userService.get(username).orElse(null);
+        if (user != null) {
+            Set<Store> userStores = user.getStores();
+            for (Store store: userStores){
+                addLogoOnStore(store);
+            }
+            return userStores;
+        }
+        return null;
     }
 }

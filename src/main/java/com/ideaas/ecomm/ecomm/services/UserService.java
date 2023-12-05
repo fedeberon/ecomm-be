@@ -1,8 +1,6 @@
 package com.ideaas.ecomm.ecomm.services;
 
-import com.ideaas.ecomm.ecomm.domain.Schedule;
 import com.ideaas.ecomm.ecomm.domain.User;
-import com.ideaas.ecomm.ecomm.domain.Store;
 import com.ideaas.ecomm.ecomm.repository.ScheduleDao;
 import com.ideaas.ecomm.ecomm.repository.UserDao;
 import com.ideaas.ecomm.ecomm.services.interfaces.IAuthenticationFacade;
@@ -13,11 +11,9 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 @Service
 public class UserService implements IUserService {
@@ -80,12 +76,4 @@ public class UserService implements IUserService {
         }
     }
 
-    @Override
-    public Set<Store> getStoresByUser(String username) {
-        User user = dao.findById(username).orElse(null);
-        if (user != null) {
-            return user.getStores();
-        }
-        return null;
-    }
 }
