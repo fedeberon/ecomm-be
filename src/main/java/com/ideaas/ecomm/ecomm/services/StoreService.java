@@ -66,10 +66,15 @@ public class StoreService implements IStoreService {
 
     @Override
     @Transactional
-    public Store update(Long id, Store updatedStore) {
+    public Store update(Long id, Store store) {
         Store existingStore = dao.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid Store Id: " + id));
-        existingStore.setName(updatedStore.getName());
-        existingStore.setOwners(updatedStore.getOwners());
+        existingStore.setName(store.getName().isEmpty() ? existingStore.getName() : store.getName());
+        existingStore.setDescription(store.getDescription().isEmpty() ? existingStore.getDescription() : store.getDescription());
+        existingStore.setEmail(store.getEmail().isEmpty() ? existingStore.getEmail() : store.getEmail());
+        existingStore.setAddress(store.getAddress().isEmpty() ? existingStore.getAddress() : store.getAddress());
+        existingStore.setTelephone(store.getTelephone().isEmpty() ? existingStore.getTelephone() : store.getTelephone());
+        existingStore.setSchedule(store.getSchedule().isEmpty() ? existingStore.getSchedule() : store.getSchedule());
+        existingStore.setOwners(existingStore.getOwners());
 
         return dao.save(existingStore);
     }
