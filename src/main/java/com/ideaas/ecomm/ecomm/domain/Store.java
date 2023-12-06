@@ -1,19 +1,14 @@
 package com.ideaas.ecomm.ecomm.domain;
 
-import lombok.*;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.ManyToMany;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-
-import javax.persistence.JoinTable;
-import javax.persistence.JoinColumn;
-import java.util.Set;
 import java.util.HashSet;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -33,7 +28,6 @@ public class Store {
     @Column(name = "STO_DESCR")
     private String description;
 
-
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.DETACH)
     @JoinTable(name = "user_store", joinColumns = @JoinColumn(name = "store_id"), inverseJoinColumns = @JoinColumn(name = "user_id"))
     @JsonIgnore
@@ -48,9 +42,8 @@ public class Store {
     @Column(name = "STO_ADDRESS")
     private String address;
 
-    // @OneToOne
-    // @JoinColumn(name = "STO_SCH_ID")
-    // private Schedule schedule;
+    @Column(name = "STO_SCHEDULE")
+    private String schedule;
 
     @Transient
     private Image logo;
