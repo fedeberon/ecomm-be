@@ -1,11 +1,6 @@
 package com.ideaas.ecomm.ecomm.services;
 
-import com.ideaas.ecomm.ecomm.domain.Brand;
-import com.ideaas.ecomm.ecomm.domain.Category;
-import com.ideaas.ecomm.ecomm.domain.Image;
-import com.ideaas.ecomm.ecomm.domain.Product;
-import com.ideaas.ecomm.ecomm.domain.ProductToCart;
-import com.ideaas.ecomm.ecomm.domain.Size;
+import com.ideaas.ecomm.ecomm.domain.*;
 import com.ideaas.ecomm.ecomm.payload.SearchRequest;
 import com.ideaas.ecomm.ecomm.repository.ProductDao;
 import com.ideaas.ecomm.ecomm.services.interfaces.ICategoryService;
@@ -18,7 +13,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import java.io.File;
 import java.util.*;
 
 @Service
@@ -43,7 +37,7 @@ public class ProductService implements IProductService {
         Sort sort = Sort.by(sortBy).descending();
         Page<Product> products = dao.findByDeleted(false, PageRequest.of(page, size, sort));
 
-        products.forEach(product -> addImagesOnProduct(product));
+        products.forEach(product -> setImagesAndLogo(product));
 
         return products;
     }
@@ -51,7 +45,7 @@ public class ProductService implements IProductService {
     @Override
     public List<Product> findAll() {
         List<Product> products =  dao.findByDeleted(false);
-        products.forEach(this::addImagesOnProduct);
+        products.forEach(this::setImagesAndLogo);
 
         return products;
     }
@@ -65,9 +59,20 @@ public class ProductService implements IProductService {
     @Override
     public Product get(final Long id) {
         Optional<Product> optionalProduct = dao.findById(id);
-        addImagesOnProduct(optionalProduct.get());
+        setImagesAndLogo(optionalProduct.get());
 
         return optionalProduct.get();
+    }
+
+    private void setImagesAndLogo(final Product product) {
+        addImagesOnProduct(product);
+        Store store = product.getStore();
+        Image logo = fileService.readFiles(store.getId().toString()).stream().findFirst().orElse(null);
+        if (logo != null) {
+            logo.setLink(getPath(logo, store.getId().toString()));
+            store.setLogo(logo);
+        }
+        product.setStore(store);
     }
 
 
@@ -75,17 +80,19 @@ public class ProductService implements IProductService {
     public void addImagesOnProduct(final Product product) {
         List<Image> images  = fileService.readFiles(product.getId().toString());
         images.forEach(image -> {
-            String path = ServletUriComponentsBuilder.fromCurrentContextPath()
-                    .path("/file/download/")
-                    .path(product.getId().toString())
-                    .path(File.separator)
-                    .path(image.getUrl())
-                    .toUriString();
-            image.setLink(path);
+            image.setLink(getPath(image, product.getId().toString()));
         });
         product.setImages(images);
     }
 
+    private String getPath(Image image, String id){
+        return ServletUriComponentsBuilder.fromCurrentContextPath()
+                .path("/file/download/")
+                .path(id)
+                .path("/")
+                .path(image.getUrl())
+                .toUriString();
+    }
 
     public void deleteImageOfProduct(final Product product, final String imageName) {
         fileService.deleteImage(product, imageName);
@@ -101,14 +108,14 @@ public class ProductService implements IProductService {
     public List<Product> byCategory(final Long id) {
         Category category = categoryService.findById(id);
         List<Product> optionalProducts = dao.findByCategoryAndDeleted(category,false);
-        optionalProducts.forEach(this::addImagesOnProduct);
+        optionalProducts.forEach(this::setImagesAndLogo);
         return optionalProducts;
     }
 
     @Override
     public List<Product> search(final String value) {
         List<Product> optionalProducts = dao.findAllByNameContainingIgnoreCaseAndDeleted(value,false);
-        optionalProducts.forEach(this::addImagesOnProduct);
+        optionalProducts.forEach(this::setImagesAndLogo);
 
         return optionalProducts;
     }
@@ -117,7 +124,7 @@ public class ProductService implements IProductService {
     public List<Product> searchByBrand(List<SearchRequest.BrandRequest> brands) {
         Collection brandsList = convertToCollection(brands);
         List<Product> products = dao.searchAllByBrandInAndDeleted(brandsList, false);
-        products.forEach(oneProduct -> addImagesOnProduct(oneProduct));
+        products.forEach(oneProduct -> setImagesAndLogo(oneProduct));
 
         return products;
     }
@@ -126,7 +133,7 @@ public class ProductService implements IProductService {
     public List<Product> searchByCategories(List<SearchRequest.CategoriesRequest> categories) {
         Collection categoriesList = convertToCategoriesCollection(categories);
         List<Product> products =  dao.searchAllByCategoryInAndDeleted(categoriesList, false);
-        products.forEach(oneProduct -> addImagesOnProduct(oneProduct));
+        products.forEach(oneProduct -> setImagesAndLogo(oneProduct));
 
         return products;
     }
@@ -173,7 +180,7 @@ public class ProductService implements IProductService {
             productPage = dao.findAllByNameContainingIgnoreCaseAndDeletedFalse(name, pageable);
         }
 
-        productPage.forEach(oneProduct -> addImagesOnProduct(oneProduct));
+        productPage.forEach(oneProduct -> setImagesAndLogo(oneProduct));
 
         return productPage;
     }
@@ -247,3 +254,4 @@ public class ProductService implements IProductService {
         return productToUpdate;
     }
 }
+

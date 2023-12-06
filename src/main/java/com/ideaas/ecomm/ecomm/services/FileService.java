@@ -2,6 +2,7 @@ package com.ideaas.ecomm.ecomm.services;
 
 import com.ideaas.ecomm.ecomm.domain.Image;
 import com.ideaas.ecomm.ecomm.domain.Product;
+import com.ideaas.ecomm.ecomm.domain.Store;
 import com.ideaas.ecomm.ecomm.exception.FileStorageException;
 import com.ideaas.ecomm.ecomm.exception.MyFileNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,7 +60,7 @@ public class FileService {
             if(fileName.contains("..")) {
                 throw new FileStorageException("Sorry! Filename contains invalid path sequence " + fileName);
             }
-            Path path = Paths.get(this.fileStorageLocation.toString().concat(File.separator).concat(folder));
+            Path path = Paths.get(this.fileStorageLocation.toString().concat("/").concat(folder));
             try {
                 Files.createDirectories(path);
             } catch (Exception ex) {
@@ -78,7 +79,7 @@ public class FileService {
     public List<Image> readFiles(String url) {
         final List<Image> images = new ArrayList<>();
         try {
-            Files.walkFileTree(Paths.get(fileStorageLocation.toString() + File.separator + url), new SimpleFileVisitor<Path>() {
+            Files.walkFileTree(Paths.get(fileStorageLocation.toString() + "/" + url), new SimpleFileVisitor<Path>() {
                 @Override
                 public FileVisitResult visitFile(Path file, BasicFileAttributes attrs){
                     try {
@@ -100,9 +101,15 @@ public class FileService {
     }
 
     public void deleteImage(Product product, String image){
-       String path = fileStorageLocation.toString() + File.separator + product.getId() +  File.separator + image;
+       String path = fileStorageLocation.toString() + "/" + product.getId() +  "/" + image;
        System.out.println(path);
        eliminarImagenes(path);
+    }
+
+    public void deleteLogo(Store store, String image){
+        String path = fileStorageLocation.toString() + "/" + store.getId() +  "/" + image;
+        System.out.println(path);
+        eliminarImagenes(path);
     }
 
     public static void eliminarImagenes(String rutaCarpeta) {

@@ -1,27 +1,38 @@
 package com.ideaas.ecomm.ecomm.domain;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.Getter;
-import lombok.Setter;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
+import javax.persistence.*;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.ManyToMany;
+import javax.persistence.JoinTable;
+import javax.persistence.JoinColumn;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import java.util.HashSet;
+import java.util.Set;
 import javax.persistence.Table;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-@Entity
-@Table(name = "USERS")
 @Getter
 @Setter
-public class User  {
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@Entity
+@Table(name = "USERS")
+public class User {
 
     @Id
     @Column(name = "USU_USERNAME")
@@ -60,6 +71,8 @@ public class User  {
     @Column(name = "USU_MELLIZOS")
     private Boolean twins;
 
+    @ManyToMany(mappedBy = "owners", fetch = FetchType.LAZY)
+    private Set<Store> stores = new HashSet<>();
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     @JsonIgnore
@@ -68,12 +81,16 @@ public class User  {
     @JsonIgnore
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<GrantedAuthority> authorities = new ArrayList<>();
-        for (Role role: this.roles) {
+        for (Role role : this.roles) {
             authorities.add(new SimpleGrantedAuthority(role.getRole()));
         }
 
         return authorities;
 
+    }
+
+    public User(String username) {
+        this.username = username;
     }
 
 }

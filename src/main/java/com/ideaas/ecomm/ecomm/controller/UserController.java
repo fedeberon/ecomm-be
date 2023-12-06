@@ -1,22 +1,17 @@
 package com.ideaas.ecomm.ecomm.controller;
 
+import com.ideaas.ecomm.ecomm.domain.Store;
 import com.ideaas.ecomm.ecomm.domain.User;
 import com.ideaas.ecomm.ecomm.domain.Wallet;
 import com.ideaas.ecomm.ecomm.services.UserService;
+import com.ideaas.ecomm.ecomm.services.interfaces.IStoreService;
 import com.ideaas.ecomm.ecomm.services.interfaces.IWalletService;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @CrossOrigin
@@ -25,13 +20,16 @@ public class UserController {
 
     private UserService userService;
     private IWalletService walletService;
+    private IStoreService storeService;
 
 
     @Autowired
     public UserController(final UserService userService,
-                            final IWalletService walletService) {
+                          final IWalletService walletService,
+                          final IStoreService storeService) {
         this.userService = userService;
         this.walletService = walletService;
+        this.storeService = storeService;
     }
 
     @PostMapping
@@ -89,4 +87,9 @@ public class UserController {
         return ResponseEntity.status(202).body(userToUpdate);
     }
 
+    @GetMapping("/{username}/stores")
+    public ResponseEntity<Set<Store>> getUserStores(@PathVariable String username) {
+        Set<Store> userStores = storeService.getStoresByUser(username);
+        return ResponseEntity.ok(userStores);
+    }
 }
