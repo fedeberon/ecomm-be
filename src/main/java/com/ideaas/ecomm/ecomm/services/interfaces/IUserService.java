@@ -16,5 +16,4 @@ public interface IUserService extends UserDetailsService {
     List<User> findAll();
 
     User getCurrent();
-
 }
