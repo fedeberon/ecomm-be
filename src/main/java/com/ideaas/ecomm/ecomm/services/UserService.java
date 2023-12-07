@@ -1,7 +1,6 @@
 package com.ideaas.ecomm.ecomm.services;
 
 import com.ideaas.ecomm.ecomm.domain.User;
-import com.ideaas.ecomm.ecomm.repository.ScheduleDao;
 import com.ideaas.ecomm.ecomm.repository.UserDao;
 import com.ideaas.ecomm.ecomm.services.interfaces.IAuthenticationFacade;
 import com.ideaas.ecomm.ecomm.services.interfaces.IUserService;
@@ -11,6 +10,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -19,7 +19,6 @@ import java.util.Optional;
 public class UserService implements IUserService {
 
     private UserDao dao;
-    private ScheduleDao scheduleDao;
     private IAuthenticationFacade authenticationFacade;
 
     @Autowired

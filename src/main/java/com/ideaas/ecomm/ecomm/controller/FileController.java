@@ -29,13 +29,12 @@ public class FileController {
 
     @PostMapping("upload")
     public UploadFileResponse uploadFile(@RequestParam("file") final MultipartFile file, @RequestParam final String folder) {
-
         final String fileName = fileService.storeFile(file, folder);
 
         final String fileDownloadUrl = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path("/file/download/")
                 .path(folder)
-                .path("/")
+                .path(File.separator)
                 .path(fileName)
                 .toUriString();
 
@@ -50,7 +49,7 @@ public class FileController {
             String path = ServletUriComponentsBuilder.fromCurrentContextPath()
                             .path("/file/download/")
                             .path(folder)
-                            .path("/")
+                            .path(File.separator)
                             .path(image.getUrl())
                             .toUriString();
             image.setLink(path);
