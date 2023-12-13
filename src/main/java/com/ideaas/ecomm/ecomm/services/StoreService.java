@@ -52,16 +52,16 @@ public class StoreService implements IStoreService {
     }
 
     @Override
-    public Store save(final Store store, final String creatorId) {
-        Optional<User> creator = userService.get(creatorId);
-        if (creator.isPresent()){
-            Set<User> owners = new HashSet<>();
-            owners.add(creator.get());
-            store.setOwners(owners);
-            return dao.save(store);
-        }else{
-            return null;
+    public Store save(final Store store, final Set<String> ownerIds) {
+        Set<User> owners  = new HashSet<>();
+        for(String ownerId : ownerIds){
+            Optional<User> owner = userService.get(ownerId);
+            if (owner.isPresent()){
+                owners.add(owner.get());
+                store.setOwners(owners);
+            }
         }
+        return dao.save(store);
     }
 
     @Override
@@ -156,6 +156,21 @@ public class StoreService implements IStoreService {
             dao.save(store);
         }
     }
+
+    @Override
+    public Store updateOwners(Long storeId, final Set<String> ownerIds){
+        Store store = findById(storeId);
+        store.setOwners(new HashSet<>());
+        for(String id: ownerIds){
+            User user = userService.get(id).get();
+            if (store != null && user != null) {
+                store.getOwners().add(user);
+            }
+        }
+        dao.save(store);
+        return store;
+    }
+
 
     @Override
     public void deleteLogoOfStore(final Store store, final String imageName){

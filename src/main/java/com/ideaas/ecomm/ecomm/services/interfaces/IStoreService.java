@@ -11,9 +11,10 @@ public interface IStoreService {
 
     Store findById(Long id);
 
-    Store save(final Store store, final String creatorId);
+    Store save(final Store store, final Set<String> ownerIds);
 
     Store update(Long id, Store updatedStore);
+    Store updateOwners(Long storeId, final Set<String> ownerIds);
 
     Store get(Long id);
 
@@ -24,6 +25,7 @@ public interface IStoreService {
     void addLogoOnStore(Store store);
 
     void addUserToStore(Long storeId, String username);
+
 
     void deleteLogoOfStore(final Store store, final String imageName);
 
