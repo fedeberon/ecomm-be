@@ -67,12 +67,15 @@ public class ProductService implements IProductService {
     private void setImagesAndLogo(final Product product) {
         addImagesOnProduct(product);
         Store store = product.getStore();
-        Image logo = fileService.readFiles(store.getId().toString()).stream().findFirst().orElse(null);
-        if (logo != null) {
+        if ( store != null) {
+            Image logo = fileService.readFiles(store.getId().toString()).stream().findFirst().orElse(null);
+            if (logo != null) {
             logo.setLink(getPath(logo, store.getId().toString()));
             store.setLogo(logo);
+            }
+            product.setStore(store);
         }
-        product.setStore(store);
+        
     }
 
 

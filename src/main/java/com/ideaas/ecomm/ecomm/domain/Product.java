@@ -51,7 +51,7 @@ public class Product {
     private Brand brand;
 
     @OneToOne
-    @JoinColumn(name = "PROD_STO_ID")
+    @JoinColumn(name = "PROD_STO_ID",nullable = true)
     private Store store;
 
     @Column(name = "PRO_POINT")    
