@@ -35,7 +35,7 @@ public class Stock {
     private LocalDateTime date = LocalDateTime.now();
 
     @ManyToOne
-    @JoinColumn(name = "ST_PROV_ID", nullable = false)
+    @JoinColumn(name = "ST_PROV_ID")
     private Provider provider;
 
     @OneToMany(mappedBy = "stock", cascade = CascadeType.ALL, orphanRemoval = true)

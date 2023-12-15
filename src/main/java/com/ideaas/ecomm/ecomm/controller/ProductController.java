@@ -81,10 +81,14 @@ public class ProductController {
     }
 
     @PostMapping
-    public ResponseEntity<Product> save(@RequestBody Product product) {
-        Product productSaved = productService.save(product);
-        productService.addImagesOnProduct(product);
-        return ResponseEntity.accepted().body(productSaved);
+    public ResponseEntity<Product> save(@RequestBody final Product product) {
+        try{
+            Product productSaved = productService.save(product);
+            productService.addImagesOnProduct(product);
+            return ResponseEntity.accepted().body(productSaved);
+        }catch(NotFoundException ex){
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @PutMapping("{id}")
