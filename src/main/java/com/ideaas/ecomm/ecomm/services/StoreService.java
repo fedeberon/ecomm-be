@@ -92,15 +92,11 @@ public class StoreService implements IStoreService {
 
 	@Override
 	public void delete(Store storeToDelete) {
-        List<Product> products = productService.findAll();
+        List<Product> products = findProductsInStore(storeToDelete.getId());
         for (Product product: products){
-            Long storeId = storeToDelete.getId();
-            if(product.getStore() != null && product.getStore().getId() == storeId){
-                product.setStore(null);
-            }
+            productService.deleteProduct(product.getId());
         }
 		dao.delete(storeToDelete);
-		
 	}
 
     @Override
@@ -176,7 +172,6 @@ public class StoreService implements IStoreService {
     public void deleteLogoOfStore(final Store store, final String imageName){
         fileService.deleteLogo(store, imageName);
     }
-
 
     @Override
     public Set<Store> getStoresByUser(String username) {
