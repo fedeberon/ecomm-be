@@ -3,18 +3,15 @@ package com.ideaas.ecomm.ecomm.repository;
 import com.ideaas.ecomm.ecomm.domain.Brand;
 import com.ideaas.ecomm.ecomm.domain.Category;
 import com.ideaas.ecomm.ecomm.domain.Product;
-
-import org.hibernate.annotations.OrderBy;
+import com.ideaas.ecomm.ecomm.domain.Store;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 
-import javax.persistence.OrderColumn;
 import java.util.Collection;
 import java.util.List;
-import java.util.Optional;
 
 @Repository
 public interface ProductDao extends PagingAndSortingRepository<Product, Long> {
@@ -48,4 +45,10 @@ public interface ProductDao extends PagingAndSortingRepository<Product, Long> {
     Page<Product> findAllByNameContainingIgnoreCaseAndDeletedFalseAndCategoryIn(String name,Collection<Category> categories, Pageable pageable);
     Page<Product> findAllByNameContainingIgnoreCaseAndDeletedFalse(String name, Pageable pageable);
 
+    //METODOS
+    List<Product> findAllByCategoryAndDeletedFalse(Category category);
+    List<Product> findAllByStoreAndDeletedFalse(Store store);
+    List<Product> findAllByBrandAndDeletedFalse(Brand brand);
+    List<Product> findAllByNameContainingIgnoreCaseAndDeletedFalse(String name);
+    List<Product> findAll();
 }

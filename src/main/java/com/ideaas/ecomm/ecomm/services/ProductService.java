@@ -22,13 +22,17 @@ public class ProductService implements IProductService {
     private FileService fileService;
     private ICategoryService categoryService;
 
+    private RecommendService recommendService;
+
     @Autowired
     public ProductService(final ProductDao dao,
                           final FileService fileService,
-                          final ICategoryService categoryService) {
+                          final ICategoryService categoryService,
+                          final RecommendService recommendService) {
         this.dao = dao;
         this.fileService = fileService;
         this.categoryService = categoryService;
+        this.recommendService = recommendService;
     }
 
 
@@ -206,6 +210,12 @@ public class ProductService implements IProductService {
             product.setSales(sales);
             save(product);
         });
+    }
+
+
+    @Override
+    public List<Product> getRecommendedProducts(Long id, Integer amount){
+        return recommendService.generateRecommendedProducts(id, amount);
     }
 
     @Override

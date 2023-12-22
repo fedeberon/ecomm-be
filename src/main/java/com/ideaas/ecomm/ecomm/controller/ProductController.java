@@ -57,6 +57,13 @@ public class ProductController {
         return ResponseEntity.ok(products);
     }
 
+    @GetMapping("/recommended/{id}/{amount}")
+    public ResponseEntity<List<Product>> getRecommendedProducts(@PathVariable Long id, @PathVariable Integer amount) {
+        List<Product> products = productService.getRecommendedProducts(id, amount);
+
+        return ResponseEntity.ok(products);
+    }
+
     @DeleteMapping("{id}")
     public ResponseEntity<Product> deleteProduct(@PathVariable final long id) {
         Product product = productService.deleteProduct(id);

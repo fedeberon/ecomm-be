@@ -24,6 +24,8 @@ public interface IProductService {
 
     List<Product> search(String value);
 
+    List<Product> getRecommendedProducts(Long id, Integer amount);
+
     List<Product> searchByBrand(List<SearchRequest.BrandRequest> brands);
 
     void discountAmountStock(List<ProductToCart> productToCarts);
