@@ -215,7 +215,9 @@ public class ProductService implements IProductService {
 
     @Override
     public List<Product> getRecommendedProducts(Long id, Integer amount){
-        return recommendService.generateRecommendedProducts(id, amount);
+        List<Product> recommendedProducts = recommendService.generateRecommendedProducts(id, amount);
+        recommendedProducts.stream().forEach(this::setImagesAndLogo);
+        return recommendedProducts;
     }
 
     @Override
