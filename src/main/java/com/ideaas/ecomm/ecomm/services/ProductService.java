@@ -168,14 +168,14 @@ public class ProductService implements IProductService {
         return collection;
     }
     @Override
-    public Page<Product> searchProducts(String rawName,
+    public Page<Product> searchProducts(String name,
                                         Collection<Category> categories,
                                         Collection<Brand> brands,
                                         String orderBy,
                                         Boolean asc,
                                         int page,
                                         int size){
-        String name = normalizeAndRemoveAccents(rawName);
+        // String name = normalizeAndRemoveAccents(rawName);
         Pageable pageable = PageRequest.of(page , size, Sort.by(asc ? Sort.Direction.ASC : Sort.Direction.DESC, orderBy));
         Page<Product> productPage;
 
