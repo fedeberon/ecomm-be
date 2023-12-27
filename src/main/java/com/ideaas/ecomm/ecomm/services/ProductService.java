@@ -13,7 +13,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import java.text.Normalizer;
 import java.util.*;
 
 @Service
@@ -168,14 +167,13 @@ public class ProductService implements IProductService {
         return collection;
     }
     @Override
-    public Page<Product> searchProducts(String rawName,
+    public Page<Product> searchProducts(String name,
                                         Collection<Category> categories,
                                         Collection<Brand> brands,
                                         String orderBy,
                                         Boolean asc,
                                         int page,
                                         int size){
-        String name = normalizeAndRemoveAccents(rawName);
         Pageable pageable = PageRequest.of(page , size, Sort.by(asc ? Sort.Direction.ASC : Sort.Direction.DESC, orderBy));
         Page<Product> productPage;
 
@@ -269,12 +267,6 @@ public class ProductService implements IProductService {
 
         this.save(productToUpdate);
         return productToUpdate;
-    }
-
-    private String normalizeAndRemoveAccents(String input) {
-        return Normalizer.normalize(input, Normalizer.Form.NFD)
-                .replaceAll("\\p{InCombiningDiacriticalMarks}+", "")
-                .toLowerCase();
     }
 }
 
