@@ -40,10 +40,31 @@ public interface ProductDao extends PagingAndSortingRepository<Product, Long> {
     List<Product> findByCategoryInAndBrandInAndDeletedFalse(List<String> categorias, List<String> marcas);
 
     //NUEVOS METODOS CON FILTROS
-    Page<Product> findAllByNameContainingIgnoreCaseAndDeletedFalseAndCategoryInAndBrandIn(String name,Collection<Category> categories,Collection<Brand> brands, Pageable pageable);
-    Page<Product> findAllByNameContainingIgnoreCaseAndDeletedFalseAndBrandIn(String name, Collection<Brand> brands, Pageable pageable);
-    Page<Product> findAllByNameContainingIgnoreCaseAndDeletedFalseAndCategoryIn(String name,Collection<Category> categories, Pageable pageable);
-    Page<Product> findAllByNameContainingIgnoreCaseAndDeletedFalse(String name, Pageable pageable);
+
+    //========= findAllByNameContainingIgnoreCaseAndDeletedFalseAndCategoryInAndBrandIn =========
+
+    Page<Product> findAllByNameContainingIgnoreCaseAndDeletedFalseAndCategoryInAndBrandIn(
+            String name,
+            Collection<Category> categories,
+            Collection<Brand> brands,
+            Pageable pageable);
+
+    //========= findAllByNameContainingIgnoreCaseAndDeletedFalseAndBrandIn =========
+    Page<Product> findAllByNameContainingIgnoreCaseAndDeletedFalseAndBrandIn(
+            String name,
+            Collection<Brand> brands,
+            Pageable pageable);
+
+    //========= findAllByNameContainingIgnoreCaseAndDeletedFalseAndCategoryIn =========
+
+    Page<Product> findAllByNameContainingIgnoreCaseAndDeletedFalseAndCategoryIn(
+            String name,
+            Collection<Category> categories,
+            Pageable pageable);
+
+    //========= findAllByNameContainingIgnoreCaseAndDeletedFalse =========
+     Page<Product> findAllByNameContainingIgnoreCaseAndDeletedFalse(String name, Pageable pageable);
+
 
     //METODOS
     List<Product> findAllByCategoryAndDeletedFalse(Category category);
