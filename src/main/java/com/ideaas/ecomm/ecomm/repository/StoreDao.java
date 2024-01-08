@@ -12,4 +12,5 @@ import javax.persistence.EntityManager;
 @Repository
 public interface StoreDao extends JpaRepository<Store, Long> {
     List<Store> findByOwnersContaining(User user);
+    boolean existsByName(String name);
 }
