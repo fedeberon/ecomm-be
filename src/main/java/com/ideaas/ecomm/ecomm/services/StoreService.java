@@ -53,6 +53,10 @@ public class StoreService implements IStoreService {
 
     @Override
     public Store save(final Store store, final Set<String> ownerIds) {
+        if (dao.existsByName(store.getName())) {
+            throw new IllegalArgumentException("Store name already exists");
+        }
+        
         Set<User> owners  = new HashSet<>();
         for(String ownerId : ownerIds){
             Optional<User> owner = userService.get(ownerId);
