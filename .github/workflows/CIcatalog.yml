@@ -25,5 +25,5 @@ jobs:
         script: |
           cd ${{ secrets.PROJECT_PATH }} && git pull
           systemctl stop ecommerce.service
-          mvn clean package -DskipTests
+          mvn clean install
           systemctl start ecommerce.service
