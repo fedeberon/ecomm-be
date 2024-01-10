@@ -45,6 +45,9 @@ public class Store {
     @Column(name = "STO_SCHEDULE")
     private String schedule;
 
+    @Column(name = "STO_DELETED")
+    private Boolean deleted = false;
+
     @Transient
     private Image logo;
 }

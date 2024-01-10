@@ -14,7 +14,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class StoreService implements IStoreService {
@@ -37,7 +41,7 @@ public class StoreService implements IStoreService {
 
     @Override
     public List<Store> findAll() {
-        List<Store> stores =  dao.findAll();
+        List<Store> stores =  dao.findAllByDeletedFalse();
         for(Store store: stores){
             addLogoOnStore(store);
         }
@@ -96,26 +100,17 @@ public class StoreService implements IStoreService {
 
 	@Override
 	public void delete(Store storeToDelete) {
+        storeToDelete.setDeleted(true);
         List<Product> products = findProductsInStore(storeToDelete.getId());
         for (Product product: products){
-            productService.deleteProduct(product.getId());
+            product.setDeleted(true);
         }
-		dao.delete(storeToDelete);
+		dao.save(storeToDelete);
 	}
 
     @Override
     public List<Product> findProductsInStore(Long id) {
-        Store Store = this.findById(id);
-        List<Product> products = productService.findAll();
-        List<Product> productsOfStore = new ArrayList<>();
-        for (Product product: products){
-            Long StoreId = Store.getId();
-            if(product.getStore() != null && product.getStore().getId() == StoreId){
-                productsOfStore.add(product);
-            }
-        }
-
-        return productsOfStore;
+        return productService.byStore(id);
     }
     
     @Override
@@ -181,7 +176,10 @@ public class StoreService implements IStoreService {
     public Set<Store> getStoresByUser(String username) {
         User user = userService.get(username).orElse(null);
         if (user != null) {
-            Set<Store> userStores = user.getStores();
+            //Obtiene todas aquellas tiendas que no tienen borrado logico
+            Set<Store> userStores = user.getStores().stream()
+                    .filter(store -> !Boolean.TRUE.equals(store.getDeleted()))
+                    .collect(Collectors.toSet());
             for (Store store: userStores){
                 addLogoOnStore(store);
             }
