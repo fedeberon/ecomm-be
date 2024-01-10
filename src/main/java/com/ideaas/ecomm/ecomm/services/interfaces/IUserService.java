@@ -17,4 +17,5 @@ public interface IUserService extends UserDetailsService {
 
     User getCurrent();
 
+    Boolean sendNewPswrdMail(User user);
 }

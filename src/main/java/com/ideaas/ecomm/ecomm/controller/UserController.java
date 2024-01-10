@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 @RestController
@@ -91,5 +92,19 @@ public class UserController {
     public ResponseEntity<Set<Store>> getUserStores(@PathVariable String username) {
         Set<Store> userStores = storeService.getStoresByUser(username);
         return ResponseEntity.ok(userStores);
+    }
+
+    @PostMapping("/restore")
+    public ResponseEntity<Void> sendRestorePasswrdMail(@RequestBody final String username){
+        System.out.println(username);
+        Optional<User> userOptional = userService.get(username);
+
+        if (userOptional.isPresent()) {
+            User user = userOptional.get();
+            Boolean status = userService.sendNewPswrdMail(user);
+            return status ? ResponseEntity.ok().build() : ResponseEntity.status(500).build();
+        } else {
+            return ResponseEntity.status(404).build();
+        }
     }
 }
