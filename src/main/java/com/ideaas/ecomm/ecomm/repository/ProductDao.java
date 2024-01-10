@@ -72,4 +72,7 @@ public interface ProductDao extends PagingAndSortingRepository<Product, Long> {
     List<Product> findAllByBrandAndDeletedFalse(Brand brand);
     List<Product> findAllByNameContainingIgnoreCaseAndDeletedFalse(String name);
     List<Product> findAll();
+
+    //UTILIZADO PARA ELIMINAR UNA STORE CON TODOS SUS PRODUCTOS
+    List<Product> findAllByStore(Store store);
 }

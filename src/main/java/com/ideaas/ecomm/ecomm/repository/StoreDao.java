@@ -7,10 +7,9 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-import javax.persistence.EntityManager;
-
 @Repository
 public interface StoreDao extends JpaRepository<Store, Long> {
     List<Store> findByOwnersContaining(User user);
+    List<Store> findAllByDeletedFalse();
     boolean existsByName(String name);
 }

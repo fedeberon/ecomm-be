@@ -38,6 +38,7 @@ public interface IProductService {
 
     Product deleteProduct(long id);
 
+
     Product activateProduct(long id);
 
     Product update(Long id, Product product);
@@ -47,4 +48,6 @@ public interface IProductService {
     List<Product> relationship(Long id);
 
     Page<Product> searchProducts(String name, Collection<Category> categories, Collection<Brand> brands, String orderBy, Boolean asc, int page, int size);
+
+    List<Product> byStore(Long storeId);
 }

@@ -3,6 +3,7 @@ package com.ideaas.ecomm.ecomm.services;
 import com.ideaas.ecomm.ecomm.domain.*;
 import com.ideaas.ecomm.ecomm.payload.SearchRequest;
 import com.ideaas.ecomm.ecomm.repository.ProductDao;
+import com.ideaas.ecomm.ecomm.repository.StoreDao;
 import com.ideaas.ecomm.ecomm.services.interfaces.ICategoryService;
 import com.ideaas.ecomm.ecomm.services.interfaces.IProductService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,7 @@ import java.util.*;
 public class ProductService implements IProductService {
 
     private ProductDao dao;
+    private StoreDao storeDao;
     private FileService fileService;
     private ICategoryService categoryService;
 
@@ -26,10 +28,12 @@ public class ProductService implements IProductService {
 
     @Autowired
     public ProductService(final ProductDao dao,
+                          final StoreDao storeDao,
                           final FileService fileService,
                           final ICategoryService categoryService,
                           final RecommendService recommendService) {
         this.dao = dao;
+        this.storeDao = storeDao;
         this.fileService = fileService;
         this.categoryService = categoryService;
         this.recommendService = recommendService;
@@ -267,6 +271,14 @@ public class ProductService implements IProductService {
 
         this.save(productToUpdate);
         return productToUpdate;
+    }
+
+    //Usados para eliminar un comercio con todos sus productos...
+    @Override
+    public List<Product> byStore(Long storeId) {
+        Store store = storeDao.getById(storeId);
+        List<Product> products =  dao.findAllByStore(store);
+        return products;
     }
 }
 
