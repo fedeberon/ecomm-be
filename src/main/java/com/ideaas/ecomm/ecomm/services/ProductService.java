@@ -272,7 +272,10 @@ public class ProductService implements IProductService {
     //Obtiene todos los productos asociados a un Store
     @Override
     public List<Product> findProductsInStore(Store store) {
-        List<Product> products =  dao.findAllByStore(store);
+        List<Product> products =  dao.findAllByStoreAndDeletedFalse(store);
+        for (Product product: products){
+            setImagesAndLogo(product);
+        }
         return products;
     }
 
