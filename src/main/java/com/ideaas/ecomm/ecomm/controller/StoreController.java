@@ -75,16 +75,16 @@ public class StoreController {
     public ResponseEntity<String> delete(@PathVariable final Long id){
         final Store storeToDelete = storeService.get(id);
         storeService.delete(storeToDelete);
-
         return ResponseEntity.accepted().body("Store deleted succesfully");
     }
 
     @GetMapping("{id}/products")
     private ResponseEntity<List<Product>> findProductsInStore(@PathVariable final Long id) {
-        List<Product> products = storeService.findProductsInStore(id);
-
+        Store store = storeService.findById(id);
+        List<Product> products = storeService.getProductsFromStore(store);
         return ResponseEntity.ok(products);
     }
+
 
     @PostMapping("/{storeId}/addUser")
     public ResponseEntity<String> addUserToStore(

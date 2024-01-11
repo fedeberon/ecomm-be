@@ -1,9 +1,6 @@
 package com.ideaas.ecomm.ecomm.services.interfaces;
 
-import com.ideaas.ecomm.ecomm.domain.Brand;
-import com.ideaas.ecomm.ecomm.domain.Category;
-import com.ideaas.ecomm.ecomm.domain.Product;
-import com.ideaas.ecomm.ecomm.domain.ProductToCart;
+import com.ideaas.ecomm.ecomm.domain.*;
 import com.ideaas.ecomm.ecomm.payload.SearchRequest;
 import org.springframework.data.domain.Page;
 
@@ -49,5 +46,5 @@ public interface IProductService {
 
     Page<Product> searchProducts(String name, Collection<Category> categories, Collection<Brand> brands, String orderBy, Boolean asc, int page, int size);
 
-    List<Product> byStore(Long storeId);
+    List<Product> findProductsInStore(Store store); //Obtiene todos los productos asociados a un Store
 }

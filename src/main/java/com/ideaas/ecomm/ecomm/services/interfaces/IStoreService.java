@@ -1,7 +1,7 @@
 package com.ideaas.ecomm.ecomm.services.interfaces;
 
-import com.ideaas.ecomm.ecomm.domain.Store;
 import com.ideaas.ecomm.ecomm.domain.Product;
+import com.ideaas.ecomm.ecomm.domain.Store;
 
 import java.util.List;
 import java.util.Set;
@@ -20,8 +20,6 @@ public interface IStoreService {
 
     void delete(Store storeToDelete);
 
-    List<Product> findProductsInStore(Long id);
-
     void addLogoOnStore(Store store);
 
     void addUserToStore(Long storeId, String username);
@@ -30,4 +28,6 @@ public interface IStoreService {
     void deleteLogoOfStore(final Store store, final String imageName);
 
     Set<Store> getStoresByUser(String username);
+
+    List<Product> getProductsFromStore(Store store);
 }
