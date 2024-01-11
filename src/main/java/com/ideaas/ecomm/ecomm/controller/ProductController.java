@@ -142,29 +142,29 @@ public class ProductController {
         return ResponseEntity.ok(products);
     }
 
-@GetMapping("/searchlist")
-public ResponseEntity<Page<Product>> searchProducts(
-        @RequestParam(defaultValue = "") String name,
-        @RequestParam(required = false) List<String> categories,
-        @RequestParam(required = false) List<String> brands,
-        @RequestParam(defaultValue = "sales") String orderBy,
-        @RequestParam(defaultValue = "false") String asc,
-        @RequestParam(defaultValue = "0") int page,
-        @RequestParam(defaultValue = "12") int size
-) {
-    try {
-        List<Category> categoryList = categories != null ? categories.stream().map(Long::valueOf).map(Category::new).collect(Collectors.toList()) : null;
-        List<Brand> brandList = brands != null ? brands.stream().map(Long::valueOf).map(Brand::new).collect(Collectors.toList()) : null;
+    @GetMapping("/searchlist")
+    public ResponseEntity<Page<Product>> searchProducts(
+            @RequestParam(defaultValue = "") String name,
+            @RequestParam(required = false) List<String> categories,
+            @RequestParam(required = false) List<String> brands,
+            @RequestParam(defaultValue = "sales") String orderBy,
+            @RequestParam(defaultValue = "false") String asc,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "12") int size
+    ) {
+        try {
+            List<Category> categoryList = categories != null ? categories.stream().map(Long::valueOf).map(Category::new).collect(Collectors.toList()) : null;
+            List<Brand> brandList = brands != null ? brands.stream().map(Long::valueOf).map(Brand::new).collect(Collectors.toList()) : null;
 
-        Page<Product> products = productService.searchProducts(name, categoryList, brandList, orderBy, Boolean.parseBoolean(asc), page, size);
-        return ResponseEntity.ok(products);
-    } catch (Exception e) {
-        // Log the exception for debugging purposes
-        e.printStackTrace();
-        // Return an error response
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+            Page<Product> products = productService.searchProducts(name, categoryList, brandList, orderBy, Boolean.parseBoolean(asc), page, size);
+            return ResponseEntity.ok(products);
+        } catch (Exception e) {
+            // Log the exception for debugging purposes
+            e.printStackTrace();
+            // Return an error response
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
-}
 
 
     @PostMapping("/promotion")
@@ -183,5 +183,4 @@ public ResponseEntity<Page<Product>> searchProducts(
 
         return ResponseEntity.accepted().build();
     }
-
 }

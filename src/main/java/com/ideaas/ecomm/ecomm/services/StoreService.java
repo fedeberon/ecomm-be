@@ -5,7 +5,6 @@ import com.ideaas.ecomm.ecomm.domain.Image;
 import com.ideaas.ecomm.ecomm.domain.Product;
 import com.ideaas.ecomm.ecomm.domain.Store;
 import com.ideaas.ecomm.ecomm.domain.User;
-import com.ideaas.ecomm.ecomm.repository.ScheduleDao;
 import com.ideaas.ecomm.ecomm.repository.StoreDao;
 import com.ideaas.ecomm.ecomm.services.interfaces.IProductService;
 import com.ideaas.ecomm.ecomm.services.interfaces.IStoreService;
@@ -24,19 +23,17 @@ import java.util.stream.Collectors;
 public class StoreService implements IStoreService {
 
     private StoreDao dao;
-    private ScheduleDao scheduleDao;
-    private IProductService productService;
     private UserService userService;
     private FileService fileService;
 
-    @Autowired
-    public StoreService(final StoreDao dao, final ScheduleDao scheduleDao, final UserService userService, final IProductService productService, final FileService fileService) {
+    private IProductService productService;
 
+    @Autowired
+    public StoreService(final StoreDao dao, final UserService userService, final FileService fileService, final IProductService productService) {
         this.dao = dao;
-        this.scheduleDao = scheduleDao;
         this.userService = userService;
-        this.productService = productService;
         this.fileService = fileService;
+        this.productService = productService;
     }
 
     @Override
@@ -94,6 +91,7 @@ public class StoreService implements IStoreService {
         return store;
 	}
 
+
     public List<Store> getStoresByUser(User user) {
         return dao.findByOwnersContaining(user);
     }
@@ -101,18 +99,19 @@ public class StoreService implements IStoreService {
 	@Override
 	public void delete(Store storeToDelete) {
         storeToDelete.setDeleted(true);
-        List<Product> products = findProductsInStore(storeToDelete.getId());
-        for (Product product: products){
+        List<Product> productsToDelete = productService.findProductsInStore(storeToDelete);
+        for (Product product: productsToDelete){
             product.setDeleted(true);
         }
 		dao.save(storeToDelete);
 	}
 
     @Override
-    public List<Product> findProductsInStore(Long id) {
-        return productService.byStore(id);
+    public List<Product> getProductsFromStore(Store store){
+        List<Product> products = productService.findProductsInStore(store);
+        return products;
     }
-    
+
     @Override
     public void addLogoOnStore(final Store store) {
         List<Image> images = fileService.readFiles(store.getId().toString());
@@ -134,7 +133,6 @@ public class StoreService implements IStoreService {
             store.setLogo(null);
         }
     }
-
 
     public void deleteLogoFromStore(final Store store, final String imageName) {
         fileService.deleteLogo(store, imageName);
