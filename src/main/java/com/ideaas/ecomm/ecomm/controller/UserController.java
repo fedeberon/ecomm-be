@@ -35,8 +35,11 @@ public class UserController {
     @PostMapping
     public ResponseEntity<User> save(@RequestBody final User user) {
         final User userSaved = userService.save(user);
-
-        return ResponseEntity.status(202).body(userSaved);
+        if (userSaved != null)
+            return ResponseEntity.status(202).body(userSaved);
+        else
+            //conflicted error
+            return ResponseEntity.status(409).build();
     }
 
     @PutMapping

@@ -46,6 +46,13 @@ public class UserService implements IUserService {
         user.setUsername(user.getEmail());
         user.setPassword(password);
 
+        User existingUser = dao.findByUsername(user.getEmail());
+
+        if (existingUser != null) {
+            return null;
+        }
+
+
         return dao.save(user);
     }
 
