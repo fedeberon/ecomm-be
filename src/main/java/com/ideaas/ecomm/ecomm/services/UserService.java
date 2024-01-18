@@ -39,25 +39,31 @@ public class UserService implements IUserService {
 
     }
 
+
+
+    private User setPassword(User user){
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        String password = passwordEncoder.encode(user.getPassword());;
+        user.setPassword(password);
+        return user;
+    }
+
     @Override
     public User save(final User user) {
-        BCryptPasswordEncoder passwordEncoder =new BCryptPasswordEncoder();
-        String password = passwordEncoder.encode(user.getPassword());
         user.setUsername(user.getEmail());
-        user.setPassword(password);
-
+        setPassword(user);
         User existingUser = dao.findByUsername(user.getEmail());
 
         if (existingUser != null) {
             return null;
         }
 
-
         return dao.save(user);
     }
 
     @Override
-    public User update(final User user) { 
+    public User update(final User user) {
+        setPassword(user);
         return dao.save(user);
     }
 
