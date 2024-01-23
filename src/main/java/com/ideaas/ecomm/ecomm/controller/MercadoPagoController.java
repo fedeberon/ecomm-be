@@ -38,12 +38,6 @@ public class MercadoPagoController {
         String username = checkoutRequest.getUsername();
         List<Detail> details = checkoutRequest.getDetails();
 
-        for (Detail detail : details) {
-            System.out.println("ID: " + detail.getProductId() +
-                    "\nCANTIDAD: " + detail.getQuantity() +
-                    "\nTALLE: " + detail.getSize());
-        }
-
         final Cart cart = new Cart.CartBuilder().withDetails(details).build();
         //Se indica que la nueva compra, obviamente, esta en proceso
         final Checkout checkout = checkoutService.save(cart, CheckoutState.IN_PROCESS, username);
