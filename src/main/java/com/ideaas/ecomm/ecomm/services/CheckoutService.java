@@ -1,10 +1,6 @@
 package com.ideaas.ecomm.ecomm.services;
 
-import com.ideaas.ecomm.ecomm.domain.Cart;
-import com.ideaas.ecomm.ecomm.domain.Checkout;
-import com.ideaas.ecomm.ecomm.domain.Product;
-import com.ideaas.ecomm.ecomm.domain.ProductToCart;
-import com.ideaas.ecomm.ecomm.domain.Size;
+import com.ideaas.ecomm.ecomm.domain.*;
 import com.ideaas.ecomm.ecomm.enums.CheckoutState;
 import com.ideaas.ecomm.ecomm.repository.CheckoutDao;
 import com.ideaas.ecomm.ecomm.services.interfaces.ICheckoutService;
@@ -13,7 +9,6 @@ import com.ideaas.ecomm.ecomm.services.interfaces.ISizeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -46,12 +41,13 @@ public class CheckoutService implements ICheckoutService {
     }
 
     @Override
-    public Checkout save(final Cart cart, CheckoutState state) {
+    public Checkout save(final Cart cart, CheckoutState state, String username) {
         final List<Product> products = new ArrayList<>();
         final List<ProductToCart> productsToCart = new ArrayList<>();
         Checkout checkout = Checkout.builder()
                 .checkoutState(state)
                 .products(productsToCart)
+                .username(username)
                 .build();
         cart.getDetails().forEach(detail -> {
            Product product = productService.get(Long.valueOf(detail.getProductId()));
