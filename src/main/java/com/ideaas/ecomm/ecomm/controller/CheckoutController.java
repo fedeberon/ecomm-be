@@ -41,7 +41,11 @@ public class CheckoutController {
             throw new DetailNotFoundException("Details should not be null or empty");
         }
         final Cart cart = new Cart.CartBuilder().withDetails(details).build();
-        final Checkout checkout = checkoutService.save(cart, CheckoutState.IN_PROCESS);
+        /*
+        ACLARACION: username es null por el momento - no se si se vaya a utilizar este endpoint en el futuro
+        asi que no hare modificaciones mayores
+        */
+        final Checkout checkout = checkoutService.save(cart, CheckoutState.IN_PROCESS, null);
 
         return ResponseEntity.ok(checkout);
     }
@@ -52,8 +56,11 @@ public class CheckoutController {
             throw new DetailNotFoundException("Details should not be null or empty");
         }
         final Cart cart = new Cart.CartBuilder().withDetails(details).build();
-        final Checkout checkout = checkoutService.save(cart, CheckoutState.BUDGET);
-
+        /*
+        ACLARACION: username es null por el momento - no se si se vaya a utilizar este endpoint en el futuro
+        asi que no hare modificaciones mayores
+        */
+        final Checkout checkout = checkoutService.save(cart, CheckoutState.BUDGET, null);
         return ResponseEntity.ok(checkout);
     }
 
