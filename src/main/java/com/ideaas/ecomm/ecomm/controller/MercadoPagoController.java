@@ -1,9 +1,6 @@
 package com.ideaas.ecomm.ecomm.controller;
 
-import com.ideaas.ecomm.ecomm.domain.Callback;
-import com.ideaas.ecomm.ecomm.domain.Cart;
-import com.ideaas.ecomm.ecomm.domain.Checkout;
-import com.ideaas.ecomm.ecomm.domain.Detail;
+import com.ideaas.ecomm.ecomm.domain.*;
 import com.ideaas.ecomm.ecomm.enums.CheckoutState;
 import com.ideaas.ecomm.ecomm.services.interfaces.ICallbackService;
 import com.ideaas.ecomm.ecomm.services.interfaces.ICheckoutService;
@@ -13,12 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -42,10 +34,13 @@ public class MercadoPagoController {
     }
 
     @PostMapping("checkout")
-    public ResponseEntity<String> mercadoPagoCheckout(@RequestBody List<Detail> details) {
+    public ResponseEntity<String> mercadoPagoCheckout(@RequestBody CheckoutRequest checkoutRequest) {
+        String username = checkoutRequest.getUsername();
+        List<Detail> details = checkoutRequest.getDetails();
+
         final Cart cart = new Cart.CartBuilder().withDetails(details).build();
         //Se indica que la nueva compra, obviamente, esta en proceso
-        final Checkout checkout = checkoutService.save(cart, CheckoutState.IN_PROCESS);
+        final Checkout checkout = checkoutService.save(cart, CheckoutState.IN_PROCESS, username);
         final Preference preference = mercadoPagoService.createPreference(checkout);
 
         return ResponseEntity.ok(preference.getInitPoint());
