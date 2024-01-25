@@ -8,10 +8,15 @@ import com.mercadopago.exceptions.MPException;
 import com.mercadopago.resources.Preference;
 import com.mercadopago.resources.datastructures.preference.BackUrls;
 import com.mercadopago.resources.datastructures.preference.Item;
+
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 @Service
 public class MercadoPagoService implements IMercadoPagoService {
+
+    @Value("${mercadoPagoCallBack}")
+    private String callbackurl;
 
 
     public MercadoPagoService() {
@@ -29,9 +34,9 @@ public class MercadoPagoService implements IMercadoPagoService {
             Preference preference = preparePreference(checkout);
 
             BackUrls backUrls = new BackUrls(
-                    "http://localhost:3000/payment/callback",
-                    "http://localhost:3000/payment/callback",
-                    "http://localhost:3000/payment/callback");
+                    callbackurl,
+                    callbackurl,
+                    callbackurl);
             preference.setBackUrls(backUrls);
             preference.setExternalReference(String.valueOf(checkout.getId()));
 
