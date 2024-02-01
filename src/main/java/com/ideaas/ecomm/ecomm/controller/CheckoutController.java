@@ -13,14 +13,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -45,7 +40,7 @@ public class CheckoutController {
         ACLARACION: username es null por el momento - no se si se vaya a utilizar este endpoint en el futuro
         asi que no hare modificaciones mayores
         */
-        final Checkout checkout = checkoutService.save(cart, CheckoutState.IN_PROCESS, null);
+        final Checkout checkout = checkoutService.save(cart, CheckoutState.IN_PROCESS, null, LocalDateTime.now());
 
         return ResponseEntity.ok(checkout);
     }
@@ -60,7 +55,7 @@ public class CheckoutController {
         ACLARACION: username es null por el momento - no se si se vaya a utilizar este endpoint en el futuro
         asi que no hare modificaciones mayores
         */
-        final Checkout checkout = checkoutService.save(cart, CheckoutState.BUDGET, null);
+        final Checkout checkout = checkoutService.save(cart, CheckoutState.BUDGET, null, LocalDateTime.now());
         return ResponseEntity.ok(checkout);
     }
 

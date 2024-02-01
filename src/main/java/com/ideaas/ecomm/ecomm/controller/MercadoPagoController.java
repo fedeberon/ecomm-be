@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 
@@ -40,7 +41,7 @@ public class MercadoPagoController {
 
         final Cart cart = new Cart.CartBuilder().withDetails(details).build();
         //Se indica que la nueva compra, obviamente, esta en proceso
-        final Checkout checkout = checkoutService.save(cart, CheckoutState.IN_PROCESS, username);
+        final Checkout checkout = checkoutService.save(cart, CheckoutState.IN_PROCESS, username, LocalDateTime.now());
         final Preference preference = mercadoPagoService.createPreference(checkout);
 
         return ResponseEntity.ok(preference.getInitPoint());

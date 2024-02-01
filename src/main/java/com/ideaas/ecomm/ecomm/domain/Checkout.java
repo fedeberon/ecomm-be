@@ -1,13 +1,10 @@
 package com.ideaas.ecomm.ecomm.domain;
 
 import com.ideaas.ecomm.ecomm.enums.CheckoutState;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
@@ -23,6 +20,9 @@ public class Checkout {
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "CHE_ID")
     private Long id;
+
+    @Column(name = "CHE_DATE_TIME")
+    private LocalDateTime dateTime;
 
     @OneToMany(mappedBy = "checkout", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ProductToCart> products;

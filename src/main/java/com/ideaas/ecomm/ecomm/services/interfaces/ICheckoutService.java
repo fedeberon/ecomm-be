@@ -6,12 +6,13 @@ import com.ideaas.ecomm.ecomm.enums.CheckoutState;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 public interface ICheckoutService {
     Checkout get(Long id);
 
-    Checkout save(Cart cart, CheckoutState state, String username);
+    Checkout save(Cart cart, CheckoutState state, String username, LocalDateTime dateTime);
 
     Checkout changeStateTo(CheckoutState state, Long checkoutId);
 

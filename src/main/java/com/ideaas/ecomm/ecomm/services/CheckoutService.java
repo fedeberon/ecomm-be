@@ -11,6 +11,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -41,13 +42,14 @@ public class CheckoutService implements ICheckoutService {
     }
 
     @Override
-    public Checkout save(final Cart cart, CheckoutState state, String username) {
+    public Checkout save(final Cart cart, CheckoutState state, String username, LocalDateTime dateTime) {
         final List<Product> products = new ArrayList<>();
         final List<ProductToCart> productsToCart = new ArrayList<>();
         Checkout checkout = Checkout.builder()
                 .checkoutState(state)
                 .products(productsToCart)
                 .username(username)
+                .dateTime(dateTime)
                 .build();
         cart.getDetails().forEach(detail -> {
            Product product = productService.get(Long.valueOf(detail.getProductId()));
