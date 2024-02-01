@@ -58,7 +58,6 @@ public class CheckoutService implements ICheckoutService {
            final ProductToCart productToCart = prepareProductToCart(product, checkout, detail.getQuantity(), size);
            productsToCart.add(productToCart);
         });
-
         dao.save(checkout);
 
         return checkout;
@@ -68,7 +67,6 @@ public class CheckoutService implements ICheckoutService {
     public Page<Checkout> findAll(Pageable pageable) {
         return dao.findAll(pageable);
     }
-
 
     public List<Checkout> search(final Long id) {
         return dao.findAllById(id);
@@ -95,5 +93,10 @@ public class CheckoutService implements ICheckoutService {
                             .price(product.getPrice())
                             .size(size)
                             .build();
+    }
+
+    @Override
+    public Page<Checkout> getByUser(String username, Pageable pageable) {
+        return dao.findByUsername(username, pageable);
     }
 }
