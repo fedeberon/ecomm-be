@@ -4,7 +4,8 @@ import com.ideaas.ecomm.ecomm.enums.CheckoutState;
 import lombok.*;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 
 @Entity
@@ -21,8 +22,11 @@ public class Checkout {
     @Column(name = "CHE_ID")
     private Long id;
 
-    @Column(name = "CHE_DATE_TIME")
-    private LocalDateTime dateTime;
+    @Column(name = "CHE_DATE")
+    private LocalDate date;
+
+    @Column(name = "CHE_TIME")
+    private LocalTime time;
 
     @OneToMany(mappedBy = "checkout", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ProductToCart> products;

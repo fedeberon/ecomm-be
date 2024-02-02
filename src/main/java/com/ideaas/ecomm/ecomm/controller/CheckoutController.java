@@ -15,7 +15,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -40,7 +39,7 @@ public class CheckoutController {
         ACLARACION: username es null por el momento - no se si se vaya a utilizar este endpoint en el futuro
         asi que no hare modificaciones mayores
         */
-        final Checkout checkout = checkoutService.save(cart, CheckoutState.IN_PROCESS, null, LocalDateTime.now());
+        final Checkout checkout = checkoutService.save(cart, CheckoutState.IN_PROCESS, null);
 
         return ResponseEntity.ok(checkout);
     }
@@ -55,7 +54,7 @@ public class CheckoutController {
         ACLARACION: username es null por el momento - no se si se vaya a utilizar este endpoint en el futuro
         asi que no hare modificaciones mayores
         */
-        final Checkout checkout = checkoutService.save(cart, CheckoutState.BUDGET, null, LocalDateTime.now());
+        final Checkout checkout = checkoutService.save(cart, CheckoutState.BUDGET, null);
         return ResponseEntity.ok(checkout);
     }
 
