@@ -52,8 +52,7 @@ public class CheckoutService implements ICheckoutService {
         builder.username(username);
         builder.date(LocalDate.now());
         builder.time(LocalTime.now());
-        Checkout checkout = builder
-                .build();
+        Checkout checkout = builder.build();
         cart.getDetails().forEach(detail -> {
            Product product = productService.get(Long.valueOf(detail.getProductId()));
            Size size = sizeService.get(Objects.nonNull(detail.getSize()) ? Long.valueOf(detail.getSize()) : 0);

@@ -83,16 +83,18 @@ public class CheckoutController {
     }
 
     @GetMapping("/user/{username}")
-    public ResponseEntity<Page<Checkout>> findByUser (@PathVariable String username,
-                                                      @RequestParam(defaultValue = "false") String asc,
-                                                      @RequestParam(defaultValue = "0") int page,
-                                                      @RequestParam(defaultValue = "10") int size){
+    public ResponseEntity<Page<Checkout>> findByUser(@PathVariable String username,
+                                                     @RequestParam(defaultValue = "false") String asc,
+                                                     @RequestParam(defaultValue = "0") int page,
+                                                     @RequestParam(defaultValue = "10") int size) {
         Pageable pageable = PageRequest.of(page, size,
                 asc.equals("true") ?
-                        Sort.by(Sort.Order.asc("dateTime").nullsLast()).and(Sort.by("id").ascending()) :
-                        Sort.by(Sort.Order.desc("dateTime").nullsLast()).and(Sort.by("id").descending())
+                    Sort.by(Sort.Order.asc("date").nullsLast()).and(Sort.by("id").ascending())
+                    :
+                    Sort.by(Sort.Order.desc("date").nullsLast()).and(Sort.by("id").descending())
         );
         Page<Checkout> userCheckouts = checkoutService.getByUser(username, pageable);
         return ResponseEntity.ok().body(userCheckouts);
     }
+
 }
