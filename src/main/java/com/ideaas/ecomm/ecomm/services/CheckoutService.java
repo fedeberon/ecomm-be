@@ -11,6 +11,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -44,11 +46,13 @@ public class CheckoutService implements ICheckoutService {
     public Checkout save(final Cart cart, CheckoutState state, String username) {
         final List<Product> products = new ArrayList<>();
         final List<ProductToCart> productsToCart = new ArrayList<>();
-        Checkout checkout = Checkout.builder()
-                .checkoutState(state)
-                .products(productsToCart)
-                .username(username)
-                .build();
+        Checkout.CheckoutBuilder builder = Checkout.builder();
+        builder.checkoutState(state);
+        builder.products(productsToCart);
+        builder.username(username);
+        builder.date(LocalDate.now());
+        builder.time(LocalTime.now());
+        Checkout checkout = builder.build();
         cart.getDetails().forEach(detail -> {
            Product product = productService.get(Long.valueOf(detail.getProductId()));
            Size size = sizeService.get(Objects.nonNull(detail.getSize()) ? Long.valueOf(detail.getSize()) : 0);
@@ -56,7 +60,6 @@ public class CheckoutService implements ICheckoutService {
            final ProductToCart productToCart = prepareProductToCart(product, checkout, detail.getQuantity(), size);
            productsToCart.add(productToCart);
         });
-
         dao.save(checkout);
 
         return checkout;
@@ -66,7 +69,6 @@ public class CheckoutService implements ICheckoutService {
     public Page<Checkout> findAll(Pageable pageable) {
         return dao.findAll(pageable);
     }
-
 
     public List<Checkout> search(final Long id) {
         return dao.findAllById(id);
@@ -93,5 +95,10 @@ public class CheckoutService implements ICheckoutService {
                             .price(product.getPrice())
                             .size(size)
                             .build();
+    }
+
+    @Override
+    public Page<Checkout> getByUser(String username, Pageable pageable) {
+        return dao.findByUsername(username, pageable);
     }
 }

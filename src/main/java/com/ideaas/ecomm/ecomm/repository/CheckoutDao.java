@@ -3,6 +3,7 @@ package com.ideaas.ecomm.ecomm.repository;
 import com.ideaas.ecomm.ecomm.domain.Checkout;
 import com.ideaas.ecomm.ecomm.enums.CheckoutState;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
@@ -13,4 +14,6 @@ public interface CheckoutDao extends JpaRepository<Checkout, Long> {
 
     List<Checkout> findAllById(Long id);
 
+    //METODOS PARA DEVOLVER LOS CHECKOUTS SEGUN MULTIPLES CRITERIOS
+    Page<Checkout> findByUsername(String username, Pageable pageable);
 }

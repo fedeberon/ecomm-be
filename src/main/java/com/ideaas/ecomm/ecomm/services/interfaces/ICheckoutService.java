@@ -19,4 +19,6 @@ public interface ICheckoutService {
 
     List<Checkout> search(final Long data);
 
+    Page<Checkout> getByUser(String username, Pageable pageable);
+
 }
