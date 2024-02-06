@@ -2,9 +2,7 @@ package com.ideaas.ecomm.ecomm.controller;
 
 import com.ideaas.ecomm.ecomm.domain.*;
 import com.ideaas.ecomm.ecomm.enums.CheckoutState;
-import com.ideaas.ecomm.ecomm.services.interfaces.ICallbackService;
-import com.ideaas.ecomm.ecomm.services.interfaces.ICheckoutService;
-import com.ideaas.ecomm.ecomm.services.interfaces.IMercadoPagoService;
+import com.ideaas.ecomm.ecomm.services.interfaces.*;
 import com.mercadopago.resources.Preference;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -23,14 +21,17 @@ public class MercadoPagoController {
     private IMercadoPagoService mercadoPagoService;
     private ICheckoutService checkoutService;
     private ICallbackService callbackService;
+    private IWalletService walletService;
 
     @Autowired
     public MercadoPagoController(final IMercadoPagoService mercadoPagoService,
                                  final ICheckoutService checkoutService,
-                                 final ICallbackService callbackService) {
+                                 final ICallbackService callbackService,
+                                 final IWalletService walletService) {
         this.mercadoPagoService = mercadoPagoService;
         this.checkoutService = checkoutService;
         this.callbackService = callbackService;
+        this.walletService = walletService;
     }
 
     @PostMapping("checkout")
@@ -55,6 +56,7 @@ public class MercadoPagoController {
         //Determinan las acciones a realizar en base al estado.
         if (state.equals("approved")) {
             checkout.setCheckoutState(CheckoutState.PAID_OUT);
+            walletService.getPointsFromCheckout(checkout);
         }else if (state.equals("pending")){
             checkout.setCheckoutState(CheckoutState.IN_PROCESS);
         }else{

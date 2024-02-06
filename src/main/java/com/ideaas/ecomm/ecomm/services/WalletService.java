@@ -1,30 +1,33 @@
 package com.ideaas.ecomm.ecomm.services;
 
+import com.ideaas.ecomm.ecomm.domain.*;
+import com.ideaas.ecomm.ecomm.enums.WalletTransactionType;
+import com.ideaas.ecomm.ecomm.repository.WalletDao;
+import com.ideaas.ecomm.ecomm.services.interfaces.IProductService;
+import com.ideaas.ecomm.ecomm.services.interfaces.IUserService;
+import com.ideaas.ecomm.ecomm.services.interfaces.IWalletService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
-
-import com.ideaas.ecomm.ecomm.enums.WalletTransactionType;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import com.ideaas.ecomm.ecomm.domain.Product;
-import com.ideaas.ecomm.ecomm.domain.ProductToCart;
-import com.ideaas.ecomm.ecomm.domain.User;
-import com.ideaas.ecomm.ecomm.domain.Wallet;
-import com.ideaas.ecomm.ecomm.repository.WalletDao;
-import com.ideaas.ecomm.ecomm.services.interfaces.IWalletService;
+import java.util.stream.Collectors;
 
 @Service
 public class WalletService implements IWalletService {
 
 	private WalletDao dao;
+
+	private IUserService userService;
+	private IProductService productService;
 	
 	@Autowired
-	public WalletService(WalletDao dao) {
+	public WalletService(final WalletDao dao, final IUserService userService, final IProductService productService) {
 		this.dao = dao;
+		this.userService = userService;
+		this.productService = productService;
 	}
 	
 	@Override
@@ -210,5 +213,19 @@ public class WalletService implements IWalletService {
 		registersConsumer(user, pointsOfProducts);
 	}
 
-
+	@Override
+	public void getPointsFromCheckout(Checkout checkout){
+		User user = userService.get(checkout.getUsername()).get();
+		List<Wallet> wallets = checkout.getProducts().stream()
+				.map(item -> Wallet.builder()
+						.product(item.getProduct())
+						.quantity(item.getQuantity())
+						.points(item.getProduct().getPoints())
+						.user(user)
+						.date(LocalDateTime.of(checkout.getDate(), checkout.getTime()))
+						.isConsumed(false)
+						.build())
+				.collect(Collectors.toList());
+		wallets.forEach(dao::save);
+	}
 }
