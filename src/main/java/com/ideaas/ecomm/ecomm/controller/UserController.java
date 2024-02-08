@@ -2,6 +2,7 @@ package com.ideaas.ecomm.ecomm.controller;
 
 import com.ideaas.ecomm.ecomm.domain.Store;
 import com.ideaas.ecomm.ecomm.domain.User;
+import com.ideaas.ecomm.ecomm.domain.dto.UserDTO;
 import com.ideaas.ecomm.ecomm.domain.Wallet;
 import com.ideaas.ecomm.ecomm.services.UserService;
 import com.ideaas.ecomm.ecomm.services.interfaces.IStoreService;
@@ -11,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 @RestController
@@ -33,19 +35,23 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<User> save(@RequestBody final User user) {
-        final User userSaved = userService.save(user);
-        if (userSaved != null)
-            return ResponseEntity.status(202).body(userSaved);
-        else
-            //conflicted error
-            return ResponseEntity.status(409).build();
+    public ResponseEntity<User> save(@RequestBody final UserDTO dto) {
+        Optional<User> optionalUser = userService.save(dto);
+
+        /*Codigos retornados:
+        * 202: OK
+        * 412: Precondition Failed - cuando el valor del rol no es aceptable.
+        * 409: Conflict - cuando el usuario ya existe dentro de la base (usar update en lugar de save)
+        */
+        return optionalUser
+                .map(savedUser -> ResponseEntity.status(202).body(savedUser))
+                .orElseGet(() -> ResponseEntity.status(optionalUser.isPresent() ? 412 : 409).build());
+
     }
 
-    @PutMapping
-    public ResponseEntity<User> update(@RequestBody final User user) {
-        final User userSaved = userService.update(user);
-
+    @PutMapping("/{role}")
+    public ResponseEntity<User> update(@PathVariable String role, @RequestBody final User user) {
+        final User userSaved = userService.update(user, role);
         return ResponseEntity.status(202).body(userSaved);
     }
 
@@ -85,7 +91,7 @@ public class UserController {
     public ResponseEntity<User> updateTwins(@RequestBody final User user) {
         User userToUpdate = userService.get(user.getCardId()).get();
         userToUpdate.setTwins(user.getTwins());
-        userService.update(userToUpdate);
+        userService.update(userToUpdate, "");
 
         return ResponseEntity.status(202).body(userToUpdate);
     }

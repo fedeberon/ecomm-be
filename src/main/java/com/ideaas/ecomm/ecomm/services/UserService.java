@@ -1,9 +1,12 @@
 package com.ideaas.ecomm.ecomm.services;
 
 import com.ideaas.ecomm.ecomm.domain.User;
+import com.ideaas.ecomm.ecomm.domain.dto.UserDTO;
+import com.ideaas.ecomm.ecomm.enums.CommerceRole;
 import com.ideaas.ecomm.ecomm.repository.ScheduleDao;
 import com.ideaas.ecomm.ecomm.repository.UserDao;
 import com.ideaas.ecomm.ecomm.services.interfaces.IAuthenticationFacade;
+import com.ideaas.ecomm.ecomm.services.interfaces.IRoleService;
 import com.ideaas.ecomm.ecomm.services.interfaces.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -12,6 +15,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,12 +25,15 @@ public class UserService implements IUserService {
     private UserDao dao;
     private ScheduleDao scheduleDao;
     private IAuthenticationFacade authenticationFacade;
+    private IRoleService roleService;
 
     @Autowired
     public UserService(final UserDao dao,
-                       final IAuthenticationFacade authenticationFacade) {
+                       final IAuthenticationFacade authenticationFacade,
+                       final IRoleService roleService) {
         this.dao = dao;
         this.authenticationFacade = authenticationFacade;
+        this.roleService = roleService;
     }
 
     @Override
@@ -49,22 +56,44 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public User save(final User user) {
-        user.setUsername(user.getEmail());
-        setPassword(user);
-        User existingUser = dao.findByUsername(user.getEmail());
-
+    public Optional<User> save(final UserDTO dto) {
+        User existingUser = dao.findByUsername(dto.getEmail());
         if (existingUser != null) {
+            System.out.println("OPTION 1");
             return null;
+        }else if (Arrays.stream(CommerceRole.values()).anyMatch(val -> val.name().equals(dto.getRole()))) {
+            System.out.println("OPTION 2");
+            return Optional.empty();
         }
 
-        return dao.save(user);
+        User newUser = generateUser(dto);
+
+        User saved = dao.save(newUser);
+        roleService.assign(newUser, dto.getRole());
+        return Optional.of(saved);
     }
 
     @Override
-    public User update(final User user) {
+    public User update(final User user, final String role) {
         setPassword(user);
-        return dao.save(user);
+        User saved = dao.save(user);
+        roleService.assign(user, role);
+        return saved;
+    }
+
+    private User generateUser(final UserDTO dto){
+        User user = User.builder()
+                .username(dto.getEmail())
+                .name(dto.getName())
+                .lastName(dto.getLastName())
+                .cuit(dto.getCuit())
+                .email(dto.getEmail())
+                .phone(dto.getPhone())
+                .city(dto.getCity())
+                .direction(dto.getDirection())
+                .postal(dto.getPostal())
+                .build();
+        return user;
     }
 
     @Override
@@ -76,7 +105,6 @@ public class UserService implements IUserService {
     public List<User> findAll() {
         return dao.findAll();
     }
-
 
     @Override
     public User getCurrent(){

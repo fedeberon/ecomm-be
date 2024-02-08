@@ -1,15 +1,16 @@
 package com.ideaas.ecomm.ecomm.services.interfaces;
 
 import com.ideaas.ecomm.ecomm.domain.User;
+import com.ideaas.ecomm.ecomm.domain.dto.UserDTO;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
 import java.util.List;
 import java.util.Optional;
 
 public interface IUserService extends UserDetailsService {
-    User save(User user);
+    Optional<User> save(UserDTO dto);
 
-    User update(User user);
+    User update(User user, String role);
 
     Optional<User> get(String username);
 
