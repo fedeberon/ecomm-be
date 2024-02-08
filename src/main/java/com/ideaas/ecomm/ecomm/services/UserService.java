@@ -59,10 +59,8 @@ public class UserService implements IUserService {
     public Optional<User> save(final UserDTO dto) {
         User existingUser = dao.findByUsername(dto.getEmail());
         if (existingUser != null) {
-            System.out.println("OPTION 1");
             return null;
-        }else if (Arrays.stream(CommerceRole.values()).anyMatch(val -> val.name().equals(dto.getRole()))) {
-            System.out.println("OPTION 2");
+        }else if (!Arrays.stream(CommerceRole.values()).anyMatch(val -> val.name().equals(dto.getRole().trim()))) {
             return Optional.empty();
         }
 
@@ -81,9 +79,15 @@ public class UserService implements IUserService {
         return saved;
     }
 
+    private String encryptPassword(String passwrd){
+        BCryptPasswordEncoder passwordEncoder =new BCryptPasswordEncoder();
+        return passwordEncoder.encode(passwrd);
+    }
+
     private User generateUser(final UserDTO dto){
         User user = User.builder()
                 .username(dto.getEmail())
+                .password(encryptPassword(dto.getPassword()))
                 .name(dto.getName())
                 .lastName(dto.getLastName())
                 .cuit(dto.getCuit())
