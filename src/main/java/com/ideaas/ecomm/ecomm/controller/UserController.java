@@ -2,8 +2,8 @@ package com.ideaas.ecomm.ecomm.controller;
 
 import com.ideaas.ecomm.ecomm.domain.Store;
 import com.ideaas.ecomm.ecomm.domain.User;
-import com.ideaas.ecomm.ecomm.domain.dto.UserDTO;
 import com.ideaas.ecomm.ecomm.domain.Wallet;
+import com.ideaas.ecomm.ecomm.domain.dto.UserDTO;
 import com.ideaas.ecomm.ecomm.services.UserService;
 import com.ideaas.ecomm.ecomm.services.interfaces.IStoreService;
 import com.ideaas.ecomm.ecomm.services.interfaces.IWalletService;
@@ -12,7 +12,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 @RestController
@@ -34,27 +35,31 @@ public class UserController {
         this.storeService = storeService;
     }
 
+    /*Codigos retornados:
+     * 202: OK
+     * 412: Precondition Failed - cuando el valor del rol no es aceptable.
+     * 409: Conflict - cuando el usuario ya existe dentro de la base (usar update en lugar de save)
+     */
+
     @PostMapping
-    public ResponseEntity<User> save(@RequestBody final UserDTO dto) {
-        Optional<User> optionalUser = userService.save(dto);
-
-        /*Codigos retornados:
-        * 202: OK
-        * 412: Precondition Failed - cuando el valor del rol no es aceptable.
-        * 409: Conflict - cuando el usuario ya existe dentro de la base (usar update en lugar de save)
-        */
-        return optionalUser
-                .map(savedUser -> ResponseEntity.status(202).body(savedUser))
-                .orElseGet(() -> ResponseEntity.status(optionalUser.isPresent() ? 412 : 409).build());
-
+    public ResponseEntity<UserDTO> save(@RequestBody final UserDTO dto) {
+        final Entry<Integer, UserDTO> result = userService.save(dto);
+        return ResponseEntity.status(result.getKey()).body(result.getValue());
     }
 
-    @PutMapping("/{role}")
-    public ResponseEntity<User> update(@PathVariable String role, @RequestBody final User user) {
-        final User userSaved = userService.update(user, role);
-        return ResponseEntity.status(202).body(userSaved);
+    @PutMapping
+    public ResponseEntity<UserDTO> update(@RequestBody final UserDTO dto) {
+        Entry<Integer, UserDTO> result = userService.update(dto);
+        return ResponseEntity.status(result.getKey()).body(result.getValue());
     }
 
+    @PutMapping("/password")
+    public ResponseEntity<String> updatePassword(@RequestBody Map<String, String> requestBody) {
+        String username = requestBody.get("username");
+        String password = requestBody.get("password");
+        Entry<Integer, String> result = userService.updatePassword(username, password);
+        return ResponseEntity.status(result.getKey()).body(result.getValue());
+    }
 
     @GetMapping
     private ResponseEntity<List<User>> findAll(){
@@ -91,9 +96,9 @@ public class UserController {
     public ResponseEntity<User> updateTwins(@RequestBody final User user) {
         User userToUpdate = userService.get(user.getCardId()).get();
         userToUpdate.setTwins(user.getTwins());
-        userService.update(userToUpdate, "");
+        //userService.update(userToUpdate, "");
 
-        return ResponseEntity.status(202).body(userToUpdate);
+        return ResponseEntity.status(202).body(null);
     }
 
     @GetMapping("/{username}/stores")
