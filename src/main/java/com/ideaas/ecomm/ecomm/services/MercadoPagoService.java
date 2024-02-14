@@ -22,7 +22,7 @@ public class MercadoPagoService implements IMercadoPagoService {
     public MercadoPagoService() {
         try {
             //Token de testing
-            MercadoPago.SDK.setAccessToken("TEST-7210183612571177-101815-da1016bb668135d6ba273a4465407cca-1515196309");
+            MercadoPago.SDK.setAccessToken("APP_USR-8183309099712369-101215-d4f44d02b29835ba46419b43b5fe4349-175802530");
         } catch (MPConfException e) {
             e.printStackTrace();
         }
