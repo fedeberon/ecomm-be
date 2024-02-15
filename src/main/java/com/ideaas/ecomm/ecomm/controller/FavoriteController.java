@@ -14,7 +14,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/favorite")
@@ -47,18 +46,6 @@ public class FavoriteController {
         }
     }
 
-    @GetMapping("/user")
-    public ResponseEntity<Long> getFavoriteStatus(@RequestParam final Long prodId,
-                                                     @RequestParam final String username){
-        Optional<User> user = userService.get(username);
-        Optional<Product> product = Optional.of(productService.get(prodId));
-
-        return user.isPresent() && product.isPresent() ?
-             ResponseEntity.ok(favoriteService.getFavoriteStatus(user.get(), product.get()))
-        :
-             ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-    }
-
     @GetMapping("/{id}")
     public ResponseEntity<Favorite> get(@PathVariable Long id) {
         try {
@@ -81,9 +68,6 @@ public class FavoriteController {
         Favorite favorite = Favorite.builder().user(user).product(product).build();
         //Se envia al servicio para guardarlo.
         Favorite favSaved = favoriteService.save(favorite);
-
-        if (favSaved == null)
-            return ResponseEntity.status(409).build();
         return ResponseEntity.ok(favSaved);
     }
 
