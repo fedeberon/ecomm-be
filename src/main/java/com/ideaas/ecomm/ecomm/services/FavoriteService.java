@@ -1,6 +1,7 @@
 package com.ideaas.ecomm.ecomm.services;
 
 import com.ideaas.ecomm.ecomm.domain.Favorite;
+import com.ideaas.ecomm.ecomm.domain.Product;
 import com.ideaas.ecomm.ecomm.domain.User;
 import com.ideaas.ecomm.ecomm.repository.FavoriteDao;
 import com.ideaas.ecomm.ecomm.services.interfaces.IFavoriteService;
@@ -27,6 +28,10 @@ public class FavoriteService implements IFavoriteService {
 
     @Override
     public Favorite save(Favorite favorite) {
+        Long existantFavId = getFavoriteStatus(favorite.getUser(), favorite.getProduct());
+        if (existantFavId != null)
+            return null;
+
         return dao.save(favorite);
     }
 
@@ -34,6 +39,14 @@ public class FavoriteService implements IFavoriteService {
     public Favorite get(Long id) {
         Optional<Favorite> optFavorite = dao.findById(id);
         return optFavorite.get();
+    }
+
+    @Override
+    public Long getFavoriteStatus (User user, Product product){
+        Optional<Favorite> evaluated = dao.findByUserAndProduct(user, product);
+        if (!evaluated.isPresent())
+            return null;
+        return evaluated.get().getId();
     }
 
     @Override
