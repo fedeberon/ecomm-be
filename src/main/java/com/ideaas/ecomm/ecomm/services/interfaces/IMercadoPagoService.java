@@ -5,4 +5,6 @@ import com.mercadopago.resources.Preference;
 
 public interface IMercadoPagoService {
     Preference createPreference(Checkout checkout);
+
+    void getMPPayment(final String paymentId);
 }

@@ -1,8 +1,13 @@
 package com.ideaas.ecomm.ecomm.controller;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ideaas.ecomm.ecomm.domain.*;
 import com.ideaas.ecomm.ecomm.enums.CheckoutState;
-import com.ideaas.ecomm.ecomm.services.interfaces.*;
+import com.ideaas.ecomm.ecomm.services.interfaces.ICallbackService;
+import com.ideaas.ecomm.ecomm.services.interfaces.ICheckoutService;
+import com.ideaas.ecomm.ecomm.services.interfaces.IMercadoPagoService;
+import com.ideaas.ecomm.ecomm.services.interfaces.IWalletService;
 import com.mercadopago.resources.Preference;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -34,6 +39,25 @@ public class MercadoPagoController {
         this.walletService = walletService;
     }
 
+    @PostMapping("/webhook")
+    public void handleWebhookNotification(@RequestBody String payload) {
+        try {
+            ObjectMapper objectMapper = new ObjectMapper();
+            JsonNode jsonNode = objectMapper.readTree(payload);
+
+            JsonNode dataNode = jsonNode.get("data");
+            if (dataNode != null && dataNode.has("id")) {
+                String idValue = dataNode.get("id").asText();
+                mercadoPagoService.getMPPayment(idValue);
+
+            } else {
+                System.err.println("Invalid or missing data/id field in the payload.");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     @PostMapping("checkout")
     public ResponseEntity<String> mercadoPagoCheckout(@RequestBody CheckoutRequest checkoutRequest) {
         String username = checkoutRequest.getUsername();
@@ -43,7 +67,6 @@ public class MercadoPagoController {
         //Se indica que la nueva compra, obviamente, esta en proceso
         final Checkout checkout = checkoutService.save(cart, CheckoutState.IN_PROCESS, username);
         final Preference preference = mercadoPagoService.createPreference(checkout);
-
         return ResponseEntity.ok(preference.getInitPoint());
     }
 
