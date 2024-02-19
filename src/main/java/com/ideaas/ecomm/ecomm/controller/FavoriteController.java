@@ -13,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -40,7 +41,28 @@ public class FavoriteController {
                                      @RequestParam(defaultValue = "10") final Integer size) {
         try{
             Page<Favorite> favPage = favoriteService.findByUser(username, asc, page, size);
+            for(Favorite fav: favPage){
+                Product prodWithImage = fav.getProduct();
+                productService.addImagesOnProduct(fav.getProduct());
+                fav.setProduct(prodWithImage);
+            }
             return ResponseEntity.ok(favPage);
+        }catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    @GetMapping("/user/all/{username}")
+    public ResponseEntity<List<Favorite>> findAllByUser(@PathVariable String username) {
+        try{
+            List<Favorite> favList = favoriteService.findAllByUser(username);
+            for(Favorite fav: favList){
+                Product prodWithImage = fav.getProduct();
+                productService.addImagesOnProduct(fav.getProduct());
+                fav.setProduct(prodWithImage);
+            }
+            return ResponseEntity.ok(favList);
         }catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
