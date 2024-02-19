@@ -8,10 +8,12 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
 public interface FavoriteDao extends JpaRepository<Favorite, Long>{
     Optional<Favorite> findByUserAndProduct(User user, Product product);
     Page<Favorite> findAllByUser(User user, Pageable pageable);
+    List<Favorite> findAllByUser(User user);
 }
