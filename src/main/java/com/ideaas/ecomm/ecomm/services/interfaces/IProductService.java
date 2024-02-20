@@ -42,6 +42,8 @@ public interface IProductService {
 
     void deleteImageOfProduct(final Product product, final String imageName);
 
+    void setImagesAndLogo(final Product product);
+
     List<Product> relationship(Long id);
 
     Page<Product> searchProducts(String name, Collection<Category> categories, Collection<Brand> brands, String orderBy, Boolean asc, int page, int size);
