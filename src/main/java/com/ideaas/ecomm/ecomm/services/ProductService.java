@@ -68,7 +68,8 @@ public class ProductService implements IProductService {
         return optionalProduct.get();
     }
 
-    private void setImagesAndLogo(final Product product) {
+    @Override
+    public void setImagesAndLogo(final Product product) {
         addImagesOnProduct(product);
         Store store = product.getStore();
         if ( store != null) {
