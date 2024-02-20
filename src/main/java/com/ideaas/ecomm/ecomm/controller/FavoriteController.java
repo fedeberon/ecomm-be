@@ -3,6 +3,7 @@ package com.ideaas.ecomm.ecomm.controller;
 import com.ideaas.ecomm.ecomm.domain.Favorite;
 import com.ideaas.ecomm.ecomm.domain.Product;
 import com.ideaas.ecomm.ecomm.domain.User;
+import com.ideaas.ecomm.ecomm.domain.dto.FavoriteDTO;
 import com.ideaas.ecomm.ecomm.exception.NotFoundException;
 import com.ideaas.ecomm.ecomm.services.interfaces.IFavoriteService;
 import com.ideaas.ecomm.ecomm.services.interfaces.IProductService;
@@ -35,15 +36,15 @@ public class FavoriteController {
     }
 
     @GetMapping("/user/{username}")
-    public ResponseEntity<Page<Favorite>> findByUser(@PathVariable String username,
-                                     @RequestParam(defaultValue = "true") final Boolean asc,
-                                     @RequestParam(defaultValue = "0") final Integer page,
-                                     @RequestParam(defaultValue = "10") final Integer size) {
+    public ResponseEntity<Page<FavoriteDTO>> findByUser(@PathVariable String username,
+                                                        @RequestParam(defaultValue = "true") final Boolean asc,
+                                                        @RequestParam(defaultValue = "0") final Integer page,
+                                                        @RequestParam(defaultValue = "10") final Integer size) {
         try{
-            Page<Favorite> favPage = favoriteService.findByUser(username, asc, page, size);
-            for(Favorite fav: favPage){
+            Page<FavoriteDTO> favPage = favoriteService.findByUser(username, asc, page, size);
+            for(FavoriteDTO fav: favPage){
                 Product prodWithImage = fav.getProduct();
-                productService.addImagesOnProduct(fav.getProduct());
+                productService.setImagesAndLogo(prodWithImage);
                 fav.setProduct(prodWithImage);
             }
             return ResponseEntity.ok(favPage);
@@ -54,12 +55,12 @@ public class FavoriteController {
     }
 
     @GetMapping("/user/all/{username}")
-    public ResponseEntity<List<Favorite>> findAllByUser(@PathVariable String username) {
+    public ResponseEntity<List<FavoriteDTO>> findAllByUser(@PathVariable String username) {
         try{
-            List<Favorite> favList = favoriteService.findAllByUser(username);
-            for(Favorite fav: favList){
+            List<FavoriteDTO> favList = favoriteService.findAllByUser(username);
+            for(FavoriteDTO fav: favList){
                 Product prodWithImage = fav.getProduct();
-                productService.addImagesOnProduct(fav.getProduct());
+                productService.setImagesAndLogo(prodWithImage);
                 fav.setProduct(prodWithImage);
             }
             return ResponseEntity.ok(favList);
@@ -82,9 +83,9 @@ public class FavoriteController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Favorite> get(@PathVariable Long id) {
+    public ResponseEntity<FavoriteDTO> get(@PathVariable Long id) {
         try {
-            Favorite favorite = favoriteService.get(id);
+            FavoriteDTO favorite = favoriteService.get(id);
             return ResponseEntity.ok().body(favorite);
         }catch (NotFoundException ex) {
             return ResponseEntity.notFound().build();
@@ -92,7 +93,7 @@ public class FavoriteController {
     }
 
     @PostMapping
-    public  ResponseEntity<Favorite> save(@RequestBody Map<String, String> request) {
+    public  ResponseEntity<FavoriteDTO> save(@RequestBody Map<String, String> request) {
         //Se obtienen los datos
         Long productId = Long.parseLong(request.get("productId"));
         String username = request.get("username");
@@ -102,7 +103,7 @@ public class FavoriteController {
         //Se asocian en un favorito nuevo
         Favorite favorite = Favorite.builder().user(user).product(product).build();
         //Se envia al servicio para guardarlo.
-        Favorite favSaved = favoriteService.save(favorite);
+        FavoriteDTO favSaved = favoriteService.save(favorite);
 
         if (favSaved == null)
             return ResponseEntity.status(409).build();
@@ -111,9 +112,8 @@ public class FavoriteController {
 
     @DeleteMapping("/{id}")
     public  ResponseEntity<String> delete(@PathVariable Long id) {
-        final Favorite favToDelete = favoriteService.get(id);
-        favoriteService.delete(favToDelete);
+        favoriteService.delete(id);
 
-        return ResponseEntity.accepted().body("Favourite with id #" + favToDelete.getId() + " deleted succesfully.");
+        return ResponseEntity.accepted().body("Favourite with id #" + id + " deleted succesfully.");
     }
 }
