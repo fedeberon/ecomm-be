@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.*;
 import java.util.Map.Entry;
+import java.util.stream.Collectors;
 
 @Service
 public class UserService implements IUserService {
@@ -43,10 +44,7 @@ public class UserService implements IUserService {
             throw new UsernameNotFoundException("User not found with username: " + username);
         }
         return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), new ArrayList<>());
-
     }
-
-
 
     private User setPassword(User user){
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
@@ -55,32 +53,40 @@ public class UserService implements IUserService {
         return user;
     }
 
-    @Override
+    @Override //DONE
     public Entry<Integer, UserDTO> save(UserDTO dto) {
-        //Se evalua si el mismo usuario existe, de ser asi no se guarda
-        if (getExistentUser(dto.getEmail()) != null) {
-            return new AbstractMap.SimpleEntry<>(409, null);
-        }
+        if(validUser(dto) && dto.getPassword() != null) {
+            //Se evalua si el mismo usuario existe, de ser asi no se guarda
+            if (getExistentUser(dto.getUsername()) != null) {
+                return new AbstractMap.SimpleEntry<>(409, null);
+            }
 
-        //Se encripta la contraseña del nuevo usuario
-        dto.setPassword(passwordEncoder.encode(dto.getPassword()));
-        return saveUser(dto);
+            //Se encripta la contraseña del nuevo usuario
+            dto.setPassword(passwordEncoder.encode(dto.getPassword()));
+            return saveUser(dto);
+        }else{
+            return new AbstractMap.SimpleEntry<>(412, null);
+        }
     }
 
-    @Override
+    @Override //DONE
     public Entry<Integer, UserDTO>  update(UserDTO dto) {
-        //Se evalua si el mismo usuario existe, de no ser asi no hay actualizacion.
-        User user = getExistentUser(dto.getEmail());
-        if (user == null) {
-            return new AbstractMap.SimpleEntry<>(409, null);
+        if(validUser(dto)){
+            //Se evalua si el mismo usuario existe, de no ser asi no hay actualizacion.
+            User user = getExistentUser(dto.getUsername());
+            if (user == null) {
+                return new AbstractMap.SimpleEntry<>(409, null);
+            }
+            //Se conservara la misma contraseña (ya encriptada)
+            dto.setPassword(user.getPassword());
+        }else{
+            return new AbstractMap.SimpleEntry<>(412, null);
         }
 
-        //Se conservara la misma contraseña (ya encriptada)
-        dto.setPassword(user.getPassword());
         return saveUser(dto);
     }
 
-    @Override
+    @Override //DONE
     public Entry<Integer, String>  updatePassword(final String username, final String password) {
         //Se verifica si el usuario ya existe: de no ser asi retorna error.
         User user = getExistentUser(username);
@@ -95,40 +101,16 @@ public class UserService implements IUserService {
         return new AbstractMap.SimpleEntry<>(202, "Password changed successfully");
     }
 
-    private Entry<Integer, UserDTO> saveUser(UserDTO dto){
-        //Se verifica si el rol ingresado es valido o no
-        if (!Arrays.stream(CommerceRole.values()).anyMatch(val -> val.name().equals(dto.getRole().trim()))) {
-            return new AbstractMap.SimpleEntry<>(412, null);
-        }
-
-        //Se guarda el usuario y se le asigna un rol en la base de datos.
-        User saved = dao.save(generateUser(dto));
-        roleService.assign(saved, dto.getRole());
-
-        //A la confirmacion de los datos se le borra la confirmacion encriptada
-        dto.setPassword(null);
-
-        return new AbstractMap.SimpleEntry<>(202, dto);
+    @Override
+    public List<UserDTO> findAll() {
+        List<User> allUsers = dao.findAll();
+        return allUsers.stream().map(this::userToDTO).collect(Collectors.toList());
     }
 
-    private User getExistentUser(String username){
-        return dao.findByUsername(username);
-    }
-
-    private User generateUser(final UserDTO dto){
-        User user = User.builder()
-                .username(dto.getEmail())
-                .password(dto.getPassword())
-                .name(dto.getName())
-                .lastName(dto.getLastName())
-                .cuit(dto.getCuit())
-                .email(dto.getEmail())
-                .phone(dto.getPhone())
-                .city(dto.getCity())
-                .direction(dto.getDirection())
-                .postal(dto.getPostal())
-                .build();
-        return user;
+    @Override
+    public Optional<UserDTO> getDTO (String username) {
+        User user = dao.findById(username).get();
+        return Optional.of(userToDTO(user));
     }
 
     @Override
@@ -137,14 +119,9 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public List<User> findAll() {
-        return dao.findAll();
-    }
-
-    @Override
-    public User getCurrent(){
+    public UserDTO getCurrent(){
         String username = authenticationFacade.getAuthentication().getName();
-        Optional<User> user = get(username);
+        Optional<UserDTO> user = getDTO(username);
         if (user.isPresent()) {
             return user.get();
         } else {
@@ -152,4 +129,67 @@ public class UserService implements IUserService {
         }
     }
 
+    //Evalua si el usuario a guardar/actualizar es valido o no...
+    private boolean validUser(UserDTO dto){
+        return !(dto.getUsername() == null ||
+                dto.getName() == null  ||
+                dto.getLastName() == null  ||
+                dto.getRole() == null );
+    }
+
+    //Verifica si un usuario existe o no...
+    private User getExistentUser(String username){
+        return dao.findByUsername(username);
+    }
+
+    //Guarda o actualiza un usuario en la base de datos...
+    private Entry<Integer, UserDTO> saveUser(UserDTO dto){
+        //Se verifica si el rol ingresado es valido o no
+        if (!Arrays.stream(CommerceRole.values()).anyMatch(val -> val.name().equals(dto.getRole().trim()))) {
+            return new AbstractMap.SimpleEntry<>(412, null);
+        }
+
+        //Se guarda el usuario y se le asigna un rol en la base de datos.
+        User saved = dao.save(dtoToUser(dto));
+        roleService.assign(saved, dto.getRole());
+
+        //A la confirmacion de los datos se le borra la confirmacion encriptada
+        dto.setPassword(null);
+
+        return new AbstractMap.SimpleEntry<>(202, dto);
+    }
+
+    /*
+     * =====================================================================================================
+     * Convertidores - DTO a User y User a DTO
+     * =====================================================================================================
+     */
+
+    private User dtoToUser (final UserDTO dto){
+        return User.builder()
+                .username(dto.getUsername())
+                .password(dto.getPassword())
+                .name(dto.getName())
+                .lastName(dto.getLastName())
+                .cuit(dto.getCuit())
+                .phone(dto.getPhone())
+                .city(dto.getCity())
+                .direction(dto.getDirection())
+                .postal(dto.getPostal())
+                .build();
+    }
+
+    private UserDTO userToDTO(final User user) {
+        return UserDTO.builder()
+                .username(user.getUsername())
+                .name(user.getName())
+                .lastName(user.getLastName())
+                .direction(user.getDirection())
+                .phone(user.getPhone())
+                .city(user.getCity())
+                .postal(user.getPostal())
+                .cuit(user.getCuit())
+                .role(roleService.get(user).getRole())
+                .build();
+    }
 }

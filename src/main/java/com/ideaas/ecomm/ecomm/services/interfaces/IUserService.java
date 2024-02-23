@@ -14,10 +14,11 @@ public interface IUserService extends UserDetailsService {
     Entry<Integer, UserDTO>  update(UserDTO user);
     Entry<Integer, String>  updatePassword(final String username, final String password);
 
-    Optional<User> get(String username);
+    Optional<UserDTO> getDTO(String username);//Para devolver solicitudes
+    Optional<User> get(String username);//Para trabajo con wallets
 
-    List<User> findAll();
+    List<UserDTO> findAll();
 
-    User getCurrent();
+    UserDTO getCurrent();
 
 }

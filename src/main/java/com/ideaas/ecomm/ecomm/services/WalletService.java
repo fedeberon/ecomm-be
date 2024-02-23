@@ -1,6 +1,8 @@
 package com.ideaas.ecomm.ecomm.services;
 
 import com.ideaas.ecomm.ecomm.domain.*;
+import com.ideaas.ecomm.ecomm.domain.dto.UserDTO;
+import com.ideaas.ecomm.ecomm.domain.dto.WalletDTO;
 import com.ideaas.ecomm.ecomm.enums.WalletTransactionType;
 import com.ideaas.ecomm.ecomm.repository.WalletDao;
 import com.ideaas.ecomm.ecomm.services.interfaces.IProductService;
@@ -44,8 +46,9 @@ public class WalletService implements IWalletService {
 		dao.saveAll(wallets);
 	}
 
-	public List<Wallet> findAllByUser(final User user) {
-		return dao.findAllByUser(user);
+	public List<WalletDTO> findAllByUser(final User user) {
+		List<Wallet> userWallets = dao.findAllByUser(user);
+		return userWallets.stream().map(this::walletToDTO).collect(Collectors.toList());
 	}
 
 	public List<Wallet> findNoExpiredByUser(final User user) {
@@ -55,9 +58,7 @@ public class WalletService implements IWalletService {
 
 	public List<Wallet> findRegistersActiveByUser(final User user) {
 		List<Wallet> registers = findNoExpiredByUser(user);
-
-		List<Wallet> actives= new ArrayList<>();
-
+		List<Wallet> actives = new ArrayList<>();
 		registers.forEach(register -> {
 			if(register.getIsConsumed() == false && register.getPoints() >= 0L){
 				actives.add(register);
@@ -71,8 +72,8 @@ public class WalletService implements IWalletService {
 	 * Gets points of wallet by user
 	 */
 	public Long getPointsWalletByUser(final User user) {
-		final List<Wallet> walletOfUser = this.findAllByUser(user);
-		return walletOfUser.stream().mapToLong(Wallet::getPoints).sum();
+		final List<WalletDTO> walletOfUser = this.findAllByUser(user);
+		return walletOfUser.stream().mapToLong(WalletDTO::getPoints).sum();
 	}
 
 	public Long getActivePointsWalletByUser(final User user) {
@@ -130,14 +131,17 @@ public class WalletService implements IWalletService {
 		}
 	}
 
+	//CURRENT
 	@Override
-	public Wallet addPoints(final Wallet wallet) {
-		return dao.save(wallet);
+	public WalletDTO addPoints(final WalletDTO dto) {
+		Wallet wallet = dtoToWallet(dto);
+		return walletToDTO(dao.save(wallet));
 	}
 
-	
+	//CURRENT
 	@Override
-	public Wallet removePoints(Wallet wallet) {
+	public WalletDTO removePoints(WalletDTO dto) {
+		Wallet wallet = dtoToWallet(dto);
 		User user = wallet.getUser();
 		Long pointsToRemove = wallet.getPoints();
 		registersConsumer(user, pointsToRemove);
@@ -152,7 +156,7 @@ public class WalletService implements IWalletService {
 				.build();
 				
 
-		return dao.save(wallet);
+		return walletToDTO(dao.save(wallet));
 	}
 
 
@@ -204,7 +208,7 @@ public class WalletService implements IWalletService {
 				.isConsumed(false)
 				.build();
 				
-				addPoints(wallet);
+				addPoints(walletToDTO(wallet));
 			}
 	}
 
@@ -227,5 +231,42 @@ public class WalletService implements IWalletService {
 						.build())
 				.collect(Collectors.toList());
 		wallets.forEach(dao::save);
+	}
+
+	/*
+	* =====================================================================================================
+	* Convertidores - DTO a Wallet y Wallet a DTO
+	* =====================================================================================================
+	*/
+
+	private WalletDTO walletToDTO(final Wallet wallet) {
+		WalletDTO.Product prodDTO = wallet.getProduct() != null
+				? new WalletDTO.Product( wallet.getProduct().getId(), wallet.getProduct().getName())
+				: null;
+
+		return WalletDTO.builder()
+				.id(wallet.getId())
+				.product(prodDTO)
+				.points(wallet.getPoints())
+				.quantity(wallet.getQuantity())
+				.user(new WalletDTO.User(wallet.getUser().getUsername()))
+				.date(wallet.getDate())
+				.isConsumed(wallet.getIsConsumed())
+				.build();
+	}
+
+
+	private Wallet dtoToWallet (final WalletDTO dto){
+		Product product = dto.getProduct() != null ? productService.get(dto.getProduct().getId()) : null;
+		Wallet wallet = Wallet.builder()
+				.id(dto.getId())
+				.product(product)
+				.points(dto.getPoints())
+				.quantity(dto.getQuantity())
+				.user(userService.get(dto.getUser().getUsername()).get())
+				.date(dto.getDate())
+				.isConsumed(dto.getIsConsumed())
+				.build();
+		return wallet;
 	}
 }

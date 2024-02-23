@@ -4,8 +4,10 @@ import com.ideaas.ecomm.ecomm.domain.Store;
 import com.ideaas.ecomm.ecomm.domain.User;
 import com.ideaas.ecomm.ecomm.domain.Wallet;
 import com.ideaas.ecomm.ecomm.domain.dto.UserDTO;
+import com.ideaas.ecomm.ecomm.domain.dto.WalletDTO;
 import com.ideaas.ecomm.ecomm.services.UserService;
 import com.ideaas.ecomm.ecomm.services.interfaces.IStoreService;
+import com.ideaas.ecomm.ecomm.services.interfaces.IUserService;
 import com.ideaas.ecomm.ecomm.services.interfaces.IWalletService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -21,13 +23,13 @@ import java.util.Set;
 @RequestMapping("user")
 public class UserController {
 
-    private UserService userService;
+    private IUserService userService;
     private IWalletService walletService;
     private IStoreService storeService;
 
 
     @Autowired
-    public UserController(final UserService userService,
+    public UserController(final IUserService userService,
                           final IWalletService walletService,
                           final IStoreService storeService) {
         this.userService = userService;
@@ -62,24 +64,22 @@ public class UserController {
     }
 
     @GetMapping
-    private ResponseEntity<List<User>> findAll(){
-        List<User> users = userService.findAll();
-
+    private ResponseEntity<List<UserDTO>> findAll(){
+        List<UserDTO> users = userService.findAll();
         return ResponseEntity.ok(users);
     }
 
     @GetMapping("{username}")
-    public ResponseEntity<User> findByUsername(@PathVariable final String username){
-        final User user = userService.get(username).get();
-
+    public ResponseEntity<UserDTO> findByUsername(@PathVariable final String username){
+        final UserDTO user = userService.getDTO(username).get();
         return ResponseEntity.ok(user);
     }
 
 
     @GetMapping("/wallet/{username}")
-    public ResponseEntity<List<Wallet>> getWalletByUser(@PathVariable final String username) {
+    public ResponseEntity<List<WalletDTO>> getWalletByUser(@PathVariable final String username) {
         final User user = userService.get(username).get();
-        final List<Wallet> walletOfUser = walletService.findAllByUser(user);     
+        final List<WalletDTO> walletOfUser = walletService.findAllByUser(user);
 
         return ResponseEntity.ok(walletOfUser);
     }
@@ -92,6 +92,7 @@ public class UserController {
         return ResponseEntity.ok(points);
     }
 
+    /*
     @PostMapping("twins")
     public ResponseEntity<User> updateTwins(@RequestBody final User user) {
         User userToUpdate = userService.get(user.getCardId()).get();
@@ -100,6 +101,7 @@ public class UserController {
 
         return ResponseEntity.status(202).body(null);
     }
+    */
 
     @GetMapping("/{username}/stores")
     public ResponseEntity<Set<Store>> getUserStores(@PathVariable String username) {
