@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.NoSuchElementException;
 import java.util.Set;
 
 @RestController
@@ -66,13 +67,20 @@ public class UserController {
     @GetMapping
     private ResponseEntity<List<UserDTO>> findAll(){
         List<UserDTO> users = userService.findAll();
-        return ResponseEntity.ok(users);
+        if (users != null)
+            return ResponseEntity.ok(users);
+        else
+            return ResponseEntity.status(400).build();
     }
 
     @GetMapping("{username}")
     public ResponseEntity<UserDTO> findByUsername(@PathVariable final String username){
-        final UserDTO user = userService.getDTO(username).get();
-        return ResponseEntity.ok(user);
+        try {
+            final UserDTO user = userService.getDTO(username).get();
+            return ResponseEntity.ok(user);
+        }catch (NoSuchElementException e){
+            return ResponseEntity.status(400).build();
+        }
     }
 
 
