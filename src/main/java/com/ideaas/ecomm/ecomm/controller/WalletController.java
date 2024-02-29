@@ -3,6 +3,8 @@ package com.ideaas.ecomm.ecomm.controller;
 import com.ideaas.ecomm.ecomm.domain.Checkout;
 import com.ideaas.ecomm.ecomm.domain.User;
 import com.ideaas.ecomm.ecomm.domain.Wallet;
+import com.ideaas.ecomm.ecomm.domain.dto.WalletDTO;
+import com.ideaas.ecomm.ecomm.enums.CheckoutState;
 import com.ideaas.ecomm.ecomm.enums.WalletTransactionType;
 import com.ideaas.ecomm.ecomm.payload.WalletDiscountRequest;
 import com.ideaas.ecomm.ecomm.services.interfaces.ICheckoutService;
@@ -21,7 +23,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("wallet")
 @CrossOrigin
 public class WalletController {
-
     private ICheckoutService checkoutService;
     private IUserService userService;
     private IWalletService walletService;
@@ -47,24 +48,22 @@ public class WalletController {
             walletService.productToCartInWallet(user, checkout.getProducts(), WalletTransactionType.SALE);
             productService.discountAmountStock(checkout.getProducts());
             productService.increaseAmountOfSales(checkout.getProducts());
+            checkoutService.changeStateTo(CheckoutState.PAID_OUT, checkout.getId());
             return ResponseEntity.ok().build();
         } else {
-            return ResponseEntity.status(202).body("puntos insuficientes");
+            return ResponseEntity.status(202).body("Puntos insuficientes");
         }
     }
 
     @PostMapping("/add")
-    public ResponseEntity<Wallet> addPoints(@RequestBody final Wallet wallet){
-        final Wallet walletAdd = walletService.addPoints(wallet);
-
+    public ResponseEntity<WalletDTO> addPoints(@RequestBody final WalletDTO dto){
+        final WalletDTO walletAdd = walletService.addPoints(dto);
         return ResponseEntity.status(202).body(walletAdd);
     }
 
     @PostMapping("/remove")
-    public ResponseEntity<Wallet> removePoints(@RequestBody final Wallet wallet){
-        final Wallet walletRemove = walletService.removePoints(wallet);
-
+    public ResponseEntity<WalletDTO> removePoints(@RequestBody final WalletDTO dto){
+        final WalletDTO walletRemove = walletService.removePoints(dto);
         return ResponseEntity.status(202).body(walletRemove);
     }
-
 }
