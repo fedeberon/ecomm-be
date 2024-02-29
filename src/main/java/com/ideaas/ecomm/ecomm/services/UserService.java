@@ -133,8 +133,7 @@ public class UserService implements IUserService {
     private boolean validUser(UserDTO dto){
         return !(dto.getUsername() == null ||
                 dto.getName() == null  ||
-                dto.getLastName() == null  ||
-                dto.getRole() == null );
+                dto.getLastName() == null );
     }
 
     //Verifica si un usuario existe o no...
@@ -144,6 +143,12 @@ public class UserService implements IUserService {
 
     //Guarda o actualiza un usuario en la base de datos...
     private Entry<Integer, UserDTO> saveUser(UserDTO dto){
+        //En caso de que el rol sea nulo, sera cambiado al de cliente por defecto
+        //(Necesario para sign in, por ejemplo de Google o Facebook)
+        if(dto.getRole() == null){
+            dto.setRole(CommerceRole.CUSTOMER.name());
+        }
+
         //Se verifica si el rol ingresado es valido o no
         if (!Arrays.stream(CommerceRole.values()).anyMatch(val -> val.name().equals(dto.getRole().trim()))) {
             return new AbstractMap.SimpleEntry<>(412, null);
