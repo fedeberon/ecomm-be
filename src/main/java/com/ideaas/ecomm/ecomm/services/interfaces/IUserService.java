@@ -1,20 +1,24 @@
 package com.ideaas.ecomm.ecomm.services.interfaces;
 
 import com.ideaas.ecomm.ecomm.domain.User;
+import com.ideaas.ecomm.ecomm.domain.dto.UserDTO;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
 import java.util.List;
+import java.util.Map.Entry;
 import java.util.Optional;
 
 public interface IUserService extends UserDetailsService {
-    User save(User user);
+    Entry<Integer,UserDTO> save(UserDTO dto);
 
-    User update(User user);
+    Entry<Integer, UserDTO>  update(UserDTO user);
+    Entry<Integer, String>  updatePassword(final String username, final String password);
 
-    Optional<User> get(String username);
+    Optional<UserDTO> getDTO(String username);//Para devolver solicitudes
+    Optional<User> get(String username);//Para trabajo con wallets
 
-    List<User> findAll();
+    List<UserDTO> findAll();
 
-    User getCurrent();
+    UserDTO getCurrent();
 
 }
