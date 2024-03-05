@@ -135,6 +135,9 @@ public class WalletService implements IWalletService {
 	@Override
 	public WalletDTO addPoints(final WalletDTO dto) {
 		Wallet wallet = dtoToWallet(dto);
+		if(wallet.getQuantity() == null){wallet.setQuantity(1);}
+		wallet.setIsConsumed(false);
+		wallet.setDate(LocalDateTime.now());
 		return walletToDTO(dao.save(wallet));
 	}
 
