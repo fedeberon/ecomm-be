@@ -19,7 +19,12 @@ import java.util.Map.Entry;
 import java.util.NoSuchElementException;
 import java.util.Set;
 
-@RestController
+/*los controladores sirven para manejar las url
+ * ej el usuario esta entrando la pagina web con url hacemos que devuelva una cosa
+ * 
+ */
+
+@RestController 
 @CrossOrigin
 @RequestMapping("user")
 public class UserController {
@@ -43,14 +48,14 @@ public class UserController {
      * 412: Precondition Failed - cuando el valor del rol no es aceptable.
      * 409: Conflict - cuando el usuario ya existe dentro de la base (usar update en lugar de save)
      */
-
+    //post(info oculta) crea una nueva entidad(en este caso crear un nuevo usuario)
     @PostMapping
     public ResponseEntity<UserDTO> save(@RequestBody final UserDTO dto) {
         final Entry<Integer, UserDTO> result = userService.save(dto);
         return ResponseEntity.status(result.getKey()).body(result.getValue());
     }
-
-    @PutMapping
+    //put(info oculta) para modificar una entidad (modificar usuario)
+    @PutMapping 
     public ResponseEntity<UserDTO> update(@RequestBody final UserDTO dto) {
         Entry<Integer, UserDTO> result = userService.update(dto);
         return ResponseEntity.status(result.getKey()).body(result.getValue());
@@ -63,9 +68,8 @@ public class UserController {
         Entry<Integer, String> result = userService.updatePassword(username, password);
         return ResponseEntity.status(result.getKey()).body(result.getValue());
     }
-
     @GetMapping
-    private ResponseEntity<List<UserDTO>> findAll(){
+    private ResponseEntity<List<UserDTO>> findAll(){ 
         List<UserDTO> users = userService.findAll();
         if (users != null)
             return ResponseEntity.ok(users);

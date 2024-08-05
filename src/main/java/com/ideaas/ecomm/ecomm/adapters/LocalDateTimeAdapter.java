@@ -5,7 +5,7 @@ import org.springframework.stereotype.Component;
 import javax.xml.bind.annotation.adapters.XmlAdapter;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-
+// adapatdor de fecha y hora.
 @Component
 public class LocalDateTimeAdapter extends XmlAdapter<String, LocalDateTime> {
 
