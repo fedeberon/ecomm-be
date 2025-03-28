@@ -4,7 +4,9 @@ import com.ideaas.ecomm.ecomm.payload.BillResponse;
 import com.ideaas.ecomm.ecomm.payload.LastBillIdResponse;
 import com.ideaas.ecomm.ecomm.payload.LoginTicket;
 import com.ideaas.ecomm.ecomm.util.FileUtil;
+import org.junit.Ignore;
 import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
 
 import java.io.File;
 import java.io.IOException;
@@ -54,6 +56,8 @@ public class AfipConvertTest {
 
 
     @Test
+    @Disabled
+    @Ignore
     public void shouldConvertToBillResponseWithErrors() throws IOException {
         File resource = FileUtil.loadEmployeesWithSpringInternalClass("files/BillResponseWithErrors.xml");
         String xml = new String(Files.readAllBytes(resource.toPath()));

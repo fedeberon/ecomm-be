@@ -1,27 +1,22 @@
 package com.ideaas.ecomm.ecomm.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-import java.io.Serializable;
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
 @Entity
 @Table(name = "USERS")
-@Getter
-@Setter
-public class User  {
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
+@Data
+public class User {
 
     @Id
     @Column(name = "USU_USERNAME")
@@ -37,6 +32,7 @@ public class User  {
     private String lastName;
 
     @Column(name = "USU_CARD_ID")
+    @Getter
     private String cardId;
 
     @Column(name = "USU_CUIT")
