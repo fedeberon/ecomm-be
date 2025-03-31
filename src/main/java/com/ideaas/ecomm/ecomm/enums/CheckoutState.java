@@ -11,7 +11,9 @@ public enum CheckoutState {
     PAID_OUT("Pagado"),
     IN_PROCESS("En Proceso"),
     REJECTED("Rechazado"),
-    BUDGET("Presupuesto");
+    BUDGET("Presupuesto"),
+    COMPLETED("Completado"),
+    PENDING("Pendiente");
 
     private String value;
 
