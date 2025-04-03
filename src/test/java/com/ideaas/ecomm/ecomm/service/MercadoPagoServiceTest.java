@@ -21,28 +21,22 @@ public class MercadoPagoServiceTest {
     @Mock
     private Checkout checkout;
 
-
     @Test
     void testCreatePreference() {
-        // Crear un producto
         Product product = new Product();
         product.setName("Producto de prueba");
         product.setPrice(100.0);
 
-        // Crear un ProductToCart con el producto
         ProductToCart productToCart = new ProductToCart();
         productToCart.setProduct(product);
         productToCart.setQuantity(2);
 
-        // Crear un Checkout con una lista de productos
         Checkout checkout = new Checkout();
         checkout.setId(1L);
         checkout.setProducts(Collections.singletonList(productToCart));
 
-        // Ejecutar el método
         Preference preference = mercadoPagoService.createPreference(checkout);
 
-        // Verificar que la preferencia no es nula
         assertNotNull(preference);
     }
 

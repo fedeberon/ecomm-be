@@ -29,14 +29,11 @@ public class LoginTickerServiceTest {
 
     @Test
     void testSave_ShouldReturnSavedTicket() {
-        // Arrange
         LoginTicketResponse loginTicket = new LoginTicketResponse();
         when(loginTicketDao.save(loginTicket)).thenReturn(loginTicket);
 
-        // Act
         LoginTicketResponse result = loginTickerService.save(loginTicket);
 
-        // Assert
         assertNotNull(result);
         assertEquals(loginTicket, result);
         verify(loginTicketDao, times(1)).save(loginTicket);
@@ -44,15 +41,12 @@ public class LoginTickerServiceTest {
 
     @Test
     void testGetActive_ShouldReturnActiveTicket() {
-        // Arrange
         String service = "testService";
         LoginTicketResponse loginTicket = new LoginTicketResponse();
         when(loginTicketDao.getActive(any(LocalDateTime.class), eq(service))).thenReturn(Optional.of(loginTicket));
 
-        // Act
         Optional<LoginTicketResponse> result = loginTickerService.getActive(service);
 
-        // Assert
         assertTrue(result.isPresent());
         assertEquals(loginTicket, result.get());
         verify(loginTicketDao, times(1)).getActive(any(LocalDateTime.class), eq(service));
@@ -60,14 +54,11 @@ public class LoginTickerServiceTest {
 
     @Test
     void testGetActive_ShouldReturnEmptyIfNoActiveTicket() {
-        // Arrange
         String service = "testService";
         when(loginTicketDao.getActive(any(LocalDateTime.class), eq(service))).thenReturn(Optional.empty());
 
-        // Act
         Optional<LoginTicketResponse> result = loginTickerService.getActive(service);
 
-        // Assert
         assertFalse(result.isPresent());
         verify(loginTicketDao, times(1)).getActive(any(LocalDateTime.class), eq(service));
     }
