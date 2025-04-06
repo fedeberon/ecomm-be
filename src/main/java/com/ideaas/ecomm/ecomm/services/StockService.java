@@ -28,7 +28,12 @@ public class StockService implements IStockService {
 
     @Override
     public void save(final Stock stock){
-        stock.getItems().forEach(itemStock -> itemStock.setStock(stock));
+        if (stock == null) {
+            throw new IllegalArgumentException("The stock cannot be zero");
+        }
+        if (stock.getItems() != null) {
+            stock.getItems().forEach(itemStock -> itemStock.setStock(stock));
+        }
         dao.save(stock);
     }
 

@@ -13,6 +13,7 @@ import java.util.*;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
+
 public class SizeServiceTest {
 
     @Mock
@@ -62,7 +63,6 @@ public class SizeServiceTest {
         Long id = 99L;
 
         when(sizeDao.findById(id)).thenReturn(Optional.empty());
-
         sizeService.get(id); // debe lanzar excepción
     }
 
