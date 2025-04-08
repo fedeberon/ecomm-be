@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
@@ -27,9 +28,11 @@ class AfipServiceTest {
     @InjectMocks
     private AfipService afipService;
 
+    private AfipService spyAfipService;
+
     @BeforeEach
     void setUp() {
-        // Configurar mocks si es necesario antes de cada prueba
+        spyAfipService = Mockito.spy(afipService);
     }
 
     @Test
@@ -46,18 +49,20 @@ class AfipServiceTest {
     }
 
     @Test
-    @Disabled
     void testGet_WhenLoginTicketDoesNotExist() {
         String service = "testService";
-        LoginTicketResponse newResponse = new LoginTicketResponse();
-        when(loginTicketService.getActive(service)).thenReturn(Optional.empty());
-        when(loginTicketService.save(any())).thenReturn(newResponse);
+        LoginTicketResponse mockedTicket = new LoginTicketResponse();
 
-        LoginTicketResponse actualResponse = afipService.get(service);
+        when(loginTicketService.getActive(service)).thenReturn(Optional.empty());
+        doReturn(mockedTicket).when(spyAfipService).getAuthentication(service);
+        when(loginTicketService.save(mockedTicket)).thenReturn(mockedTicket);
+
+        LoginTicketResponse actualResponse = spyAfipService.get(service);
 
         assertNotNull(actualResponse);
         verify(loginTicketService, times(1)).getActive(service);
-        verify(loginTicketService, times(1)).save(any(LoginTicketResponse.class));
+        verify(spyAfipService, times(1)).getAuthentication(service);
+        verify(loginTicketService, times(1)).save(mockedTicket);
     }
 }
 
