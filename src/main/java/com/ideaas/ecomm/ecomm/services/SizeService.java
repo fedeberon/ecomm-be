@@ -39,9 +39,9 @@ public class SizeService implements ISizeService {
     @Override
     public void delete(Size sizeToDelete) {
         Set<Product> products = sizeToDelete.getProducts();
-        for (Product product: products){
+        for (Product product : products) {
             Set<Size> sizes = product.getSizes();
-            sizes.removeIf(size -> size.id == sizeToDelete.getId());
+            sizes.removeIf(size -> size.getId().equals(sizeToDelete.getId()));
             product.setSizes(sizes);
         }
         dao.delete(sizeToDelete);

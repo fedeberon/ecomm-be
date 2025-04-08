@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 @Service
 public class CheckoutService implements ICheckoutService {
@@ -39,9 +40,18 @@ public class CheckoutService implements ICheckoutService {
 
     @Override
     public Checkout get(final Long id) {
-        Checkout checkout = dao.findById(id).get();
-        checkout.getProducts().forEach(productToCart -> productService.addImagesOnProduct(productToCart.getProduct()));
+        Optional<Checkout> optionalCheckout = dao.findById(id);
 
+        if (!optionalCheckout.isPresent()) {
+            throw new RuntimeException("Checkout no encontrado con ID: " + id);
+        }
+        Checkout checkout = optionalCheckout.get();
+
+        if (checkout.getProducts() == null) {
+            checkout.setProducts(new ArrayList<>()); // Inicializar lista vacía
+        }
+        checkout.getProducts().forEach(productToCart ->
+                productService.addImagesOnProduct(productToCart.getProduct()));
         return checkout;
     }
 
