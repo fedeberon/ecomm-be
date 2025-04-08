@@ -56,8 +56,8 @@ public class FileService {
 
         try {
             // Check if the file's name contains invalid characters
-            if(fileName.contains("..")) {
-                throw new FileStorageException("Sorry! Filename contains invalid path sequence " + fileName);
+            if (originalFilename.contains("..") || fileName.contains("..")) {
+                throw new FileStorageException("Sorry! Filename contains invalid path sequence " + originalFilename);
             }
             Path path = Paths.get(this.fileStorageLocation.toString().concat(File.separator).concat(folder));
             try {

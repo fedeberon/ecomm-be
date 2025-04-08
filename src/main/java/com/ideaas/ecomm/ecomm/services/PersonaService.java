@@ -7,6 +7,7 @@ import com.ideaas.ecomm.ecomm.services.interfaces.IPersonaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 
 @Service
@@ -21,13 +22,12 @@ public class PersonaService implements IPersonaService {
         this.addressDao = addressDao;
     }
 
-
     @Override
     public Person save(final Person person) {
         Person personSaved = dao.save(person);
         if (person.getAddresses() != null) {
             personSaved.getAddresses().forEach(address -> address.setPersona(person));
-            addressDao.saveAll(personSaved.getAddresses());
+            addressDao.saveAll(new ArrayList<>(personSaved.getAddresses())); // Convertir Set en List
         }
         return personSaved;
     }

@@ -81,8 +81,8 @@ public class UserController {
     }
 
     @PostMapping("twins")
-    public ResponseEntity<User> updateTwins(@RequestBody final User user) {
-        User userToUpdate = userService.get(user.getCardId()).get();
+    public ResponseEntity<User> updateTwins(@RequestBody User user) {
+        User userToUpdate = userService.get(user.getUsername()).get();
         userToUpdate.setTwins(user.getTwins());
         userService.update(userToUpdate);
 

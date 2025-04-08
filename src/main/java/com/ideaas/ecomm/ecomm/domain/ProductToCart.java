@@ -1,11 +1,7 @@
 package com.ideaas.ecomm.ecomm.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -17,11 +13,13 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "PRODUCT_TO_CART")
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
+@Setter
 @Builder
+@Table(name = "PRODUCT_TO_CART")
+
 public class ProductToCart {
 
     @Id
@@ -57,4 +55,5 @@ public class ProductToCart {
             return 0.0;
         }
     }
+
 }

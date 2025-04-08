@@ -140,7 +140,7 @@ public class ProductController {
             @RequestParam(required = false) List<String> categories,
             @RequestParam(required = false) List<String> brands,
             @RequestParam(defaultValue = "sales") String orderBy,
-            @RequestParam(defaultValue = "true") String asc,
+            @RequestParam(defaultValue = "false") String asc,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "12") int size
     ) {

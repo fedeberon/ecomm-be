@@ -22,5 +22,5 @@ public class Provider {
     private String address;
 
     @Column(name = "PRO_CUIT")
-    private int cuit;
+    private String cuit;
 }
